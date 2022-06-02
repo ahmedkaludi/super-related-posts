@@ -254,7 +254,24 @@ function srp_admin_footer() {
 	<?php
 }
 
-add_action ('init', 'super_related_posts_save_entries', 10);
+
+//Cron job functions starts here
+
+function super_related_posts_cron_recurrence_interval( $schedules ) {
+ 
+    $schedules['super_related_posts_every_30_seconds'] = array(
+            'interval'  => 30,
+            'display'   => __( 'Every 30 Seconds', 'textdomain' )
+    );
+     
+    return $schedules;
+  }
+
+  add_filter( 'cron_schedules', 'super_related_posts_cron_recurrence_interval');
+
+
+  add_action('super_related_posts_every_30_seconds_action_hook', 'super_related_posts_save_entries');
+
 
 function super_related_posts_save_entries(){
 	
