@@ -256,26 +256,23 @@ function srp_admin_footer() {
 
 
 //Cron job functions starts here
-
-function super_related_posts_cron_recurrence_interval( $schedules ) {
- 
-    $schedules['super_related_posts_every_30_seconds'] = array(
-            'interval'  => 30,
-            'display'   => __( 'Every 30 Seconds', 'textdomain' )
-    );
-     
-    return $schedules;
-  }
-
-  add_filter( 'cron_schedules', 'super_related_posts_cron_recurrence_interval');
-
-
-  add_action('super_related_posts_every_30_seconds_action_hook', 'super_related_posts_save_entries');
-
-
-function super_related_posts_save_entries(){
+// add_filter( 'cron_schedules', 'saswp_server_add_cron_recurrence_interval');
+// function saswp_server_add_cron_recurrence_interval( $schedules ) {
 	
-	if(get_option('srp_entries_status') != 'finish'){
+//     $schedules['saswp_server_on_seconds'] = array(
+//             'interval'  => 10,
+//             'display'   => __( 'Every 5 Minutes', 'textdomain' )
+//     );
+    
+//     return $schedules;
+//   }
+
+//add_action('wi_create_daily_backup', 'super_related_posts_save_entries');
+  
+  
+function super_related_posts_save_entries(){
+		error_log('running cron job');
+//	if(get_option('srp_entries_status') != 'finish'){
 		
 		$start = 0;
 		$batch = 50;
@@ -284,7 +281,7 @@ function super_related_posts_save_entries(){
 			$start = get_option('srp_entries_position');
 		}		
 		save_index_entries($start,true, false, $batch, true);
-	}
+//	}
 	
 }
 

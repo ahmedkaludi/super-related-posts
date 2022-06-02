@@ -391,6 +391,15 @@ class SuperRelatedPosts {
 
   // save some info
   static function activate() {
+	$timestamp = wp_next_scheduled( 'wi_create_minutely_backup' );
+	if( $timestamp == false ){
+		//Schedule the event for right now, then to repeat daily using the hook 'wi_create_daily_backup'
+		wp_schedule_event( time(), 'minutely', 'wi_create_minutely_backup' );
+	}
+	// wp_clear_scheduled_hook( 'super_related_posts_60_seconds_cron_func' );
+    // if ( ! wp_next_scheduled( 'super_related_posts_60_seconds_cron_func' ) ) {
+	// 	wp_schedule_event( time(), 'minutely', 'super_related_posts_60_seconds_cron_func' );
+	// }
     $options = get_option('similar_posts_meta', array());
 
     if (empty($options['first_version'])) {
@@ -704,4 +713,10 @@ add_action('wp_enqueue_scripts', 'sprp_front_css');
 function sprp_front_css(){
 	wp_register_style( 'super-related-posts', plugins_url('', __FILE__) . '/css/super-related-posts.css', false, SuperRelatedPosts::$version );
 	wp_enqueue_style( 'super-related-posts' );
+}
+
+add_action('wi_create_daily_backup', 'abcdefghijk');
+
+function abcdefghijk(){
+	error_log('write to error log');
 }
