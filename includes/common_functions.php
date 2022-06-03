@@ -544,11 +544,34 @@ $ppl_filter_data = array();
 
 // each plugin calls this on startup to have content scanned for its own tag
 function ppl_register_post_filter($type, $key, $class, $condition='') {
+
 	global $ppl_filter_data;
-	$options = get_option($key);
-	$priority = $options[$type . '_priority'];
-	$parameters = stripslashes($options[$type . '_parameters']);
-	$ppl_filter_data [] = array('type' => $type, 'priority' => $priority, 'class' => $class, 'parameters' => $parameters, 'key' => $key, 'condition' => stripslashes($condition), 'position' => $options['pstn_rel_1'], 'paragraph' => $options['para_rel_1'], 'design' => $options['re_design_1'] );
+	$options = get_option($key);	
+
+	$ppl_filter_arr = [];
+	
+	if(isset($options[$type . '_priority'])){
+		$ppl_filter_arr['priority'] = $options[$type . '_priority'];
+	}	
+	if(isset($options[$type . '_parameters'])){
+		$ppl_filter_arr['parameters'] = $options[$type . '_parameters'];
+	}
+	$ppl_filter_arr['type']  = $type;
+	$ppl_filter_arr['class'] = $class;
+	$ppl_filter_arr['key']   = $key;
+	$ppl_filter_arr['condition'] = stripslashes($condition);
+
+	if(isset($options['pstn_rel_1'])){
+		$ppl_filter_arr['position'] = $options['pstn_rel_1'];
+	}
+	if(isset($options['para_rel_1'])){
+		$ppl_filter_arr['paragraph'] = $options['para_rel_1'];	
+	}
+	if(isset($options['re_design_1'])){
+		$ppl_filter_arr['design'] = $options['re_design_1'];		
+	}			
+
+	$ppl_filter_data [] = $ppl_filter_arr;
 	sort($ppl_filter_data);
 }
 
@@ -577,12 +600,33 @@ function ppl_post_filter_1($content) {
 }
 
 function ppl_register_post_filter_2($type, $key, $class, $condition='') {
+
 	global $ppl_filter_data2;
-	$options = get_option($key);
-	$priority = $options[$type . '_priority'];
-	$parameters = stripslashes($options[$type . '_parameters']);
-	$postion = isset($options['position']) ? $options['position'] : 10;
-	$ppl_filter_data2 [] = array('type' => $type, 'priority' => $priority, 'class' => $class, 'parameters' => $parameters, 'key' => $key, 'condition' => stripslashes($condition), 'position' => $options['pstn_rel_2'], 'paragraph' => $options['para_rel_2'], 'design' => $options['re_design_2'] );
+	$options = get_option($key);			
+
+	$ppl_filter_arr = [];
+
+	if(isset($options[$type . '_priority'])){
+		$ppl_filter_arr['priority'] = $options[$type . '_priority'];
+	}	
+	if(isset($options[$type . '_parameters'])){
+		$ppl_filter_arr['parameters'] = $options[$type . '_parameters'];
+	}
+	$ppl_filter_arr['type']  = $type;
+	$ppl_filter_arr['class'] = $class;
+	$ppl_filter_arr['key']   = $key;
+	$ppl_filter_arr['condition'] = stripslashes($condition);
+
+	if(isset($options['pstn_rel_2'])){
+		$ppl_filter_arr['position'] = $options['pstn_rel_2'];
+	}
+	if(isset($options['para_rel_2'])){
+		$ppl_filter_arr['paragraph'] = $options['para_rel_2'];	
+	}
+	if(isset($options['re_design_1'])){
+		$ppl_filter_arr['design'] = $options['re_design_2'];		
+	}									
+	$ppl_filter_data2 [] = $ppl_filter_arr;	
 	sort($ppl_filter_data2);
 }
 
@@ -611,11 +655,30 @@ function ppl_post_filter_2($content) {
 }
 
 function ppl_register_post_filter_3($type, $key, $class, $condition='') {
+
 	global $ppl_filter_data3;
-	$options = get_option($key);
-	$priority = $options[$type . '_priority'];
-	$parameters = stripslashes($options[$type . '_parameters']);
-	$ppl_filter_data3 [] = array('type' => $type, 'priority' => $priority, 'class' => $class, 'parameters' => $parameters, 'key' => $key, 'condition' => stripslashes($condition), 'position' => $options['pstn_rel_3'], 'paragraph' => $options['para_rel_3'], 'design' => $options['re_design_3'] );
+	$options = get_option($key);		
+	if(isset($options[$type . '_priority'])){
+		$ppl_filter_arr['priority'] = $options[$type . '_priority'];
+	}	
+	if(isset($options[$type . '_parameters'])){
+		$ppl_filter_arr['parameters'] = $options[$type . '_parameters'];
+	}
+	$ppl_filter_arr['type']  = $type;
+	$ppl_filter_arr['class'] = $class;
+	$ppl_filter_arr['key']   = $key;
+	$ppl_filter_arr['condition'] = stripslashes($condition);
+
+	if(isset($options['pstn_rel_1'])){
+		$ppl_filter_arr['position'] = $options['pstn_rel_3'];
+	}
+	if(isset($options['para_rel_1'])){
+		$ppl_filter_arr['paragraph'] = $options['para_rel_3'];	
+	}
+	if(isset($options['re_design_1'])){
+		$ppl_filter_arr['design'] = $options['re_design_3'];		
+	}
+	$ppl_filter_data3 [] = $ppl_filter_arr;	
 	sort($ppl_filter_data3);
 }
 
@@ -670,7 +733,7 @@ function sprp_shortcode_content3($arg) {
 function ppl_post_filter_init1() {
 	global $ppl_filter_data;
 	if (!$ppl_filter_data) return;
-	if($ppl_filter_data[0]['position'] != 'sc'){
+	if(isset($ppl_filter_data[0]['position']) && $ppl_filter_data[0]['position'] != 'sc'){
 		add_filter('the_content', 'ppl_post_filter_1', 5);
 	}else{
 		add_shortcode('super-related-posts', 'sprp_shortcode_content1');
@@ -680,7 +743,7 @@ function ppl_post_filter_init1() {
 function ppl_post_filter_init2() {
 	global $ppl_filter_data2;
 	if (!$ppl_filter_data2) return;
-	if($ppl_filter_data2[0]['position'] != 'sc'){
+	if(isset($ppl_filter_data2[0]['position']) && $ppl_filter_data2[0]['position'] != 'sc'){
 		add_filter('the_content', 'ppl_post_filter_2', 5);
 	}else{
 		add_shortcode('super-related-posts', 'sprp_shortcode_content2');
@@ -690,7 +753,7 @@ function ppl_post_filter_init2() {
 function ppl_post_filter_init3() {
 	global $ppl_filter_data3;
 	if (!$ppl_filter_data3) return;
-	if($ppl_filter_data3[0]['position'] != 'sc'){
+	if(isset($ppl_filter_data3[0]['position']) && $ppl_filter_data3[0]['position'] != 'sc'){
 		add_filter('the_content', 'ppl_post_filter_3', 5);
 	}else{
 		add_shortcode('super-related-posts', 'sprp_shortcode_content3');

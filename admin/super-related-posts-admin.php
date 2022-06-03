@@ -41,17 +41,37 @@ function srp_rp1_options_subpage(){
 
 		<table class="optiontable form-table">
 			<?php
+			if(isset($options['limit'])){
 				ppl_display_limit($options['limit']);
+			}
+			if(isset($options['age'])){
 				ppl_display_age($options['age']);
+			}
+			if(isset($options['match_cat'])){
 				ppl_display_match_cat($options['match_cat']);
+			}
+			if(isset($options['match_tags'])){
 				ppl_display_match_tags($options['match_tags']);
+			}
+			if(isset($options['pstn_rel_1'])){
 				sprp_position_related_i($options['pstn_rel_1'], $num);
+			}
+			if(isset($options['para_rel_1'])){
 				sprp_paragraph_i($options['para_rel_1'], $options['pstn_rel_1'], $num);
+			}
+			if(isset($options['re_design_1'])){
 				sprp_design_related_i($options['re_design_1'], $num);
+			}
+				
 			?>
 		</table>
 		<table class="optiontable form-table">
-			<?php sprp_adv_filter_switch($options['adv_filter_check_1'], $num); ?>
+			<?php 
+				if(isset($options['adv_filter_check_1'])){
+					sprp_adv_filter_switch($options['adv_filter_check_1'], $num);
+				}
+				
+			 ?>
 		</table>
 		<?php
 			$hide_filter = (isset($options['adv_filter_check_1']) && $options['adv_filter_check_1'] == 1) ? '' : 'style="display:none"';
@@ -95,29 +115,57 @@ function srp_rp2_options_subpage(){
 
 		<table class="optiontable form-table">
 			<?php
-				ppl_display_limit_i($options['limit_2'], $num);
-				ppl_display_age($options['age']);
-				ppl_display_match_cat_i($options['match_cat_2'], $num);
-				ppl_display_match_tags_i($options['match_tags_2'], $num);
-				sprp_position_related_i($options['pstn_rel_2'], $num);
-				sprp_paragraph_i($options['para_rel_2'], $options['pstn_rel_2'], $num);
-				sprp_design_related_i($options['re_design_2'], $num);
+				if(isset($options['limit_2'])){
+					ppl_display_limit_i($options['limit_2'], $num);
+				}
+				if(isset($options['age'])){
+					ppl_display_age($options['age']);
+				}
+				if(isset($options['match_cat_2'])){
+					ppl_display_match_cat_i($options['match_cat_2'], $num);
+				}
+				if(isset($options['match_tags_2'])){
+					ppl_display_match_tags_i($options['match_tags_2'], $num);
+				}
+				if(isset($options['pstn_rel_2'])){
+					sprp_position_related_i($options['pstn_rel_2'], $num);
+				}
+				if(isset($options['para_rel_2'])){
+					sprp_paragraph_i($options['para_rel_2'], $options['pstn_rel_2'], $num);
+				}
+				if(isset($options['re_design_2'])){
+					sprp_design_related_i($options['re_design_2'], $num);
+				}
+				
 			?>
 		</table>
 		<table class="optiontable form-table">
-			<?php sprp_adv_filter_switch($options['adv_filter_check_2'], $num); ?>
+			<?php 
+				if(isset($options['adv_filter_check_2'])){
+					sprp_adv_filter_switch($options['adv_filter_check_2'], $num); 
+				}				
+			?>
 		</table>
 		<?php
 			$hide_filter = (isset($options['adv_filter_check_2']) && $options['adv_filter_check_2'] == 1) ? '' : 'style="display:none"';
 		?>
 		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
 			<?php
-				ppl_display_excluded_posts_i($options['excluded_posts_2'], $num);
-				ppl_display_included_posts_i($options['included_posts_2'], $num);
+				if(isset($options['excluded_posts_2'])){
+					ppl_display_excluded_posts_i($options['excluded_posts_2'], $num);
+				}
+				if(isset($options['included_posts_2'])){
+					ppl_display_included_posts_i($options['included_posts_2'], $num);
+				}
 				ppl_display_authors($options['excluded_authors'], $options['included_authors']);
 				ppl_display_cats($options['excluded_cats'], $options['included_cats']);
-				ppl_display_tag_str_i($options['tag_str_2'], $num);
-				ppl_display_custom($options['custom']);
+				if(isset($options['tag_str_2'])){
+					ppl_display_tag_str_i($options['tag_str_2'], $num);
+				}
+				if(isset($options['custom'])){
+					ppl_display_custom($options['custom']);
+				}
+				
 			?>
 		</table>
 
@@ -150,28 +198,54 @@ function srp_rp3_options_subpage(){
 		<table class="optiontable form-table">
 			<?php
 				sprp_display_shortcode();
-				ppl_display_limit_i($options['limit_3'], $num);
-				ppl_display_age($options['age']);
-				ppl_display_match_cat_i($options['match_cat_3'], $num);
-				ppl_display_match_tags_i($options['match_tags_3'], $num);
-				sprp_position_related_i($options['pstn_rel_3'], $num);
-				sprp_paragraph_i($options['para_rel_3'], $options['pstn_rel_3'], $num);
-				sprp_design_related_i($options['re_design_3'], $num);
+
+				if(isset($options['limit_3'])){
+					ppl_display_limit_i($options['limit_3'], $num);
+				}
+				if(isset($options['age'])){
+					ppl_display_age($options['age']);
+				}
+				if(isset($options['match_cat_3'])){
+					ppl_display_match_cat_i($options['match_cat_3'], $num);
+				}
+				if(isset($options['match_tags_3'])){
+					ppl_display_match_tags_i($options['match_tags_3'], $num);
+				}
+				if(isset($options['pstn_rel_3'])){
+					sprp_position_related_i($options['pstn_rel_3'], $num);
+				}
+				if(isset($options['para_rel_3'])){
+					sprp_paragraph_i($options['para_rel_3'], $options['pstn_rel_3'], $num);
+				}
+				if(isset($options['re_design_3'])){
+					sprp_design_related_i($options['re_design_3'], $num);
+				}
+				
 			?>
 		</table>
 		<table class="optiontable form-table">
-			<?php sprp_adv_filter_switch($options['adv_filter_check_3'], $num); ?>
+			<?php 
+				if(isset($options['adv_filter_check_3'])){
+					sprp_adv_filter_switch($options['adv_filter_check_3'], $num);
+				}				
+			 ?>
 		</table>
 		<?php
 			$hide_filter = (isset($options['adv_filter_check_3']) && $options['adv_filter_check_3'] == 1) ? '' : 'style="display:none"';
 		?>
 		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
 			<?php
-				ppl_display_excluded_posts_i($options['excluded_posts_3'], $num);
-				ppl_display_included_posts_i($options['included_posts_3'], $num);
+				if(isset($options['excluded_posts_3'])){
+					ppl_display_excluded_posts_i($options['excluded_posts_3'], $num);
+				}
+				if(isset($options['included_posts_3'])){
+					ppl_display_included_posts_i($options['included_posts_3'], $num);
+				}								
 				ppl_display_authors($options['excluded_authors'], $options['included_authors']);
 				ppl_display_cats($options['excluded_cats'], $options['included_cats']);
-				ppl_display_tag_str_i($options['tag_str_3'], $num);
+				if(isset($options['tag_str_3'])){
+					ppl_display_tag_str_i($options['tag_str_3'], $num);
+				}				
 				ppl_display_custom($options['custom']);
 			?>
 		</table>
