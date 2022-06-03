@@ -130,7 +130,7 @@ function ppl_display_available_tags($plugin_name) {
 		<li title="">{php}</li>
 		<li title="">{postid}</li>
 		<li title="">{postviews}</li>
-		<?php if ($plugin_name === 'similar-posts') { ?>
+		<?php if ($plugin_name === 'super-related-posts') { ?>
 			<li title="">{score}</li>
 		<?php } ?>
 		<li title="">{snippet}</li>
@@ -439,7 +439,7 @@ function ppl_display_authors($excluded_authors, $included_authors) {
 	<tr valign="top">
 		<th scope="row"><?php _e('Authors to exclude/include:', 'post_plugin_library') ?></th>
 		<td>
-			<table class="similarposts-inner-table">
+			<table class="superrelatedposts-inner-table">
 			<?php
 				$users = $wpdb->get_results("SELECT ID, user_login FROM $wpdb->users ORDER BY user_login");
 				if ($users) {
@@ -473,7 +473,7 @@ function ppl_display_cats($excluded_cats, $included_cats) {
 	<tr valign="top">
 		<th scope="row"><?php _e('Categories to exclude/include:', 'post_plugin_library') ?></th>
 		<td>
-			<table class="similarposts-inner-table">
+			<table class="superrelatedposts-inner-table">
 			<?php
 				if (function_exists("get_categories")) {
 					$categories = get_categories();//('&hide_empty=1');

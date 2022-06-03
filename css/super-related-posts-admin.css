@@ -1,4 +1,4 @@
-.similarposts-tab-content{
+.superrelatedposts-tab-content{
     background: #FFFFFF;
     padding: 20px;
     border: 1px solid #dcdcdc;
@@ -6,7 +6,7 @@
 	  border-top: none;
 }
 
-.similarposts-tabs-menu{
+.superrelatedposts-tabs-menu{
 	background: #FFFFFF;
     padding: 20px;
     border: 1px solid #dcdcdc;
@@ -14,7 +14,7 @@
     border-bottom: 2px solid #0085ba;
 }
 
-.similarposts-tabs-menu li a{
+.superrelatedposts-tabs-menu li a{
 	font-size: 16px;
     text-decoration: none;
     padding: 18px 12px;
@@ -23,32 +23,32 @@
 	box-sizing:content-box;
 }
 
-.similarposts-tabs-menu li a:hover{
+.superrelatedposts-tabs-menu li a:hover{
 	border:none;
 	border-bottom: 4px solid #0085ba;
 	color:#23282d;
 }
 
-.similarposts-tabs-menu li a:focus{
+.superrelatedposts-tabs-menu li a:focus{
 	outline: none;
     outline-style:none;
     box-shadow:none;
 }
 
-.similarposts-tabs-menu li a.current{
+.superrelatedposts-tabs-menu li a.current{
 	color:#23282d;
 	border-bottom: 4px solid #0085ba;
 }
 
 
 
-.similarposts-inner-table{ 
+.superrelatedposts-inner-table{ 
     border-spacing: 0;
     border-collapse: collapse;
 }
 
 
-.similarposts-inner-table tr td{
+.superrelatedposts-inner-table tr td{
 	border:1px solid #CCC;
 }
 

@@ -49,7 +49,7 @@ class srp_admin_subpages {
 	}
 
 	function display_menu() {
-		echo "\n<ul id=\"submenu\" class=\"similarposts-tabs-menu\" style=\"display: block\">\n";
+		echo "\n<ul id=\"submenu\" class=\"superrelatedposts-tabs-menu\" style=\"display: block\">\n";
 		// for compatibility with WP mu
 		$base = (isset($_SERVER['REDIRECT_URL'])) ? $_SERVER['REDIRECT_URL'] : $_SERVER['PHP_SELF'];
 		$base .= '?page=' . $this->parent_page . '&subpage=';

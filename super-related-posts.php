@@ -18,7 +18,6 @@ if ( ! defined( 'SUPER_RELATED_POSTS_VERSION' ) ) {
 
 define('SPRP_DIR_NAME', dirname( __FILE__ ));
 define('SPRP_PLUGIN_URI', plugin_dir_url(__FILE__));
-
 function super_related_posts($args = '') {
 	echo SuperRelatedPosts::execute($args);
 }
@@ -38,6 +37,7 @@ if (!defined('SRP_ADMIN_SUBPAGES_LIBRARY')) require(SPRP_DIR_NAME.'/admin/admin-
 if (!defined('DSEP')) define('DSEP', DIRECTORY_SEPARATOR);
 if (!defined('POST_PLUGIN_LIBRARY')) SuperRelatedPosts::install_post_plugin_library();
 
+
 $sprp_current_ID = -1;
 
 class SuperRelatedPosts {
@@ -54,7 +54,7 @@ class SuperRelatedPosts {
   static function is_plugin_admin_page($page = 'settings') {
     $current_screen = get_current_screen();
 
-    if ($page == 'settings' && $current_screen->id == 'settings_page_similar-posts') {
+    if ($page == 'settings' && $current_screen->id == 'settings_page_super-related-posts') {
       return true;
     }
 
@@ -63,7 +63,7 @@ class SuperRelatedPosts {
 
   // add settings link to plugins page
   static function plugin_action_links($links) {
-    $settings_link = '<a href="' . admin_url('options-general.php?page=similar-posts') . '" title="Settings for Super Related Posts">Settings</a>';
+    $settings_link = '<a href="' . admin_url('options-general.php?page=super-related-posts') . '" title="Settings for Super Related Posts">Settings</a>';
 
     array_unshift($links, $settings_link);
 
@@ -71,7 +71,7 @@ class SuperRelatedPosts {
   } // plugin_action_links
 
 
-	static function execute($args='', $default_output_template='<li>{imagesrc_shareaholic}</li>', $option_key='similar-posts'){
+	static function execute($args='', $default_output_template='<li>{imagesrc_shareaholic}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID;
 		$start_time = ppl_microtime();
 		$postid = ppl_current_post_id($sprp_current_ID);
@@ -80,7 +80,7 @@ class SuperRelatedPosts {
 			$result = poc_cache_fetch($cache_key);
 			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (ppl_microtime() - $start_time));
 		}
-		$table_name = $table_prefix . 'similar_posts';
+		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = ppl_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
@@ -118,7 +118,7 @@ class SuperRelatedPosts {
 			if ($weight_tags) $weight_tags = 24.0 * $weight_tags / $count_tags;
 			if ($options['hand_links'] === 'true') {
 				// check custom field for manual links
-				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'sp_similar' ") ;
+				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'srp_related' ") ;
 			} else {
 				$forced_ids = '';
 			}
@@ -177,7 +177,7 @@ class SuperRelatedPosts {
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (ppl_microtime() - $start_time)) : '';
 	}
 
-	static function execute2($args='', $default_output_template='<li>{link}</li>', $option_key='similar-posts'){
+	static function execute2($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID;
 		$start_time = ppl_microtime();
 		$postid = ppl_current_post_id($sprp_current_ID);
@@ -186,7 +186,7 @@ class SuperRelatedPosts {
 			$result = poc_cache_fetch($cache_key);
 			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (ppl_microtime() - $start_time));
 		}
-		$table_name = $table_prefix . 'similar_posts';
+		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = ppl_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
@@ -224,7 +224,7 @@ class SuperRelatedPosts {
 			if ($weight_tags) $weight_tags = 24.0 * $weight_tags / $count_tags;
 			if ($options['hand_links'] === 'true') {
 				// check custom field for manual links
-				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'sp_similar' ") ;
+				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'srp_related' ") ;
 			} else {
 				$forced_ids = '';
 			}
@@ -283,7 +283,7 @@ class SuperRelatedPosts {
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (ppl_microtime() - $start_time)) : '';
 	}
 
-	static function execute3($args='', $default_output_template='<li>{link}</li>', $option_key='similar-posts'){
+	static function execute3($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID;
 		$start_time = ppl_microtime();
 		$postid = ppl_current_post_id($sprp_current_ID);
@@ -292,7 +292,7 @@ class SuperRelatedPosts {
 			$result = poc_cache_fetch($cache_key);
 			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (ppl_microtime() - $start_time));
 		}
-		$table_name = $table_prefix . 'similar_posts';
+		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = ppl_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
@@ -330,7 +330,7 @@ class SuperRelatedPosts {
 			if ($weight_tags) $weight_tags = 24.0 * $weight_tags / $count_tags;
 			if ($options['hand_links'] === 'true') {
 				// check custom field for manual links
-				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'sp_similar' ") ;
+				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'srp_related' ") ;
 			} else {
 				$forced_ids = '';
 			}
@@ -391,12 +391,12 @@ class SuperRelatedPosts {
 
   // save some info
   static function activate() {
-    $options = get_option('similar_posts_meta', array());
+    $options = get_option('super_related_posts_meta', array());
 
     if (empty($options['first_version'])) {
       $options['first_version'] = SuperRelatedPosts::get_plugin_version();
       $options['first_install'] = current_time('timestamp');
-      update_option('similar_posts_meta', $options);
+      update_option('super_related_posts_meta', $options);
     }
   } // activate
 
@@ -405,7 +405,7 @@ class SuperRelatedPosts {
 function sp_terms_by_freq($ID, $num_terms = 20) {
 	if (!$ID) return array('', '', '');
 	global $wpdb, $table_prefix;
-	$table_name = $table_prefix . 'similar_posts';
+	$table_name = $table_prefix . 'super_related_posts';
 	$terms = '';
 	$results = $wpdb->get_results("SELECT title, content, tags FROM $table_name WHERE pID=$ID LIMIT 1", ARRAY_A);
 	if ($results) {
@@ -436,11 +436,11 @@ function sp_terms_by_freq($ID, $num_terms = 20) {
 
 function sp_save_index_entry($postID) {
 	global $wpdb, $table_prefix;
-	$table_name = $table_prefix . 'similar_posts';
+	$table_name = $table_prefix . 'super_related_posts';
 	$post = $wpdb->get_row("SELECT post_content, post_title, post_type FROM $wpdb->posts WHERE ID = $postID", ARRAY_A);
 	if ($post['post_type'] === 'revision') return $postID;
 	//extract its terms
-	$options = get_option('similar-posts');
+	$options = get_option('super-related-posts');
 	$utf8 = ($options['utf8'] === 'true');
 	$cjk = ($options['cjk'] === 'true');
 	$content = sp_get_post_terms($post['post_content'], $utf8, $options['use_stemmer'], $cjk);
@@ -459,7 +459,7 @@ function sp_save_index_entry($postID) {
 
 function sp_delete_index_entry($postID) {
 	global $wpdb, $table_prefix;
-	$table_name = $table_prefix . 'similar_posts';
+	$table_name = $table_prefix . 'super_related_posts';
 	$wpdb->query("DELETE FROM $table_name WHERE pID = $postID ");
 	return $postID;
 }
@@ -667,21 +667,21 @@ function super_related_posts_wp_admin_style() {
 
 function super_related_posts_init () {
 	global $overusedwords, $wp_db_version;
-	load_plugin_textdomain('similar_posts');
+	load_plugin_textdomain('super_related_posts');
 
   SuperRelatedPosts::get_plugin_version();
 
-	$options = get_option('similar-posts');
+	$options = get_option('super-related-posts');
 	if ($options['content_filter'] === 'true' && function_exists('ppl_register_content_filter')) ppl_register_content_filter('SuperRelatedPosts');
 	$condition = 'true';
 	$condition = (stristr($condition, "return")) ? $condition : "return ".$condition;
 	$condition = rtrim($condition, '; ') . ';';
 
-	ppl_register_post_filter('append', 'similar-posts', 'SuperRelatedPosts', $condition);
+	ppl_register_post_filter('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 	
-	ppl_register_post_filter_2('append', 'similar-posts', 'SuperRelatedPosts', $condition);
+	ppl_register_post_filter_2('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 	
-	ppl_register_post_filter_3('append', 'similar-posts', 'SuperRelatedPosts', $condition);
+	ppl_register_post_filter_3('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 
 	//install the actions to keep the index up to date
 	add_action('save_post', 'sp_save_index_entry', 1);

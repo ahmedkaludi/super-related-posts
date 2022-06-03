@@ -102,7 +102,7 @@ function srp_set_options($option_key, $arg, $default_output_template) {
 	if (!isset($arg['no_user_comments'])) $arg['no_user_comments'] = @$options['no_user_comments'];
 	if (!isset($arg['unique'])) $arg['unique'] = @$options['unique'];
 
-	// just for similar_posts[feed]
+	// just for super_related_posts[feed]
 	if (!isset($arg['combine'])) $arg['combine'] = @$options['crossmatch'];
 	if (!isset($arg['weight_content'])) $arg['weight_content'] = @$options['weight_content'];
 	if (!isset($arg['weight_title'])) $arg['weight_title'] = @$options['weight_title'];
