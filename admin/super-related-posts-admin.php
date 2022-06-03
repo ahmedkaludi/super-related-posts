@@ -254,74 +254,30 @@ function srp_admin_footer() {
 	<?php
 }
 
-
-//Cron job functions starts here
-// add_filter( 'cron_schedules', 'saswp_server_add_cron_recurrence_interval');
-// function saswp_server_add_cron_recurrence_interval( $schedules ) {
-	
-//     $schedules['saswp_server_on_seconds'] = array(
-//             'interval'  => 10,
-//             'display'   => __( 'Every 5 Minutes', 'textdomain' )
-//     );
-    
-//     return $schedules;
-//   }
-
-//add_action('wi_create_daily_backup', 'super_related_posts_save_entries');
-  
-  
-function super_related_posts_save_entries(){
-		error_log('running cron job');
-//	if(get_option('srp_entries_status') != 'finish'){
-		
-		$start = 0;
-		$batch = 50;
-
-		if(get_option('srp_entries_position')){
-			$start = get_option('srp_entries_position');
-		}		
-		save_index_entries($start,true, false, $batch, true);
-//	}
-	
-}
-
 // sets up the index for the blog
-function save_index_entries ($start = 0, $utf8=false, $use_stemmer='false', $batch=100, $cjk=false) {
-	
-	global $wpdb, $table_prefix;	
-	$table_name = $table_prefix.'similar_posts';	
-	$termcount = 0;	
-	// in batches to conserve memory	
-		$posts = $wpdb->get_results("SELECT `ID`, `post_title`, `post_content`, `post_type` FROM $wpdb->posts LIMIT $start, $batch", ARRAY_A);
-		
-		if($posts){
-			
-			foreach ($posts as $post) {
-
-				if ($post['post_type'] === 'revision') continue;
-
-				$content = sp_get_post_terms($post['post_content'], $utf8, $use_stemmer, $cjk);
-				$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
-				$postID = $post['ID'];
-				$tags = sp_get_tag_terms($postID, $utf8);
-				
-				$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
-
-				if (is_null($pid)) {
-					$wpdb->query("INSERT INTO `$table_name` (pID, content, title, tags) VALUES ($postID, \"$content\", \"$title\", \"$tags\")");
-				} else {
-					$wpdb->query("UPDATE $table_name SET content=\"$content\", title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
-				}
-				
-				$termcount = $termcount + 1;
-			}			
-			update_option('srp_entries_position', ($start+$batch));
-			unset($posts);	
-		}else{
-			update_option('srp_entries_position', 0);
-			update_option('srp_entries_status', 'finish');
+function save_index_entries ($utf8=false, $use_stemmer='false', $batch=100, $cjk=false) {
+	global $wpdb, $table_prefix;
+	//$t0 = microtime(true);
+	$table_name = $table_prefix.'similar_posts';
+	$wpdb->query("TRUNCATE `$table_name`");
+	$termcount = 0;
+	$start = 0;
+	// in batches to conserve memory
+	while ($posts = $wpdb->get_results("SELECT `ID`, `post_title`, `post_content`, `post_type` FROM $wpdb->posts LIMIT $start, $batch", ARRAY_A)) {
+		foreach ($posts as $post) {
+			if ($post['post_type'] === 'revision') continue;
+			$content = sp_get_post_terms($post['post_content'], $utf8, $use_stemmer, $cjk);
+			$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
+			$postID = $post['ID'];
+			$tags = sp_get_tag_terms($postID, $utf8);
+			$wpdb->query("INSERT INTO `$table_name` (pID, content, title, tags) VALUES ($postID, \"$content\", \"$title\", \"$tags\")");
+			$termcount = $termcount + 1;
 		}
-		
+		$start += $batch;
+		if (!ini_get('safe_mode')) set_time_limit(30);
+	}
+	unset($posts);
+	//$t = microtime(true) - $t0; echo "t = $t<br>";
 	return $termcount;
 }
 
@@ -450,8 +406,8 @@ function super_related_posts_install() {
 	update_option('similar-posts', $options);
 
  	// initial creation of the index, if the table is empty
-	// $num_index_posts = $wpdb->get_var("SELECT COUNT(*) FROM `$table_name`");
-	// if ($num_index_posts == 0) save_index_entries (($options['utf8'] === 'true'), 'false', $options['batch'], ($options['cjk'] === 'true'));
+	$num_index_posts = $wpdb->get_var("SELECT COUNT(*) FROM `$table_name`");
+	if ($num_index_posts == 0) save_index_entries (($options['utf8'] === 'true'), 'false', $options['batch'], ($options['cjk'] === 'true'));
 
 	// deactivate legacy Super Related Posts Feed if present
 	$current = get_option('active_plugins');
