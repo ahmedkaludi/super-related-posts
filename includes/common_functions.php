@@ -748,4 +748,3 @@ function ppl_content_filter_init() {
 
 // watch out that the registration functions are called earlier
 add_action ('init', 'ppl_content_filter_init');
-add_action ('init', 'ppl_post_filter_init');
