@@ -16,7 +16,7 @@ function srp_options_page(){
 	$m->add_subpage('Related Post1',  'related_post1', 'srp_rp1_options_subpage');
 	$m->add_subpage('Related Post2',  'related_post2', 'srp_rp2_options_subpage');
 	$m->add_subpage('Related Post3',  'related_post3', 'srp_rp3_options_subpage');
-	$m->add_subpage('Posts Indexing', 'posts_indexing', 'srp_pi_options_subpage');
+	$m->add_subpage('Posts Caching', 'posts_caching', 'srp_pi_options_subpage');
 	$m->display();
 }
 
@@ -178,8 +178,27 @@ function srp_rp2_options_subpage(){
 }
 
 function srp_pi_options_subpage(){
+
+	global $wpdb, $table_prefix;
+	$srp_table = $table_prefix . 'super_related_posts';
+	$wpp_table = $table_prefix . 'posts';
+
+	$cache_count = $wpdb->get_var("SELECT COUNT(*) FROM `$srp_table`");
+	$posts_count = $wpdb->get_var("SELECT COUNT(*) FROM `$wpp_table`");
+	
+	$percentage = round( (($cache_count / $posts_count) * 100), 2);	
+	$caching_status = get_option('srp_posts_caching_status');
+	
 	?>
-	<div class="wrap superrelatedposts-tab-content">
+	<div class="wrap superrelatedposts-tab-content">	
+	<?php 
+		if($caching_status !== 'finish'){
+			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).'% is completed. Please start again to finish</p></div>';	
+		}
+	?>			
+	<div class="srp_progress_bar srp_dnone">
+        <div class="srp_progress_bar_body" style="width: 50%;">50%</div>
+    </div>
 	<table class="optiontable form-table">
 	<tr valign="top">
 		<th scope="row"><label for=""><?php _e('Cache Posts:', 'post_plugin_library') ?></label></th>
@@ -398,17 +417,30 @@ function srp_start_posts_caching(){
 	 }
 	 
 	 if(get_option('srp_posts_caching_status') == 'finished'){
-		$status = array('status' => 'finished');
+		$status = array('status' => 'finished', 'percentage'=> "100%");
 	 }else{
+
+		global $wpdb, $table_prefix;
+		$srp_table = $table_prefix . 'super_related_posts';
+		$wpp_table = $table_prefix . 'posts';
+		
+		global $posts_count;
+
+		if(!$posts_count){
+			$posts_count = $wpdb->get_var("SELECT COUNT(*) FROM `$wpp_table`");
+		}
+
 		$start = 0;
 	  	if(get_option('srp_posts_offset')){
 			$start = get_option('srp_posts_offset');
 		}
+	
+		$percentage = round( (($start / $posts_count) * 100), 2);					
 
-	 	 $result = save_index_entries ($start, true, 'false', 100, true);		
-		 if($result > 0){
-			$status = array('status' => 'continue');
-		 }
+	 	$result = save_index_entries ($start, true, 'false', 100, true);		
+		if($result > 0){
+			$status = array('status' => 'continue', 'percentage' => $percentage."%");
+		}
 	 }	 	 	 	 
 
 	 echo wp_json_encode($status);

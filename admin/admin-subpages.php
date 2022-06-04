@@ -53,14 +53,20 @@ class srp_admin_subpages {
 		// for compatibility with WP mu
 		$base = (isset($_SERVER['REDIRECT_URL'])) ? $_SERVER['REDIRECT_URL'] : $_SERVER['PHP_SELF'];
 		$base .= '?page=' . $this->parent_page . '&subpage=';
-		$this->current_page = (isset($_GET['subpage']))?$this->page_from_slug($_GET['subpage']):$this->page_from_slug(false);
+		$this->current_page = (isset($_GET['subpage']))?$this->page_from_slug($_GET['subpage']):$this->page_from_slug(false);		
 		foreach($this->pages as $page) {
 			if($page === $this->current_page) {
 				echo "<li style=\"display: inline\"><a href=\"$base{$page['slug']}\" class=\"current\" style=\"display: inline\">{$page['title']}</a></li>\n";
 			} else {
 				echo "<li style=\"display: inline\"><a href=\"$base{$page['slug']}\" style=\"display: inline\">{$page['title']}</a></li>\n";
 			}
+			if($page['slug'] == 'posts_caching'){
+				if(get_option('srp_posts_caching_status') != 'finished'){
+					echo '<span class="dashicons dashicons-warning" style="color:#f27306;"></span>';
+				}				
+			}
 		}
+
 		echo "</ul>\n";
 	}
 
