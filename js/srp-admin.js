@@ -14,10 +14,11 @@ jQuery(document).ready(function($){
                     $(".srp_progress_bar_body").text(response.percentage);
                     srp_start_caching_ajax(current);
                 }
-                if(response.status === 'finished'){                       
+                if(response.status === 'finished'){                                           
                     $(".srp_progress_bar_body").css("width", response.percentage);
                     $(".srp_progress_bar_body").text(response.percentage);
-                    $(".srp_progress_bar").addClass('srp_dnone');                 
+                    $(".srp_progress_bar").addClass('srp_dnone');         
+                    alert('Cached Successfully');        
                 }                
         },'json')
         .done(function() {        

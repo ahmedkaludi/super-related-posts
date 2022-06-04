@@ -37,7 +37,9 @@ function srp_rp1_options_subpage(){
 	//now we drop into html to display the option page form
 	?>
 		<div class="wrap superrelatedposts-tab-content">
-
+			<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
+				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
+			<?php } ?>
 		<form method="post" action="">
 
 		<table class="optiontable form-table">
@@ -111,7 +113,9 @@ function srp_rp2_options_subpage(){
 	//now we drop into html to display the option page form
 	?>
 		<div class="wrap superrelatedposts-tab-content">
-
+		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
+				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
+		<?php } ?>
 		<form method="post" action="">
 
 		<table class="optiontable form-table">
@@ -179,6 +183,7 @@ function srp_rp2_options_subpage(){
 
 function srp_pi_options_subpage(){
 
+	
 	global $wpdb, $table_prefix;
 	$srp_table = $table_prefix . 'super_related_posts';
 	$wpp_table = $table_prefix . 'posts';
@@ -192,7 +197,7 @@ function srp_pi_options_subpage(){
 	?>
 	<div class="wrap superrelatedposts-tab-content">	
 	<?php 
-		if($caching_status !== 'finish'){
+		if($caching_status != 'finished'){
 			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).'% is completed. Please start again to finish</p></div>';	
 		}
 	?>			
@@ -203,7 +208,12 @@ function srp_pi_options_subpage(){
 	<tr valign="top">
 		<th scope="row"><label for=""><?php _e('Cache Posts:', 'post_plugin_library') ?></label></th>
 		<td>
-		<button type="button" id="start-caching-btn" class="button button-primary"><?php esc_html_e( 'Start Caching', 'super-related-posts' )?></button>
+		<?php if($caching_status != 'finished'){ ?>	
+			<button type="button" id="start-caching-btn" class="button button-primary"><?php esc_html_e( 'Start Caching', 'super-related-posts' )?></button>
+		<?php }else{ ?>	
+			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php esc_html_e( 'Start Caching', 'super-related-posts' )?></button>
+		<?php } ?>	
+			
 		</td>
 	</tr>
 	</table>
@@ -227,7 +237,9 @@ function srp_rp3_options_subpage(){
 	//now we drop into html to display the option page form
 	?>
 		<div class="wrap superrelatedposts-tab-content">
-
+		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
+				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
+		<?php } ?>
 		<form method="post" action="">
 
 		<table class="optiontable form-table">
@@ -440,6 +452,8 @@ function srp_start_posts_caching(){
 	 	$result = save_index_entries ($start, true, 'false', 100, true);		
 		if($result > 0){
 			$status = array('status' => 'continue', 'percentage' => $percentage."%");
+		}else{
+			$status = array('status' => 'finished', 'percentage' => "100%");
 		}
 	 }	 	 	 	 
 
@@ -633,4 +647,28 @@ function srp_enqueue_style_js( $hook ) {
 
 	}
 	
+}
+
+add_action( 'admin_notices', 'srp_admin_notice' );
+
+function srp_admin_notice(){
+	
+	if(get_option('srp_posts_caching_status') != 'finished'){
+	
+		$setup_notice = '<div class="notice notice-warning">'
+                    . '<p>'
+                    . '<strong>Welcome to Super Related Posts</strong>'
+                    .' - '.'To work this plugin faster you need to cache the posts'
+                    . '</p>'
+                    . '<p>'
+                    . '<a class="button button-primary" href="'.esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )).'">'
+                    . 'Start Caching'
+                    . '</a> '                    
+                    . '</p>'
+                    . '</div>';        
+
+    	echo $setup_notice;					
+
+	}	
+
 }
