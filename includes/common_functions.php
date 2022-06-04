@@ -623,7 +623,7 @@ function ppl_register_post_filter_2($type, $key, $class, $condition='') {
 	if(isset($options['para_rel_2'])){
 		$ppl_filter_arr['paragraph'] = $options['para_rel_2'];	
 	}
-	if(isset($options['re_design_1'])){
+	if(isset($options['re_design_2'])){
 		$ppl_filter_arr['design'] = $options['re_design_2'];		
 	}									
 	$ppl_filter_data2 [] = $ppl_filter_arr;	
@@ -669,13 +669,13 @@ function ppl_register_post_filter_3($type, $key, $class, $condition='') {
 	$ppl_filter_arr['key']   = $key;
 	$ppl_filter_arr['condition'] = stripslashes($condition);
 
-	if(isset($options['pstn_rel_1'])){
+	if(isset($options['pstn_rel_3'])){
 		$ppl_filter_arr['position'] = $options['pstn_rel_3'];
 	}
-	if(isset($options['para_rel_1'])){
+	if(isset($options['para_rel_3'])){
 		$ppl_filter_arr['paragraph'] = $options['para_rel_3'];	
 	}
-	if(isset($options['re_design_1'])){
+	if(isset($options['re_design_3'])){
 		$ppl_filter_arr['design'] = $options['re_design_3'];		
 	}
 	$ppl_filter_data3 [] = $ppl_filter_arr;	

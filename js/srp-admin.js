@@ -26,6 +26,7 @@ jQuery(document).ready(function($){
         })
         .fail(function() {
             current.removeClass('updating-message');             
+            alert('Process broke. Click on Start again');        
         })
         .always(function() {
             //current.removeClass('updating-message'); 
