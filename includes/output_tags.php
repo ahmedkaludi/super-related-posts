@@ -5,7 +5,7 @@
 	-- provides the routines which evaluate output template tags
 */
 
-define('OT_LIBRARY', true);
+define('SRP_OT_LIBRARY', true);
 
 // Called by the post plugins to match output tags to the actions that evaluate them
 function output_tag_action($tag) {
