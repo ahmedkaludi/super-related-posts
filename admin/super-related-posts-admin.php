@@ -29,7 +29,7 @@ function srp_rp1_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		if (defined('POC_CACHE_4')) poc_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = ppl_options_from_post($options, array('limit', 'age', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
+		$options = srp_options_from_post($options, array('limit', 'age', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -45,16 +45,16 @@ function srp_rp1_options_subpage(){
 		<table class="optiontable form-table">
 			<?php
 			if(isset($options['limit'])){
-				ppl_display_limit($options['limit']);
+				srp_display_limit($options['limit']);
 			}
 			if(isset($options['age'])){
-				ppl_display_age($options['age']);
+				srp_display_age($options['age']);
 			}
 			if(isset($options['match_cat'])){
-				ppl_display_match_cat($options['match_cat']);
+				srp_display_match_cat($options['match_cat']);
 			}
 			if(isset($options['match_tags'])){
-				ppl_display_match_tags($options['match_tags']);
+				srp_display_match_tags($options['match_tags']);
 			}
 			if(isset($options['pstn_rel_1'])){
 				sprp_position_related_i($options['pstn_rel_1'], $num);
@@ -81,12 +81,12 @@ function srp_rp1_options_subpage(){
 		?>
 		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
 			<?php
-				ppl_display_excluded_posts($options['excluded_posts']);
-				ppl_display_included_posts($options['included_posts']);
-				ppl_display_authors($options['excluded_authors'], $options['included_authors']);
-				ppl_display_cats($options['excluded_cats'], $options['included_cats']);
-				ppl_display_tag_str($options['tag_str']);
-				ppl_display_custom($options['custom']);
+				srp_display_excluded_posts($options['excluded_posts']);
+				srp_display_included_posts($options['included_posts']);
+				srp_display_authors($options['excluded_authors'], $options['included_authors']);
+				srp_display_cats($options['excluded_cats'], $options['included_cats']);
+				srp_display_tag_str($options['tag_str']);
+				srp_display_custom($options['custom']);
 			?>
 		</table>
 
@@ -105,7 +105,7 @@ function srp_rp2_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		if (defined('POC_CACHE_4')) poc_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = ppl_options_from_post($options, array('limit_2', 'age', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
+		$options = srp_options_from_post($options, array('limit_2', 'age', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -121,16 +121,16 @@ function srp_rp2_options_subpage(){
 		<table class="optiontable form-table">
 			<?php
 				if(isset($options['limit_2'])){
-					ppl_display_limit_i($options['limit_2'], $num);
+					srp_display_limit_i($options['limit_2'], $num);
 				}
 				if(isset($options['age'])){
-					ppl_display_age($options['age']);
+					srp_display_age($options['age']);
 				}
 				if(isset($options['match_cat_2'])){
-					ppl_display_match_cat_i($options['match_cat_2'], $num);
+					srp_display_match_cat_i($options['match_cat_2'], $num);
 				}
 				if(isset($options['match_tags_2'])){
-					ppl_display_match_tags_i($options['match_tags_2'], $num);
+					srp_display_match_tags_i($options['match_tags_2'], $num);
 				}
 				if(isset($options['pstn_rel_2'])){
 					sprp_position_related_i($options['pstn_rel_2'], $num);
@@ -157,18 +157,18 @@ function srp_rp2_options_subpage(){
 		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
 			<?php
 				if(isset($options['excluded_posts_2'])){
-					ppl_display_excluded_posts_i($options['excluded_posts_2'], $num);
+					srp_display_excluded_posts_i($options['excluded_posts_2'], $num);
 				}
 				if(isset($options['included_posts_2'])){
-					ppl_display_included_posts_i($options['included_posts_2'], $num);
+					srp_display_included_posts_i($options['included_posts_2'], $num);
 				}
-				ppl_display_authors($options['excluded_authors'], $options['included_authors']);
-				ppl_display_cats($options['excluded_cats'], $options['included_cats']);
+				srp_display_authors($options['excluded_authors'], $options['included_authors']);
+				srp_display_cats($options['excluded_cats'], $options['included_cats']);
 				if(isset($options['tag_str_2'])){
-					ppl_display_tag_str_i($options['tag_str_2'], $num);
+					srp_display_tag_str_i($options['tag_str_2'], $num);
 				}
 				if(isset($options['custom'])){
-					ppl_display_custom($options['custom']);
+					srp_display_custom($options['custom']);
 				}
 				
 			?>
@@ -229,7 +229,7 @@ function srp_rp3_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		if (defined('POC_CACHE_4')) poc_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = ppl_options_from_post($options, array('limit_3', 'age', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
+		$options = srp_options_from_post($options, array('limit_3', 'age', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -247,16 +247,16 @@ function srp_rp3_options_subpage(){
 				sprp_display_shortcode();
 
 				if(isset($options['limit_3'])){
-					ppl_display_limit_i($options['limit_3'], $num);
+					srp_display_limit_i($options['limit_3'], $num);
 				}
 				if(isset($options['age'])){
-					ppl_display_age($options['age']);
+					srp_display_age($options['age']);
 				}
 				if(isset($options['match_cat_3'])){
-					ppl_display_match_cat_i($options['match_cat_3'], $num);
+					srp_display_match_cat_i($options['match_cat_3'], $num);
 				}
 				if(isset($options['match_tags_3'])){
-					ppl_display_match_tags_i($options['match_tags_3'], $num);
+					srp_display_match_tags_i($options['match_tags_3'], $num);
 				}
 				if(isset($options['pstn_rel_3'])){
 					sprp_position_related_i($options['pstn_rel_3'], $num);
@@ -283,17 +283,17 @@ function srp_rp3_options_subpage(){
 		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
 			<?php
 				if(isset($options['excluded_posts_3'])){
-					ppl_display_excluded_posts_i($options['excluded_posts_3'], $num);
+					srp_display_excluded_posts_i($options['excluded_posts_3'], $num);
 				}
 				if(isset($options['included_posts_3'])){
-					ppl_display_included_posts_i($options['included_posts_3'], $num);
+					srp_display_included_posts_i($options['included_posts_3'], $num);
 				}								
-				ppl_display_authors($options['excluded_authors'], $options['included_authors']);
-				ppl_display_cats($options['excluded_cats'], $options['included_cats']);
+				srp_display_authors($options['excluded_authors'], $options['included_authors']);
+				srp_display_cats($options['excluded_cats'], $options['included_cats']);
 				if(isset($options['tag_str_3'])){
-					ppl_display_tag_str_i($options['tag_str_3'], $num);
+					srp_display_tag_str_i($options['tag_str_3'], $num);
 				}				
-				ppl_display_custom($options['custom']);
+				srp_display_custom($options['custom']);
 			?>
 		</table>
 
@@ -614,9 +614,9 @@ function super_related_posts_install() {
 	error_reporting($errorlevel);
 }
 
-if (!function_exists('ppl_plugin_basename')) {
+if (!function_exists('srp_plugin_basename')) {
 	if ( !defined('WP_PLUGIN_DIR') ) define( 'WP_PLUGIN_DIR', ABSPATH . 'wp-content/plugins' );
-	function ppl_plugin_basename($file) {
+	function srp_plugin_basename($file) {
 		$file = str_replace('\\','/',$file); // sanitize for Win32 installs
 		$file = preg_replace('|/+|','/', $file); // remove any duplicate slash
 		$plugin_dir = str_replace('\\','/',WP_PLUGIN_DIR); // sanitize for Win32 installs

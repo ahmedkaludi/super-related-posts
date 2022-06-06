@@ -137,18 +137,18 @@ function otf_excerpt($option_key, $result, $ext) {
 			$value = convert_smilies($value);
 			$value = oth_trim_extract($value, $len, $more, $numsent);
 			$value = apply_filters('get_the_content', $value);
-			remove_filter('the_content', 'ppl_content_filter', 5);
-			remove_filter('the_content', 'ppl_post_filter', 5);
+			remove_filter('the_content', 'srp_content_filter', 5);
+			remove_filter('the_content', 'srp_post_filter', 5);
 			$value = apply_filters('the_content', $value);
-			add_filter('the_content', 'ppl_content_filter', 5);
-			add_filter('the_content', 'ppl_post_filter', 5);
+			add_filter('the_content', 'srp_content_filter', 5);
+			add_filter('the_content', 'srp_post_filter', 5);
 
 		} else {
 			$value = convert_smilies($value);
 			$value = apply_filters('get_the_excerpt', $value);
-			remove_filter('the_excerpt', 'ppl_content_filter', 5);
+			remove_filter('the_excerpt', 'srp_content_filter', 5);
 			$value = apply_filters('the_excerpt', $value);
-			add_filter('the_excerpt', 'ppl_content_filter', 5);
+			add_filter('the_excerpt', 'srp_content_filter', 5);
 		}
 		break;
 	default:
@@ -197,11 +197,11 @@ function otf_snippetword($option_key, $result, $ext) {
 }
 
 function otf_fullpost($option_key, $result, $ext) {
-	remove_filter( 'the_content', 'ppl_content_filter', 5 );
-	remove_filter( 'the_content', 'ppl_post_filter', 5 );
+	remove_filter( 'the_content', 'srp_content_filter', 5 );
+	remove_filter( 'the_content', 'srp_post_filter', 5 );
 	$value = apply_filters('the_content', $result->post_content);
-	add_filter( 'the_content', 'ppl_content_filter', 5 );
-	add_filter( 'the_content', 'ppl_post_filter', 5 );
+	add_filter( 'the_content', 'srp_content_filter', 5 );
+	add_filter( 'the_content', 'srp_post_filter', 5 );
 	return str_replace(']]>', ']]&gt;', $value);
 }
 
@@ -842,7 +842,7 @@ function oth_splitapart($subject) {
 
 function otf_if($option_key, $result, $ext) {
 	global $post;
-	$ID = ppl_current_post_id();
+	$ID = srp_current_post_id();
 	$condition = 'true';
 	$true = '';
 	$false = '';
@@ -853,23 +853,23 @@ function otf_if($option_key, $result, $ext) {
 		if (isset($s[2])) $false = $s[2];
 	}
 	if (strpos($condition, '{')!==false) {
-		$condition = ppl_expand_template($result, $condition, ppl_prepare_template($condition), $option_key);
+		$condition = srp_expand_template($result, $condition, srp_prepare_template($condition), $option_key);
 	}
 	if (eval("return ($condition);")) $tag = $true; else $tag = $false;
 	// if the replacement tag contains pseudotags expand them
 	if (strpos($tag, '}')!==false) {
-		$tag = ppl_expand_template($result, $tag, ppl_prepare_template($tag), $option_key);
+		$tag = srp_expand_template($result, $tag, srp_prepare_template($tag), $option_key);
 	}
 	return $tag;
 }
 
 function otf_php($option_key, $result, $ext) {
 	global $post;
-	$ID = ppl_current_post_id();
+	$ID = srp_current_post_id();
 	$value = '';
 	if ($ext) {
 		if (strpos($ext, '{')!==false) {
-			$ext = ppl_expand_template($result, $ext, ppl_prepare_template($ext), $option_key);
+			$ext = srp_expand_template($result, $ext, srp_prepare_template($ext), $option_key);
 		}
 		ob_start();
 		eval($ext);
@@ -1133,11 +1133,11 @@ function oth_strip_special_tags($text, $stripcodes) {
 
 function oth_trim_excerpt($content, $len) {
 	// taken from the wp_trim_excerpt filter
-	remove_filter( 'the_content', 'ppl_content_filter', 5 );
-	remove_filter( 'the_content', 'ppl_post_filter', 5 );
+	remove_filter( 'the_content', 'srp_content_filter', 5 );
+	remove_filter( 'the_content', 'srp_post_filter', 5 );
 	$text = apply_filters('the_content', $content);
-	add_filter( 'the_content', 'ppl_content_filter', 5 );
-	add_filter( 'the_content', 'ppl_post_filter', 5 );
+	add_filter( 'the_content', 'srp_content_filter', 5 );
+	add_filter( 'the_content', 'srp_post_filter', 5 );
 	$text = str_replace(']]>', ']]&gt;', $text);
 	$text = strip_tags($text);
 	if (!$len) $len = 55;

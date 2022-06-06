@@ -7,12 +7,12 @@
 
 define('ACF_LIBRARY', true);
 
-function ppl_options_from_post($options, $args) {
+function srp_options_from_post($options, $args) {
 	foreach ($args as $arg) {
 		switch ($arg) {
 		case 'limit':
 		case 'skip':
-		    $options[$arg] = ppl_check_cardinal($_POST[$arg]);
+		    $options[$arg] = srp_check_cardinal($_POST[$arg]);
 			break;
 		case 'excluded_cats':
 		case 'included_cats':
@@ -43,7 +43,7 @@ function ppl_options_from_post($options, $args) {
 			$check = explode(',', rtrim($_POST[$arg]));
 			$ids = array();
 			foreach ($check as $id) {
-				$id = ppl_check_cardinal($id);
+				$id = srp_check_cardinal($id);
 				if ($id !== 0) $ids[] = $id;
 			}
 			$options[$arg] = implode(',', array_unique($ids));
@@ -63,7 +63,7 @@ function ppl_options_from_post($options, $args) {
 			break;
 		case 'age':
 			$options['age']['direction'] = $_POST['age-direction'];
-			$options['age']['length'] = ppl_check_cardinal($_POST['age-length']);
+			$options['age']['length'] = srp_check_cardinal($_POST['age-length']);
 			$options['age']['duration'] = $_POST['age-duration'];
 			break;
 		case 'custom':
@@ -101,12 +101,12 @@ function ppl_options_from_post($options, $args) {
 	return $options;
 }
 
-function ppl_check_cardinal($string) {
+function srp_check_cardinal($string) {
 	$value = intval($string);
 	return ($value > 0) ? $value : 0;
 }
 
-function ppl_display_available_tags($plugin_name) {
+function srp_display_available_tags($plugin_name) {
 	?>
 		<h3><?php _e('Available Tags', 'post_plugin_library'); ?></h3>
 		<ul style="list-style-type: none;">
@@ -146,7 +146,7 @@ function ppl_display_available_tags($plugin_name) {
 	<?php
 }
 
-function ppl_display_available_comment_tags() {
+function srp_display_available_comment_tags() {
 	?>
 		<ul style="list-style-type: none;">
 		<li title="">{commentexcerpt}</li>
@@ -186,11 +186,11 @@ function get_plugin_version($prefix) {
 
 */
 
-function ppl_confirm_eradicate() {
+function srp_confirm_eradicate() {
  return (isset($_POST['eradicate-check']) && 'yes'===$_POST['eradicate-check']);
 }
 
-function ppl_deactivate_plugin($plugin_file) {
+function srp_deactivate_plugin($plugin_file) {
 	$current = get_option('active_plugins');
 	$plugin_file = substr($plugin_file, strlen(WP_PLUGIN_DIR)+1);
 	$plugin_file = str_replace('\\', '/', $plugin_file);
@@ -207,7 +207,7 @@ function ppl_deactivate_plugin($plugin_file) {
 
 */
 
-function ppl_display_limit($limit) {
+function srp_display_limit($limit) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit"><?php _e('Number of posts to show:', 'post_plugin_library') ?></label></th>
@@ -225,7 +225,7 @@ function sprp_display_shortcode() {
 	<?php
 }
 
-function ppl_display_limit_i($limit, $num) {
+function srp_display_limit_i($limit, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php _e('Number of posts to show:', 'post_plugin_library') ?></label></th>
@@ -234,7 +234,7 @@ function ppl_display_limit_i($limit, $num) {
 	<?php
 }
 
-function ppl_display_unique($unique) {
+function srp_display_unique($unique) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="unique"><?php _e('Show just one comment per post?', 'post_plugin_library') ?></label></th>
@@ -248,7 +248,7 @@ function ppl_display_unique($unique) {
 	<?php
 }
 
-function ppl_display_just_current_post($just_current_post) {
+function srp_display_just_current_post($just_current_post) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="just_current_post"><?php _e('Show just the current post?', 'post_plugin_library') ?></label></th>
@@ -262,7 +262,7 @@ function ppl_display_just_current_post($just_current_post) {
 	<?php
 }
 
-function ppl_display_match_cat($match_cat) {
+function srp_display_match_cat($match_cat) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="match_cat"><?php _e('Match the current post\'s category?', 'post_plugin_library') ?></label></th>
@@ -276,7 +276,7 @@ function ppl_display_match_cat($match_cat) {
 	<?php
 }
 
-function ppl_display_match_cat_i($match_cat, $num) {
+function srp_display_match_cat_i($match_cat, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="match_cat_<?php echo $num; ?>"><?php _e('Match the current post\'s category?', 'post_plugin_library') ?></label></th>
@@ -290,7 +290,7 @@ function ppl_display_match_cat_i($match_cat, $num) {
 	<?php
 }
 
-function ppl_display_match_tags($match_tags) {
+function srp_display_match_tags($match_tags) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -306,7 +306,7 @@ function ppl_display_match_tags($match_tags) {
 	<?php
 }
 
-function ppl_display_match_tags_i($match_tags, $num) {
+function srp_display_match_tags_i($match_tags, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -377,7 +377,7 @@ function sprp_adv_filter_switch($filter_check, $num){
 	<?php 
 }
 
-function ppl_display_tag_str($tag_str) {
+function srp_display_tag_str($tag_str) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -387,7 +387,7 @@ function ppl_display_tag_str($tag_str) {
 	<?php
 }
 
-function ppl_display_tag_str_i($tag_str, $num) {
+function srp_display_tag_str_i($tag_str, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -397,7 +397,7 @@ function ppl_display_tag_str_i($tag_str, $num) {
 	<?php
 }
 
-function ppl_display_excluded_posts($excluded_posts) {
+function srp_display_excluded_posts($excluded_posts) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="excluded_posts"><?php _e('Posts to exclude:', 'post_plugin_library') ?></label></th>
@@ -406,7 +406,7 @@ function ppl_display_excluded_posts($excluded_posts) {
 	<?php
 }
 
-function ppl_display_excluded_posts_i($excluded_posts, $num) {
+function srp_display_excluded_posts_i($excluded_posts, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="excluded_posts_<?php echo $num; ?>"><?php _e('Posts to exclude:', 'post_plugin_library') ?></label></th>
@@ -415,7 +415,7 @@ function ppl_display_excluded_posts_i($excluded_posts, $num) {
 	<?php
 }
 
-function ppl_display_included_posts($included_posts) {
+function srp_display_included_posts($included_posts) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="included_posts"><?php _e('Posts to include:', 'post_plugin_library') ?></label></th>
@@ -424,7 +424,7 @@ function ppl_display_included_posts($included_posts) {
 	<?php
 }
 
-function ppl_display_included_posts_i($included_posts, $num) {
+function srp_display_included_posts_i($included_posts, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="included_posts_<?php echo $num; ?>"><?php _e('Posts to include:', 'post_plugin_library') ?></label></th>
@@ -433,7 +433,7 @@ function ppl_display_included_posts_i($included_posts, $num) {
 	<?php
 }
 
-function ppl_display_authors($excluded_authors, $included_authors) {
+function srp_display_authors($excluded_authors, $included_authors) {
 	global $wpdb;
 	?>
 	<tr valign="top">
@@ -467,7 +467,7 @@ function ppl_display_authors($excluded_authors, $included_authors) {
 	<?php
 }
 
-function ppl_display_cats($excluded_cats, $included_cats) {
+function srp_display_cats($excluded_cats, $included_cats) {
 	global $wpdb;
 	?>
 	<tr valign="top">
@@ -524,7 +524,7 @@ function ppl_display_cats($excluded_cats, $included_cats) {
 	<?php
 }
 
-function ppl_display_stripcodes($stripcodes) {
+function srp_display_stripcodes($stripcodes) {
 	?>
 	<tr valign="top">
 		<th scope="row"><?php _e('Other plugins\' tags to remove from snippet:', 'post_plugin_library') ?></th>
@@ -554,7 +554,7 @@ function ppl_display_stripcodes($stripcodes) {
 	<?php
 }
 
-function ppl_display_age($age) {
+function srp_display_age($age) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="age-direction"><?php _e('Ignore posts:', 'post_plugin_library') ?></label></th>
@@ -579,7 +579,7 @@ function ppl_display_age($age) {
 	<?php
 }
 
-function ppl_display_custom($custom) {
+function srp_display_custom($custom) {
 	?>
 	<tr valign="top">
 		<th scope="row"><?php _e('Match posts by custom field:', 'post_plugin_library') ?></th>
@@ -610,7 +610,7 @@ function ppl_display_custom($custom) {
 	<?php
 }
 
-function ppl_display_orderby($options) {
+function srp_display_orderby($options) {
 	global $wpdb;
 	$limit = 30;
 	$keys = $wpdb->get_col( "
@@ -666,7 +666,7 @@ function ppl_display_orderby($options) {
 
 // now for recent_comments
 
-function ppl_display_show_type($show_type) {
+function srp_display_show_type($show_type) {
 	?>
 	<tr valign="top">
 		<th scope="row" title=""><label for="show_type"><?php _e('Type of comment to show:', 'post_plugin_library') ?></label></th>
@@ -681,7 +681,7 @@ function ppl_display_show_type($show_type) {
 	<?php
 }
 
-function ppl_display_group_by($group_by) {
+function srp_display_group_by($group_by) {
 	?>
 	<tr valign="top">
 		<th scope="row" title=""><?php _e('Type of grouping:', 'post_plugin_library') ?></th>
@@ -697,7 +697,7 @@ function ppl_display_group_by($group_by) {
 	<?php
 }
 
-function ppl_display_no_author_comments($no_author_comments) {
+function srp_display_no_author_comments($no_author_comments) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="no_author_comments"><?php _e('Omit comments by the post author?', 'post_plugin_library') ?></label></th>
@@ -711,7 +711,7 @@ function ppl_display_no_author_comments($no_author_comments) {
 	<?php
 }
 
-function ppl_display_no_user_comments($no_user_comments) {
+function srp_display_no_user_comments($no_user_comments) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="no_user_comments"><?php _e('Omit comments by registered users?', 'post_plugin_library') ?></label></th>
@@ -725,7 +725,7 @@ function ppl_display_no_user_comments($no_user_comments) {
 	<?php
 }
 
-function ppl_display_date_modified($date_modified) {
+function srp_display_date_modified($date_modified) {
 	?>
 	<tr valign="top">
 		<th scope="row"><?php _e('Order by date of last edit rather than date of creation?', 'post_plugin_library') ?></th>
@@ -740,7 +740,7 @@ function ppl_display_date_modified($date_modified) {
 }
 
 // 'borrowed', with adaptations, from Stephen Rider at http://striderweb.com/nerdaphernalia/
-function ppl_get_plugin_data($plugin_file) {
+function srp_get_plugin_data($plugin_file) {
 	// You can optionally pass a specific value to fetch, e.g. 'Version' -- but it's inefficient to do that multiple times
 	// As of WP 2.5.1: 'Name', 'Title', 'Description', 'Author', 'Version'
 	// As of WP 2.7-bleeding: 'Name', 'PluginURI', 'Description', 'Author', 'AuthorURI', 'Version', 'TextDomain', 'DomainPath'

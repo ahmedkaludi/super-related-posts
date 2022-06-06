@@ -73,16 +73,16 @@ class SuperRelatedPosts {
 
 	static function execute($args='', $default_output_template='<li>{imagesrc_shareaholic}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID;
-		$start_time = ppl_microtime();
-		$postid = ppl_current_post_id($sprp_current_ID);
+		$start_time = srp_microtime();
+		$postid = srp_current_post_id($sprp_current_ID);
 		if (defined('POC_CACHE_4')) {
 			$cache_key = $option_key.$postid.$args;
 			$result = poc_cache_fetch($cache_key);
-			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (ppl_microtime() - $start_time));
+			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
 		}
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
-		$options = ppl_parse_args($args);
+		$options = srp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
 		$options = srp_set_options($option_key, $options, $default_output_template);
 		if (0 < $options['limit']) {
@@ -155,11 +155,11 @@ class SuperRelatedPosts {
 			$results = false;
 		}
 	    if ($results) {
-			$translations = ppl_prepare_template($options['output_template']);
+			$translations = srp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
-				$items[] = ppl_expand_template($result, $options['output_template'], $translations, $option_key);
+				$items[] = srp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
-			if ($options['sort']['by1'] !== '') $items = ppl_sort_items($options['sort'], $results, $option_key, $items);
+			if ($options['sort']['by1'] !== '') $items = srp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
@@ -169,26 +169,26 @@ class SuperRelatedPosts {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = ppl_prepare_template($options['none_text']);
-				$output = $options['prefix'] . ppl_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$translations = srp_prepare_template($options['none_text']);
+				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
 		if (defined('POC_CACHE_4')) poc_cache_store($cache_key, $output);
-		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (ppl_microtime() - $start_time)) : '';
+		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
 	}
 
 	static function execute2($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID;
-		$start_time = ppl_microtime();
-		$postid = ppl_current_post_id($sprp_current_ID);
+		$start_time = srp_microtime();
+		$postid = srp_current_post_id($sprp_current_ID);
 		if (defined('POC_CACHE_4')) {
 			$cache_key = $option_key.$postid.$args;
 			$result = poc_cache_fetch($cache_key);
-			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (ppl_microtime() - $start_time));
+			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
 		}
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
-		$options = ppl_parse_args($args);
+		$options = srp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
 		$options = srp_set_options($option_key, $options, $default_output_template);
 		if (0 < $options['limit_2']) {
@@ -261,11 +261,11 @@ class SuperRelatedPosts {
 			$results = false;
 		}
 	    if ($results) {
-			$translations = ppl_prepare_template($options['output_template']);
+			$translations = srp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
-				$items[] = ppl_expand_template($result, $options['output_template'], $translations, $option_key);
+				$items[] = srp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
-			if ($options['sort']['by1'] !== '') $items = ppl_sort_items($options['sort'], $results, $option_key, $items);
+			if ($options['sort']['by1'] !== '') $items = srp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
@@ -275,26 +275,26 @@ class SuperRelatedPosts {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = ppl_prepare_template($options['none_text']);
-				$output = $options['prefix'] . ppl_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$translations = srp_prepare_template($options['none_text']);
+				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
 		if (defined('POC_CACHE_4')) poc_cache_store($cache_key, $output);
-		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (ppl_microtime() - $start_time)) : '';
+		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
 	}
 
 	static function execute3($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID;
-		$start_time = ppl_microtime();
-		$postid = ppl_current_post_id($sprp_current_ID);
+		$start_time = srp_microtime();
+		$postid = srp_current_post_id($sprp_current_ID);
 		if (defined('POC_CACHE_4')) {
 			$cache_key = $option_key.$postid.$args;
 			$result = poc_cache_fetch($cache_key);
-			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (ppl_microtime() - $start_time));
+			if ($result !== false) return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
 		}
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
-		$options = ppl_parse_args($args);
+		$options = srp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
 		$options = srp_set_options($option_key, $options, $default_output_template);
 		if (0 < $options['limit_3']) {
@@ -367,11 +367,11 @@ class SuperRelatedPosts {
 			$results = false;
 		}
 	    if ($results) {
-			$translations = ppl_prepare_template($options['output_template']);
+			$translations = srp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
-				$items[] = ppl_expand_template($result, $options['output_template'], $translations, $option_key);
+				$items[] = srp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
-			if ($options['sort']['by1'] !== '') $items = ppl_sort_items($options['sort'], $results, $option_key, $items);
+			if ($options['sort']['by1'] !== '') $items = srp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
@@ -381,12 +381,12 @@ class SuperRelatedPosts {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = ppl_prepare_template($options['none_text']);
-				$output = $options['prefix'] . ppl_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$translations = srp_prepare_template($options['none_text']);
+				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
 		if (defined('POC_CACHE_4')) poc_cache_store($cache_key, $output);
-		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (ppl_microtime() - $start_time)) : '';
+		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
 	}
 
   // save some info
@@ -441,10 +441,14 @@ function sp_save_index_entry($postID) {
 	if ($post['post_type'] === 'revision') return $postID;
 	//extract its terms
 	$options = get_option('super-related-posts');
-	$utf8 = ($options['utf8'] === 'true');
-	$cjk = ($options['cjk'] === 'true');
-	$content = sp_get_post_terms($post['post_content'], $utf8, $options['use_stemmer'], $cjk);
-	$title = sp_get_title_terms($post['post_title'], $utf8, $options['use_stemmer'], $cjk);
+	$utf8 = (isset($options['utf8']) && $options['utf8'] === 'true');
+	$cjk = (isset($options['cjk']) && $options['cjk'] === 'true');
+	$use_stemmer = '';
+	if(isset($options['use_stemmer'])){
+		$use_stemmer = $options['use_stemmer'];
+	}
+	$content = sp_get_post_terms($post['post_content'], $utf8, $use_stemmer, $cjk);
+	$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
 	$tags = sp_get_tag_terms($postID, $utf8);
 	//check to see if the field is set
 	$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
@@ -672,16 +676,16 @@ function super_related_posts_init () {
   SuperRelatedPosts::get_plugin_version();
 
 	$options = get_option('super-related-posts');
-	if ($options['content_filter'] === 'true' && function_exists('ppl_register_content_filter')) ppl_register_content_filter('SuperRelatedPosts');
+	if (isset($options['content_filter']) && $options['content_filter'] === 'true' && function_exists('srp_register_content_filter')) srp_register_content_filter('SuperRelatedPosts');
 	$condition = 'true';
 	$condition = (stristr($condition, "return")) ? $condition : "return ".$condition;
 	$condition = rtrim($condition, '; ') . ';';
 
-	ppl_register_post_filter('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
+	srp_register_post_filter('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 	
-	ppl_register_post_filter_2('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
+	srp_register_post_filter_2('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 	
-	ppl_register_post_filter_3('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
+	srp_register_post_filter_3('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 
 	//install the actions to keep the index up to date
 	add_action('save_post', 'sp_save_index_entry', 1);
