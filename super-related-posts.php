@@ -29,9 +29,9 @@ function super_related_posts_mark_current(){
 
 define ('POST_PLUGIN_LIBRARY', true);
 
-if (!defined('CF_LIBRARY')) require(SPRP_DIR_NAME.'/includes/common_functions.php');
+if (!defined('SRP_LIBRARY')) require(SPRP_DIR_NAME.'/includes/common_functions.php');
 if (!defined('OT_LIBRARY')) require(SPRP_DIR_NAME.'/includes/output_tags.php');
-if (!defined('ACF_LIBRARY')) require(SPRP_DIR_NAME.'/admin/admin_common_functions.php');
+if (!defined('ASRP_LIBRARY')) require(SPRP_DIR_NAME.'/admin/admin_common_functions.php');
 if (!defined('SRP_ADMIN_SUBPAGES_LIBRARY')) require(SPRP_DIR_NAME.'/admin/admin-subpages.php');
 
 if (!defined('DSEP')) define('DSEP', DIRECTORY_SEPARATOR);

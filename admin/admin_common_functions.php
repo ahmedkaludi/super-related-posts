@@ -1,11 +1,11 @@
 <?php
 
 /*
-	Library for the Recent Posts, Random Posts, Recent Comments, and Similar Posts plugins
+	Library for the Recent Posts, Random Posts, Recent Comments, and Super Related Posts Posts plugins
 	-- provides the admin routines which the plugins share
 */
 
-define('ACF_LIBRARY', true);
+define('ASRP_LIBRARY', true);
 
 function srp_options_from_post($options, $args) {
 	foreach ($args as $arg) {

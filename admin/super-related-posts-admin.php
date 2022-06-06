@@ -432,8 +432,7 @@ function srp_start_posts_caching(){
 		$status = array('status' => 'finished', 'percentage'=> "100%");
 	 }else{
 
-		global $wpdb, $table_prefix;
-		$srp_table = $table_prefix . 'super_related_posts';
+		global $wpdb, $table_prefix;		
 		$wpp_table = $table_prefix . 'posts';
 		
 		global $posts_count;

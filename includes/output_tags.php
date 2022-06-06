@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Library for the Recent Posts, Random Posts, Recent Comments, and Similar Posts plugins
+	Library for the Recent Posts, Random Posts, Recent Comments, and Super Related Posts plugins
 	-- provides the routines which evaluate output template tags
 */
 

@@ -6,6 +6,8 @@
 		delete_option('super-related-posts');
 		delete_option('super-related-posts-feed');
 		delete_option('widget_rrm_super_related_posts');
+		delete_option('srp_posts_offset');
+		delete_option('srp_posts_caching_status');
 
 		$table_name = $table_prefix . 'super_related_posts';
 		$wpdb->query("DROP TABLE `$table_name`");

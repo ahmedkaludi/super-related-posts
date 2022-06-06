@@ -1,11 +1,11 @@
 <?php
 
 /*
-	Library for the Recent Posts, Random Posts, Recent Comments, and Similar Posts plugins
+	Library for the Recent Posts, Random Posts, Recent Comments, and Super Related Posts plugins
 	-- provides the routines which the plugins share
 */
 
-define('CF_LIBRARY', true);
+define('SRP_LIBRARY', true);
 
 function srp_parse_args($args) {
 	// 	$args is of the form 'key1=val1&key2=val2'
