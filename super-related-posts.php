@@ -1,19 +1,20 @@
 <?php
 /*
 Plugin Name: Super Related Posts
-Plugin URI: https://ampforwp.com/
-Description: Displays a highly configurable list of related posts. Similarity can be based on any combination of word usage in the content, title, or tags.
-Version: 1
-Author: AMPforWP Team
-Author URI: https://ampforwp.com/
+Description: Add a highly configurable list of related posts to any posts. Related posts can be based on any combination of word usage in the content, title, or tags.
+Version: 1.0
 Text Domain: super-related-posts
+Author: Magazine3
+Author URI: https://magazine3.company/
+Donate link: https://www.paypal.me/Kaludi/25
+License: GPL2
 */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'SUPER_RELATED_POSTS_VERSION' ) ) {
-    define( 'SUPER_RELATED_POSTS_VERSION', '1' );
+    define( 'SUPER_RELATED_POSTS_VERSION', '1.0' );
 }
 
 define('SPRP_DIR_NAME', dirname( __FILE__ ));
