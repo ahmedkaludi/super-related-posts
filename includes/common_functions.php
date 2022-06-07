@@ -455,8 +455,7 @@ function where_hide_future() {
 
 function where_fulltext_match($weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms) {
 	$wsql = array();
-	if ($weight_title) $wsql[] = "MATCH (`title`) AGAINST ( \"$titleterms\" )";
-	if ($weight_content) $wsql[] = "MATCH (`content`) AGAINST ( \"$contentterms\" )";
+	if ($weight_title) $wsql[] = "MATCH (`title`) AGAINST ( \"$titleterms\" )";	
 	if ($weight_tags) $wsql[] = "MATCH (`tags`) AGAINST ( \"$tagterms\" )";
 	return '(' . implode(' OR ', $wsql) . ') ' ;
 }

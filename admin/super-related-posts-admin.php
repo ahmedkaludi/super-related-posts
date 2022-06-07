@@ -383,16 +383,29 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=1
 	$table_name = $table_prefix.'super_related_posts';	
 	$termcount = 0;	
 	// in batches to conserve memory
-	$posts = $wpdb->get_results("SELECT `ID`, `post_title`, `post_content`, `post_type` FROM $wpdb->posts LIMIT $start, $batch", ARRAY_A);
-	if($posts){
-		foreach ($posts as $post) {
-			if ($post['post_type'] === 'revision') continue;
+	$not_in = array(
+		'revision', 
+		'wp_global_styles', 
+		'attachment',
+		'elementor_library',
+		'mgmlp_media_folder',
+		'custom_css',
+		'nav_menu_item',
+		'oembed_cache'
+	);
+	
+	$sql = "SELECT `ID`, `post_title`, `post_content`, `post_type` FROM $wpdb->posts WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".") LIMIT $start, $batch";	
+	$posts = $wpdb->get_results($sql, ARRAY_A);
 
+	if($posts){
+		
+		foreach ($posts as $post) {
+													
 			$content = sp_get_post_terms($post['post_content'], $utf8, $use_stemmer, $cjk);
 			$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
 			$postID = $post['ID'];
 			$tags = sp_get_tag_terms($postID, $utf8);
-
+			
 			$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
 
 			if (is_null($pid)) {
@@ -419,7 +432,7 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=1
 add_action( 'wp_ajax_srp_start_posts_caching', 'srp_start_posts_caching'); 
 
 function srp_start_posts_caching(){
-	
+			
 	 if ( ! isset( $_GET['srp_security_nonce'] ) ){
 		return; 
 	 }
@@ -447,7 +460,7 @@ function srp_start_posts_caching(){
 		}
 	
 		$percentage = round( (($start / $posts_count) * 100), 2);					
-
+		
 	 	$result = save_index_entries ($start, true, 'false', 100, true);		
 		if($result > 0){
 			$status = array('status' => 'continue', 'percentage' => $percentage."%");
