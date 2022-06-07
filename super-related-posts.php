@@ -148,9 +148,7 @@ class SuperRelatedPosts {
 			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
 			$sql .= "WHERE ".implode(' AND ', $where);
 			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";
-			print_r($sql);die;
-			//echo $sql;
+			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";						
 			$results = $wpdb->get_results($sql);
 		} else {
 			$results = false;
