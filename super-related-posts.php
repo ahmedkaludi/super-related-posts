@@ -103,18 +103,17 @@ class SuperRelatedPosts {
 
 			list( $contentterms, $titleterms, $tagterms) = sp_terms_by_freq($postid, $options['num_terms']);
 	 		// these should add up to 1.0
-			$weight_content = $options['weight_content'];
+		
 			$weight_title = $options['weight_title'];
 			$weight_tags = $options['weight_tags'];
-			// below a threshold we ignore the weight completely and save some effort
-			if ($weight_content < 0.001) $weight_content = (int) 0;
+			// below a threshold we ignore the weight completely and save some effort		
 			if ($weight_title < 0.001) $weight_title = (int) 0;
 			if ($weight_tags < 0.001) $weight_tags = (int) 0;
 
-			$count_content = substr_count($contentterms, ' ') + 1;
+			
 			$count_title = substr_count($titleterms, ' ') + 1;
 			$count_tags  = substr_count($tagterms, ' ') + 1;
-			if ($weight_content) $weight_content = 57.0 * $weight_content / $count_content;
+			
 			if ($weight_title) $weight_title = 18.0 * $weight_title / $count_title;
 			if ($weight_tags) $weight_tags = 24.0 * $weight_tags / $count_tags;
 			if ($options['hand_links'] === 'true') {
@@ -125,13 +124,13 @@ class SuperRelatedPosts {
 			}
 			// the workhorse...
 			$sql = "SELECT *, ";
-			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms, $forced_ids);
+			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
 
 			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
 
 			// build the 'WHERE' clause
 			$where = array();
-			$where[] = where_fulltext_match($weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms);
+			$where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
 			if (!function_exists('get_post_type')) {
 				$where[] = where_hide_future();
 			}
@@ -150,6 +149,7 @@ class SuperRelatedPosts {
 			$sql .= "WHERE ".implode(' AND ', $where);
 			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
 			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";
+			print_r($sql);die;
 			//echo $sql;
 			$results = $wpdb->get_results($sql);
 		} else {
@@ -231,13 +231,13 @@ class SuperRelatedPosts {
 			}
 			// the workhorse...
 			$sql = "SELECT *, ";
-			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms, $forced_ids);
+			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
 
 			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
 
 			// build the 'WHERE' clause
 			$where = array();
-			$where[] = where_fulltext_match($weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms);
+			$where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
 			if (!function_exists('get_post_type')) {
 				$where[] = where_hide_future();
 			}
@@ -337,13 +337,13 @@ class SuperRelatedPosts {
 			}
 			// the workhorse...
 			$sql = "SELECT *, ";
-			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms, $forced_ids);
+			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
 
 			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
 
 			// build the 'WHERE' clause
 			$where = array();
-			$where[] = where_fulltext_match($weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms);
+			$where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
 			if (!function_exists('get_post_type')) {
 				$where[] = where_hide_future();
 			}

@@ -453,7 +453,7 @@ function where_hide_future() {
 	return $sql;
 }
 
-function where_fulltext_match($weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms) {
+function where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms) {
 	$wsql = array();
 	if ($weight_title) $wsql[] = "MATCH (`title`) AGAINST ( \"$titleterms\" )";	
 	if ($weight_tags) $wsql[] = "MATCH (`tags`) AGAINST ( \"$tagterms\" )";
@@ -469,11 +469,10 @@ function where_user_comments() {
 	return "user_id = 0";
 }
 
-function score_fulltext_match($table_name, $weight_title, $titleterms, $weight_content, $contentterms, $weight_tags, $tagterms, $forced_ids='') {
+function score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids='') {
 	global $wpdb;
 	$wsql = array();
-	if ($weight_title) $wsql[] = "(".number_format($weight_title, 4, '.', '')." * (MATCH (`title`) AGAINST ( \"$titleterms\" )))";
-	if ($weight_content) $wsql[] = "(".number_format($weight_content, 4, '.', '')." * (MATCH (`content`) AGAINST ( \"$contentterms\" )))";
+	if ($weight_title) $wsql[] = "(".number_format($weight_title, 4, '.', '')." * (MATCH (`title`) AGAINST ( \"$titleterms\" )))";	
 	if ($weight_tags) $wsql[] = "(".number_format($weight_tags, 4, '.', '')." * (MATCH (`tags`) AGAINST ( \"$tagterms\" )))";
 	if ($forced_ids) {
 		// apply a delta function to boost the score for certain IDs
