@@ -189,8 +189,19 @@ function srp_pi_options_subpage(){
 	$wpp_table = $table_prefix . 'posts';
 
 	$cache_count = $wpdb->get_var("SELECT COUNT(*) FROM `$srp_table`");
-	$posts_count = $wpdb->get_var("SELECT COUNT(*) FROM `$wpp_table`");
-	
+
+	$not_in = array(
+		'revision', 
+		'wp_global_styles', 
+		'attachment',
+		'elementor_library',
+		'mgmlp_media_folder',
+		'custom_css',
+		'nav_menu_item',
+		'oembed_cache'
+	);
+	$sql = "SELECT COUNT(*) FROM `$wpp_table` WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".")";
+	$posts_count = $wpdb->get_var($sql);	
 	$percentage = round( (($cache_count / $posts_count) * 100), 2);	
 	$caching_status = get_option('srp_posts_caching_status');
 	
@@ -376,7 +387,7 @@ function srp_admin_footer() {
 }
 
 // sets up the index for the blog
-function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=100, $cjk=false) {
+function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=500, $cjk=false) {
 
 	global $wpdb, $table_prefix;
 	
@@ -396,9 +407,11 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=1
 	
 	$sql = "SELECT `ID`, `post_title`, `post_content`, `post_type` FROM $wpdb->posts WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".") LIMIT $start, $batch";	
 	$posts = $wpdb->get_results($sql, ARRAY_A);
-
+	
 	if($posts){
 		
+		$to_be_inserted = array();		
+
 		foreach ($posts as $post) {
 																
 			$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
@@ -406,13 +419,35 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=1
 			$tags = sp_get_tag_terms($postID, $utf8);
 			
 			$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
-
-			if (is_null($pid)) {
-				$wpdb->query("INSERT INTO `$table_name` (pID, title, tags) VALUES ($postID, \"$title\", \"$tags\")");
+			
+			if (is_null($pid)) {				
+				$to_be_inserted[] = array(
+					'pID'   => $postID,
+					'title' => $title,
+					'tags'  => $tags,
+				);
 			}else{
-				$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
-			}			
+				//$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
+			}
+
 			$termcount = $termcount + 1;
+		}
+
+		if(!empty($to_be_inserted)){
+
+			$values = $place_holders = array();
+
+			foreach($to_be_inserted as $data) {
+				array_push( $values, $data['pID'], $data['title'], $data['tags']);
+				$place_holders[] = "( %d, %s, %s)";
+			}
+
+			$query           = "INSERT INTO `$table_name` (`pID`, `title`, `tags`) VALUES ";
+			$query           .= implode( ', ', $place_holders );
+			$sql             = $wpdb->prepare( "$query ", $values );
+
+			$wpdb->query( $sql );
+
 		}
 		
 		$start += $batch;
@@ -450,7 +485,20 @@ function srp_start_posts_caching(){
 		global $posts_count;
 
 		if(!$posts_count){
-			$posts_count = $wpdb->get_var("SELECT COUNT(*) FROM `$wpp_table`");
+
+			$not_in = array(
+				'revision', 
+				'wp_global_styles', 
+				'attachment',
+				'elementor_library',
+				'mgmlp_media_folder',
+				'custom_css',
+				'nav_menu_item',
+				'oembed_cache'
+			);
+
+			$sql = "SELECT COUNT(*) FROM `$wpp_table` WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".")";
+			$posts_count = $wpdb->get_var($sql);
 		}
 
 		$start = 0;
@@ -460,7 +508,7 @@ function srp_start_posts_caching(){
 	
 		$percentage = round( (($start / $posts_count) * 100), 2);					
 		
-	 	$result = save_index_entries ($start, true, 'false', 100, true);		
+	 	$result = save_index_entries ($start, true, 'false', 500, true);		
 		if($result > 0){
 			$status = array('status' => 'continue', 'percentage' => $percentage."%");
 		}else{
@@ -591,19 +639,6 @@ function super_related_posts_install() {
 	if (!isset($options['batch'])) $options['batch'] = '100';
 
 	update_option('super-related-posts', $options);
-
- 	// initial creation of the index, if the table is empty
-	// $num_index_posts = $wpdb->get_var("SELECT COUNT(*) FROM `$table_name`");
-	// if ($num_index_posts == 0) 
-	// save_index_entries (($options['utf8'] === 'true'), 'false', $options['batch'], ($options['cjk'] === 'true'));
-
-	// deactivate legacy Super Related Posts Feed if present
-	// $current = get_option('active_plugins');
-	// if (in_array('Similar_Posts_Feed/super-related-posts-feed.php', $current)) {
-	// 	array_splice($current, array_search('Similar_Posts_Feed/super-related-posts-feed.php', $current), 1);
-	// 	update_option('active_plugins', $current);
-	// }
-	// unset($current);
 
  	// clear legacy custom fields
 	$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'srpterms'");
