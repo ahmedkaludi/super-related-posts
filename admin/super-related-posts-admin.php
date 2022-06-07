@@ -400,8 +400,7 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=1
 	if($posts){
 		
 		foreach ($posts as $post) {
-													
-			$content = sp_get_post_terms($post['post_content'], $utf8, $use_stemmer, $cjk);
+																
 			$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
 			$postID = $post['ID'];
 			$tags = sp_get_tag_terms($postID, $utf8);
@@ -409,9 +408,9 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=1
 			$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
 
 			if (is_null($pid)) {
-				$wpdb->query("INSERT INTO `$table_name` (pID, content, title, tags) VALUES ($postID, \"$content\", \"$title\", \"$tags\")");
+				$wpdb->query("INSERT INTO `$table_name` (pID, title, tags) VALUES ($postID, \"$title\", \"$tags\")");
 			}else{
-				$wpdb->query("UPDATE $table_name SET content=\"$content\", title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
+				$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
 			}			
 			$termcount = $termcount + 1;
 		}
@@ -481,24 +480,20 @@ function super_related_posts_install() {
 	$errorlevel = error_reporting(0);
 	$suppress = $wpdb->hide_errors();
 	$sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
-			`pID` bigint( 20 ) unsigned NOT NULL ,
-			`content` longtext NOT NULL ,
+			`pID` bigint( 20 ) unsigned NOT NULL ,		
 			`title` text NOT NULL ,
 			`tags` text NOT NULL ,
-			FULLTEXT KEY `title` ( `title` ) ,
-			FULLTEXT KEY `content` ( `content` ) ,
+			FULLTEXT KEY `title` ( `title` ) ,			
 			FULLTEXT KEY `tags` ( `tags` )
 			) ENGINE = MyISAM CHARSET = utf8;";
 	$wpdb->query($sql);
 	// MySQL before 4.1 doesn't recognise the character set properly, so if there's an error we can try without
 	if ($wpdb->last_error !== '') {
 		$sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
-				`pID` bigint( 20 ) unsigned NOT NULL ,
-				`content` longtext NOT NULL ,
+				`pID` bigint( 20 ) unsigned NOT NULL ,				
 				`title` text NOT NULL ,
 				`tags` text NOT NULL ,
-				FULLTEXT KEY `title` ( `title` ) ,
-				FULLTEXT KEY `content` ( `content` ) ,
+				FULLTEXT KEY `title` ( `title` ) ,				
 				FULLTEXT KEY `tags` ( `tags` )
 				) ENGINE = MyISAM;";
 		$wpdb->query($sql);

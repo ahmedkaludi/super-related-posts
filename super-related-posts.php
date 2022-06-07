@@ -336,6 +336,7 @@ class SuperRelatedPosts {
 			// the workhorse...
 			$sql = "SELECT *, ";
 			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
+			
 
 			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
 
@@ -359,7 +360,7 @@ class SuperRelatedPosts {
 			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
 			$sql .= "WHERE ".implode(' AND ', $where);
 			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";
+			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";			
 			//echo $sql;
 			$results = $wpdb->get_results($sql);
 		} else {
@@ -404,29 +405,9 @@ class SuperRelatedPosts {
 function sp_terms_by_freq($ID, $num_terms = 20) {
 	if (!$ID) return array('', '', '');
 	global $wpdb, $table_prefix;
-	$table_name = $table_prefix . 'super_related_posts';
-	$terms = '';
-	$results = $wpdb->get_results("SELECT title, content, tags FROM $table_name WHERE pID=$ID LIMIT 1", ARRAY_A);
-	if ($results) {
-		$word = strtok($results[0]['content'], ' ');
-		$n = 0;
-		$wordtable = array();
-		while ($word !== false) {
-			if(!array_key_exists($word,$wordtable)){
-				$wordtable[$word]=0;
-			}
-			$wordtable[$word] += 1;
-			$word = strtok(' ');
-		}
-		arsort($wordtable);
-		if ($num_terms < 1) $num_terms = 1;
-		$wordtable = array_slice($wordtable, 0, $num_terms);
-
-		foreach ($wordtable as $word => $count) {
-			$terms .= ' ' . $word;
-		}
-
-		$res[] = $terms;
+	$table_name = $table_prefix . 'super_related_posts';	
+	$results = $wpdb->get_results("SELECT title, tags FROM $table_name WHERE pID=$ID LIMIT 1", ARRAY_A);
+	if ($results) {		
 		$res[] = $results[0]['title'];
 		$res[] = $results[0]['tags'];
  	}
@@ -445,17 +426,16 @@ function sp_save_index_entry($postID) {
 	$use_stemmer = '';
 	if(isset($options['use_stemmer'])){
 		$use_stemmer = $options['use_stemmer'];
-	}
-	$content = sp_get_post_terms($post['post_content'], $utf8, $use_stemmer, $cjk);
+	}	
 	$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
 	$tags = sp_get_tag_terms($postID, $utf8);
 	//check to see if the field is set
 	$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
 	//then insert if empty
 	if (is_null($pid)) {
-		$wpdb->query("INSERT INTO $table_name (pID, content, title, tags) VALUES ($postID, \"$content\", \"$title\", \"$tags\")");
+		$wpdb->query("INSERT INTO $table_name (pID, title, tags) VALUES ($postID, \"$title\", \"$tags\")");
 	} else {
-		$wpdb->query("UPDATE $table_name SET content=\"$content\", title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
+		$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
 	}
 	return $postID;
 }
