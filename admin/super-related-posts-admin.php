@@ -255,7 +255,7 @@ function srp_rp3_options_subpage(){
 
 		<table class="optiontable form-table">
 			<?php
-				sprp_display_shortcode();
+				sprp_display_shortcode($num);
 
 				if(isset($options['limit_3'])){
 					srp_display_limit_i($options['limit_3'], $num);

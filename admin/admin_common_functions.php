@@ -216,7 +216,7 @@ function srp_display_limit($limit) {
 	<?php
 }
 
-function sprp_display_shortcode() {
+function sprp_display_shortcode($num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php _e('Shortcode:', 'post_plugin_library') ?></label></th>
