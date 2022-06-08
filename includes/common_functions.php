@@ -83,8 +83,8 @@ function srp_set_options($option_key, $arg, $default_output_template) {
 	if (!isset($arg['match_cat_2'])) $arg['match_cat_2'] = @$options['match_cat'];
 	if (!isset($arg['match_cat_3'])) $arg['match_cat_3'] = @$options['match_cat'];
 	if (!isset($arg['match_tags'])) $arg['match_tags'] = @$options['match_tags'];
-	if (!isset($arg['match_tags_2'])) $arg['match_tags_2'] = @$options['match_tags'];
-	if (!isset($arg['match_tags_3'])) $arg['match_tags_3'] = @$options['match_tags'];
+	if (!isset($arg['match_tags_2'])) $arg['match_tags_2'] = @$options['match_tags_2'];
+	if (!isset($arg['match_tags_3'])) $arg['match_tags_3'] = @$options['match_tags_3'];
 	if (!isset($arg['match_author'])) $arg['match_author'] = @$options['match_author'];
 	if (!isset($arg['age'])) $arg['age'] = @$options['age'];
 	if (!isset($arg['custom'])) $arg['custom'] = @$options['custom'];
@@ -313,25 +313,56 @@ if (!function_exists('get_objects_in_term')) {
 }
 
 function where_match_category() {
-	global $wpdb, $wp_version;
+	global $wpdb, $wp_version, $table_prefix;
 	$cat_ids = '';
 	foreach(get_the_category() as $cat) {
 		if ($cat->cat_ID) $cat_ids .= $cat->cat_ID . ',';
 	}
 	$cat_ids = rtrim($cat_ids, ',');
 	$catarray = explode(',', $cat_ids);
+	
 	foreach ( $catarray as $cat ) {
 		$catarray = array_merge($catarray, get_term_children($cat, 'category'));
 	}
+	
 	$catarray = array_unique($catarray);
-	$ids = get_objects_in_term($catarray, 'category');
+
+	$ids = array();
+	if(!empty($catarray)){
+
+		foreach ( $catarray as $value ) {
+			
+			$wp_posts_t   = $table_prefix.'posts';
+			$wp_term_re   = $table_prefix.'term_relationships';
+			$wp_terms     = $table_prefix.'terms';
+			$wp_term_taxo = $table_prefix.'term_taxonomy';
+
+			$sql = "select p.id from `$wp_posts_t` p
+			inner join `$wp_term_re` tr on tr.object_id = p.ID
+			inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
+			inner join `$wp_term_taxo` tt on tt.term_taxonomy_id = t.term_id
+			where p.post_status ='publish'
+			and tt.taxonomy = 'category'
+			and t.term_id = $value 
+			ORDER BY p.id DESC LIMIT 5";
+
+			$results = $wpdb->get_results($sql, ARRAY_A);
+				
+			if(!empty($results)){
+				foreach ($results as $rval) {
+					$ids[] = $rval['id'];
+				}
+			}
+		}						
+	}			
+	
 	$ids = array_unique($ids);
 	if ( is_array($ids) && count($ids) > 0 ) {
 		$out_posts = "'" . implode("', '", $ids) . "'";
 		$sql = "$wpdb->posts.ID IN ($out_posts)";
 	} else {
 		$sql = "1 = 2";
-	}
+	}	
 	return $sql;
 }
 

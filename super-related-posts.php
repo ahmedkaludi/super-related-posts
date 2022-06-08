@@ -98,7 +98,7 @@ class SuperRelatedPosts {
 			$use_tag_str = ('' != trim($options['tag_str']) && $wp_version >= 2.3);
 			$check_age = ('none' !== $options['age']['direction']);
 			$check_custom = (trim($options['custom']['key']) !== '');
-			$limit = $options['skip'].', '.$options['limit'];
+			$limit = '0'.', '.$options['limit'];
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
 
 			list( $contentterms, $titleterms, $tagterms) = sp_terms_by_freq($postid, $options['num_terms']);
@@ -123,18 +123,18 @@ class SuperRelatedPosts {
 				$forced_ids = '';
 			}
 			// the workhorse...
-			$sql = "SELECT *, ";
-			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
+			$sql = "SELECT * ";
+			//$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
 
 			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
 
 			// build the 'WHERE' clause
 			$where = array();
-			$where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
-			if (!function_exists('get_post_type')) {
-				$where[] = where_hide_future();
-			}
-			if ($match_category) $where[] = where_match_category();
+			// $where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
+			// if (!function_exists('get_post_type')) {
+			// 	$where[] = where_hide_future();
+			// }
+			if ($match_category) $where[] = where_match_category();			
 			if ($match_tags) $where[] = where_match_tags($options['match_tags']);
 			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
 			if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
@@ -146,10 +146,12 @@ class SuperRelatedPosts {
 			$where[] = where_omit_post($sprp_current_ID);
 			if ($check_age) $where[] = where_check_age($options['age']['direction'], $options['age']['length'], $options['age']['duration']);
 			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-			$sql .= "WHERE ".implode(' AND ', $where);
+			$sql .= "FROM `$table_name` LEFT JOIN `$wpdb->posts` ON `pID` = `ID` WHERE ".implode(' AND ', $where);
 			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";						
+			$sql .= " ORDER BY id DESC LIMIT $limit";						
+			
 			$results = $wpdb->get_results($sql);
+			
 		} else {
 			$results = false;
 		}
@@ -177,6 +179,7 @@ class SuperRelatedPosts {
 	}
 
 	static function execute2($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
+		
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID;
 		$start_time = srp_microtime();
 		$postid = srp_current_post_id($sprp_current_ID);
@@ -202,7 +205,7 @@ class SuperRelatedPosts {
 			$use_tag_str = ('' != trim($options['tag_str_2']) && $wp_version >= 2.3);
 			$check_age = ('none' !== $options['age']['direction']);
 			$check_custom = (trim($options['custom']['key']) !== '');
-			$limit = $options['limit'].', '.$options['limit_2'];
+			$limit = '0'.', '.$options['limit_2'];
 			$des = isset($options['re_design_2']) ? $options['re_design_2'] : 'd1';
 
 			list( $contentterms, $titleterms, $tagterms) = sp_terms_by_freq($postid, $options['num_terms']);
@@ -228,17 +231,17 @@ class SuperRelatedPosts {
 				$forced_ids = '';
 			}
 			// the workhorse...
-			$sql = "SELECT *, ";
-			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
+			$sql = "SELECT * ";
+			//$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
 
 			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
 
 			// build the 'WHERE' clause
 			$where = array();
-			$where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
-			if (!function_exists('get_post_type')) {
-				$where[] = where_hide_future();
-			}
+			// $where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
+			// if (!function_exists('get_post_type')) {
+			// 	$where[] = where_hide_future();
+			// }
 			if ($match_category) $where[] = where_match_category();
 			if ($match_tags) $where[] = where_match_tags($options['match_tags_2']);
 			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
@@ -251,10 +254,11 @@ class SuperRelatedPosts {
 			$where[] = where_omit_post($sprp_current_ID);
 			if ($check_age) $where[] = where_check_age($options['age']['direction'], $options['age']['length'], $options['age']['duration']);
 			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-			$sql .= "WHERE ".implode(' AND ', $where);
+
+			$sql .= "FROM `$table_name` LEFT JOIN `$wpdb->posts` ON `pID` = `ID` WHERE ".implode(' AND ', $where);
 			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";
-			//echo $sql;
+			$sql .= " ORDER BY id DESC LIMIT $limit";
+			
 			$results = $wpdb->get_results($sql);
 		} else {
 			$results = false;
@@ -308,7 +312,7 @@ class SuperRelatedPosts {
 			$use_tag_str = ('' != trim($options['tag_str_3']) && $wp_version >= 2.3);
 			$check_age = ('none' !== $options['age']['direction']);
 			$check_custom = (trim($options['custom']['key']) !== '');
-			$limit = $options['limit_2'].', '.$options['limit_3'];
+			$limit = '0'.', '.$options['limit_3'];
 			$des = isset($options['re_design_3']) ? $options['re_design_3'] : 'd1';
 
 			list( $contentterms, $titleterms, $tagterms) = sp_terms_by_freq($postid, $options['num_terms']);
@@ -334,18 +338,18 @@ class SuperRelatedPosts {
 				$forced_ids = '';
 			}
 			// the workhorse...
-			$sql = "SELECT *, ";
-			$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
+			$sql = "SELECT * ";
+			//$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
 			
 
 			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
 
 			// build the 'WHERE' clause
 			$where = array();
-			$where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
-			if (!function_exists('get_post_type')) {
-				$where[] = where_hide_future();
-			}
+			// $where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
+			// if (!function_exists('get_post_type')) {
+			// 	$where[] = where_hide_future();
+			// }
 			if ($match_category) $where[] = where_match_category();
 			if ($match_tags) $where[] = where_match_tags($options['match_tags_3']);
 			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
@@ -358,10 +362,10 @@ class SuperRelatedPosts {
 			$where[] = where_omit_post($sprp_current_ID);
 			if ($check_age) $where[] = where_check_age($options['age']['direction'], $options['age']['length'], $options['age']['duration']);
 			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-			$sql .= "WHERE ".implode(' AND ', $where);
+			$sql .= "FROM `$table_name` LEFT JOIN `$wpdb->posts` ON `pID` = `ID` WHERE ".implode(' AND ', $where);
 			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY score DESC, post_date DESC LIMIT $limit";			
-			//echo $sql;
+			$sql .= " ORDER BY id DESC LIMIT $limit";			
+			
 			$results = $wpdb->get_results($sql);
 		} else {
 			$results = false;
