@@ -27,7 +27,7 @@ function srp_rp1_options_subpage(){
 	$num = 1;
 	if (isset($_POST['update_options'])) {
 		check_admin_referer('super-related-posts-update-options');
-		if (defined('POC_CACHE_4')) srp_cache_flush();
+		srp_cache_flush();
 		// Fill up the options with the values chosen...
 		$options = srp_options_from_post($options, array('limit', 'age', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
 		update_option('super-related-posts', $options);
@@ -103,7 +103,7 @@ function srp_rp2_options_subpage(){
 	$num = 2;
 	if (isset($_POST['update_options'])) {
 		check_admin_referer('super-related-posts-update-options');
-		if (defined('POC_CACHE_4')) srp_cache_flush();
+		srp_cache_flush();
 		// Fill up the options with the values chosen...
 		$options = srp_options_from_post($options, array('limit_2', 'age', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
 		update_option('super-related-posts', $options);
@@ -236,9 +236,10 @@ function srp_rp3_options_subpage(){
 	global $wpdb, $wp_version;
 	$options = get_option('super-related-posts');
 	$num = 3;
+	
 	if (isset($_POST['update_options'])) {
 		check_admin_referer('super-related-posts-update-options');
-		if (defined('POC_CACHE_4')) srp_cache_flush();
+		srp_cache_flush();
 		// Fill up the options with the values chosen...
 		$options = srp_options_from_post($options, array('limit_3', 'age', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
 		update_option('super-related-posts', $options);

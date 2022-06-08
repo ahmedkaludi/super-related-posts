@@ -7,7 +7,29 @@
 
 define('SRP_LIBRARY', true);
 
-function srp_cache_flush(){}
+function srp_get_transient_keys_with_prefix( $prefix ) {
+
+	global $wpdb;
+
+	$prefix = stripslashes($wpdb->esc_like( '_transient_' . $prefix ));	
+	$sql    = "SELECT `option_name` FROM $wpdb->options WHERE `option_name` LIKE '%s'";
+	$keys   = $wpdb->get_results( $wpdb->prepare( $sql, $prefix . '%' ), ARRAY_A );	
+	
+	if ( is_wp_error( $keys ) ) {
+		return [];
+	}
+
+	return array_map( function( $key ) {
+		return str_replace('_transient_', '', $key['option_name']);
+	}, $keys );
+}
+
+function srp_cache_flush(){
+	$prefix = 'super-related-posts';
+	foreach ( srp_get_transient_keys_with_prefix( $prefix ) as $key ) {				
+		delete_transient( trim($key) );
+	}
+}
 
 function srp_cache_fetch($cache_key){	
 	return get_transient($cache_key);
