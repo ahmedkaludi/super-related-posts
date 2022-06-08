@@ -7,6 +7,17 @@
 
 define('SRP_LIBRARY', true);
 
+function srp_cache_flush(){}
+
+function srp_cache_fetch($cache_key){	
+	return get_transient($cache_key);
+}
+
+function srp_cache_store($cache_key, $output){
+
+	set_transient( $cache_key, $output, 24 * 7 * HOUR_IN_SECONDS );
+}
+
 function srp_parse_args($args) {
 	// 	$args is of the form 'key1=val1&key2=val2'
 	//	The code copes with null values, e.g., 'key1=&key2=val2'
@@ -327,8 +338,9 @@ function where_match_category() {
 	
 	$catarray = array_unique($catarray);
 
-	$ids = array();
-	if(!empty($catarray)){
+	global $srp_filter_ids;
+
+	if(!empty($catarray) && empty($srp_filter_ids)){
 
 		foreach ( $catarray as $value ) {
 			
@@ -350,15 +362,15 @@ function where_match_category() {
 				
 			if(!empty($results)){
 				foreach ($results as $rval) {
-					$ids[] = $rval['id'];
+					$srp_filter_ids[] = $rval['id'];
 				}
 			}
 		}						
 	}			
 	
-	$ids = array_unique($ids);
-	if ( is_array($ids) && count($ids) > 0 ) {
-		$out_posts = "'" . implode("', '", $ids) . "'";
+	$srp_filter_ids = array_unique($srp_filter_ids);
+	if ( is_array($srp_filter_ids) && count($srp_filter_ids) > 0 ) {
+		$out_posts = "'" . implode("', '", $srp_filter_ids) . "'";
 		$sql = "$wpdb->posts.ID IN ($out_posts)";
 	} else {
 		$sql = "1 = 2";
