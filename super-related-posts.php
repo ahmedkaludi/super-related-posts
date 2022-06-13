@@ -715,8 +715,65 @@ function super_related_posts_init () {
 add_action ('init', 'super_related_posts_init', 1);
 register_activation_hook(__FILE__, array('SuperRelatedPosts', 'activate'));
 
-add_action('wp_enqueue_scripts', 'sprp_front_css');
-function sprp_front_css(){
+add_action('wp_enqueue_scripts', 'sprp_front_css_and_js');
+
+function sprp_front_css_and_js(){
+
 	wp_register_style( 'super-related-posts', plugins_url('', __FILE__) . '/css/super-related-posts.css', false, SuperRelatedPosts::$version );
 	wp_enqueue_style( 'super-related-posts' );
+
+	$local = array(     		   
+		'ajax_url'                     => admin_url( 'admin-ajax.php' ),            
+		'srp_security_nonce'           => wp_create_nonce('srp_ajax_check_nonce'),
+		'post_id'                      => get_the_ID()
+	);            
+
+	$local = apply_filters('srp_front_data',$local,'srp_localize_front_data');
+
+	wp_register_script( 'srp-front-js', SPRP_PLUGIN_URI . 'js/srp.js', array('jquery'), SuperRelatedPosts::$version , true );                        
+	wp_localize_script( 'srp-front-js', 'srp_localize_front_data', $local );        
+	wp_enqueue_script( 'srp-front-js');
+}
+
+add_action( 'wp_ajax_nopriv_srp_update_post_views_ajax', 'srp_update_post_views_via_ajax');  
+add_action( 'wp_ajax_srp_update_post_views_ajax', 'srp_update_post_views_via_ajax') ;  
+
+function srp_update_post_views_via_ajax(){
+
+	 if ( ! isset( $_POST['srp_security_nonce'] ) ){
+		return; 
+	 }
+	 
+	 if ( !wp_verify_nonce( $_POST['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
+		return;  
+	 }
+   
+	if(isset($_POST['post_id'])){
+
+	   $post_id = intval($_POST['post_id']);	   
+
+	   try{
+    
+		global $wpdb;
+
+		$count = $wpdb->get_var($wpdb->prepare( "SELECT views FROM {$wpdb->prefix}super_related_posts WHERE pID = %d ", $post_id) );
+		$count++;	
+		$wpdb->query($wpdb->prepare(
+			"UPDATE {$wpdb->prefix}super_related_posts SET `views` = '{$count}' WHERE (`pID` = %d)",
+			$post_id			
+		));				
+		if($wpdb->last_error){            
+			echo json_encode(array('status' => 'error', 'message' => $wpdb->last_error));
+		}else{
+			echo json_encode(array('status' => 'Post Views Updated'));            
+		}
+		
+		} catch (\Exception $ex) {
+			echo json_encode(array('status' => 'error', 'message' => $ex->getMessage()));			
+		}
+
+	}
+	
+	wp_die();
+					
 }

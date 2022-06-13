@@ -534,8 +534,10 @@ function super_related_posts_install() {
 			`pID` bigint( 20 ) unsigned NOT NULL ,		
 			`title` text NOT NULL ,
 			`tags` text NOT NULL ,
+			`views` bigint unsigned NOT NULL default 0,
 			FULLTEXT KEY `title` ( `title` ) ,			
-			FULLTEXT KEY `tags` ( `tags` )
+			FULLTEXT KEY `tags` ( `tags` ),
+			KEY `views` ( `views` )
 			) ENGINE = MyISAM CHARSET = utf8;";
 	$wpdb->query($sql);
 	// MySQL before 4.1 doesn't recognise the character set properly, so if there's an error we can try without
@@ -544,8 +546,10 @@ function super_related_posts_install() {
 				`pID` bigint( 20 ) unsigned NOT NULL ,				
 				`title` text NOT NULL ,
 				`tags` text NOT NULL ,
+				`views` bigint unsigned NOT NULL default 0,
 				FULLTEXT KEY `title` ( `title` ) ,				
-				FULLTEXT KEY `tags` ( `tags` )
+				FULLTEXT KEY `tags` ( `tags` ),
+				KEY `views` ( `views` )
 				) ENGINE = MyISAM;";
 		$wpdb->query($sql);
 	}
