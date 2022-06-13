@@ -799,33 +799,61 @@ function sprp_shortcode_content3($arg) {
 }
 
 function srp_post_filter_init1() {
-	global $srp_filter_data;
-	if (!$srp_filter_data) return;
-	if(isset($srp_filter_data[0]['position']) && $srp_filter_data[0]['position'] != 'sc'){
-		add_filter('the_content', 'srp_post_filter_1', 5);
-	}else{
-		add_shortcode('super-related-posts', 'sprp_shortcode_content1');
-	}
+
+	if(!is_admin()){
+		global $srp_options;
+		if(!$srp_options){
+			$srp_options = get_option('super-related-posts');
+		}	
+		if($srp_options['display_status_1'] == 1){
+	
+			global $srp_filter_data;
+			if (!$srp_filter_data) return;
+			if(isset($srp_filter_data[0]['position']) && $srp_filter_data[0]['position'] != 'sc'){
+				add_filter('the_content', 'srp_post_filter_1', 5);
+			}else{
+				add_shortcode('super-related-posts', 'sprp_shortcode_content1');
+			}
+	
+		}
+	}				
 }
 
 function srp_post_filter_init2() {
-	global $srp_filter_data2;
-	if (!$srp_filter_data2) return;
-	if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
-		add_filter('the_content', 'srp_post_filter_2', 5);
-	}else{
-		add_shortcode('super-related-posts', 'sprp_shortcode_content2');
-	}
+	if(!is_admin()){
+		global $srp_options;
+		if(!$srp_options){
+			$srp_options = get_option('super-related-posts');
+		}	
+		if($srp_options['display_status_2'] == 1){
+			global $srp_filter_data2;
+			if (!$srp_filter_data2) return;
+			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
+				add_filter('the_content', 'srp_post_filter_2', 5);
+			}else{
+				add_shortcode('super-related-posts', 'sprp_shortcode_content2');
+			}
+		}
+	}		
 }
 
 function srp_post_filter_init3() {
-	global $srp_filter_data3;
-	if (!$srp_filter_data3) return;
-	if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
-		add_filter('the_content', 'srp_post_filter_3', 5);
-	}else{
-		add_shortcode('super-related-posts', 'sprp_shortcode_content3');
-	}
+
+	if(!is_admin()){
+		global $srp_options;
+		if(!$srp_options){
+			$srp_options = get_option('super-related-posts');
+		}	
+		if($srp_options['display_status_3'] == 1){
+			global $srp_filter_data3;
+			if (!$srp_filter_data3) return;
+			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
+				add_filter('the_content', 'srp_post_filter_3', 5);
+			}else{
+				add_shortcode('super-related-posts', 'sprp_shortcode_content3');
+			}
+		}	
+	}		
 }
 
 // watch out that the registration functions are called earlier
