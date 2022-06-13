@@ -77,7 +77,7 @@ class SuperRelatedPosts {
 		$start_time = srp_microtime();
 		$postid = srp_current_post_id($sprp_current_ID);
 		
-		$cache_key = $option_key.$postid.$args;
+		$cache_key = $option_key.$postid.'tab1';
 		$result = srp_cache_fetch($cache_key);
 		if ($result !== false) {
 			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
@@ -136,7 +136,7 @@ class SuperRelatedPosts {
 			// if (!function_exists('get_post_type')) {
 			// 	$where[] = where_hide_future();
 			// }
-			if ($match_category) $where[] = where_match_category();			
+			if ($match_category) $where[] = where_match_category($limit);			
 			if ($match_tags) $where[] = where_match_tags($options['match_tags']);
 			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
 			if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
@@ -192,7 +192,7 @@ class SuperRelatedPosts {
 		$start_time = srp_microtime();
 		$postid = srp_current_post_id($sprp_current_ID);		
 
-		$cache_key = $option_key.$postid.$args;
+		$cache_key = $option_key.$postid.'tab2';
 		$result = srp_cache_fetch($cache_key);
 		if ($result !== false) {
 			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
@@ -252,7 +252,7 @@ class SuperRelatedPosts {
 			// if (!function_exists('get_post_type')) {
 			// 	$where[] = where_hide_future();
 			// }
-			if ($match_category) $where[] = where_match_category();
+			if ($match_category) $where[] = where_match_category($limit);
 			if ($match_tags) $where[] = where_match_tags($options['match_tags_2']);
 			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
 			if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
@@ -308,7 +308,7 @@ class SuperRelatedPosts {
 		$start_time = srp_microtime();
 		$postid = srp_current_post_id($sprp_current_ID);
 		
-		$cache_key = $option_key.$postid.$args;
+		$cache_key = $option_key.$postid.'tab3';
 		$result = srp_cache_fetch($cache_key);
 		if ($result !== false) 
 		{
@@ -370,7 +370,7 @@ class SuperRelatedPosts {
 			// if (!function_exists('get_post_type')) {
 			// 	$where[] = where_hide_future();
 			// }
-			if ($match_category) $where[] = where_match_category();
+			if ($match_category) $where[] = where_match_category($limit);
 			if ($match_tags) $where[] = where_match_tags($options['match_tags_3']);
 			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
 			if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);

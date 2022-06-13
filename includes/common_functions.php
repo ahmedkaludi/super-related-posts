@@ -345,7 +345,7 @@ if (!function_exists('get_objects_in_term')) {
 	}
 }
 
-function where_match_category() {
+function where_match_category($limit) {
 	global $wpdb, $wp_version, $table_prefix;
 	$cat_ids = '';
 	foreach(get_the_category() as $cat) {
@@ -378,7 +378,7 @@ function where_match_category() {
 			where p.post_status ='publish'
 			and tt.taxonomy = 'category'
 			and t.term_id = $value 
-			ORDER BY p.id DESC LIMIT 5";
+			ORDER BY p.id DESC LIMIT $limit";
 
 			$results = $wpdb->get_results($sql, ARRAY_A);
 				
