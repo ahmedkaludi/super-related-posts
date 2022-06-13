@@ -376,6 +376,19 @@ function sprp_adv_filter_switch($filter_check, $num){
 	</tr>
 	<?php 
 }
+function srp_display_status($filter_check, $num){
+	?>
+	<tr valign="top">
+	    <th scope="row"><label for="display_status_<?php echo $num; ?>" class="display_status_label">On/Off</label></th>
+	    <td>
+	      <label class="switch">
+	        <input type="checkbox" id="display_status_2<?php echo $num; ?>" name="display_status_<?php echo $num; ?>" value="1" <?php if( $filter_check == 1 ){echo 'checked'; } ?> >
+	        <span class="slider round"></span>
+	      </label>            
+	    </td>
+	</tr>
+	<?php 
+}
 
 function srp_display_tag_str($tag_str) {
 	global $wp_version;

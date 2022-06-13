@@ -98,6 +98,11 @@ function srp_set_options($option_key, $arg, $default_output_template) {
 	if (!isset($arg['included_cats'])) $arg['included_cats'] = stripslashes(@$options['included_cats']);
 	if (!isset($arg['excluded_authors'])) $arg['excluded_authors'] = stripslashes(@$options['excluded_authors']);
 	if (!isset($arg['included_authors'])) $arg['included_authors'] = stripslashes(@$options['included_authors']);
+
+	if (!isset($arg['display_status_1'])) $arg['display_status_1'] = stripslashes(@$options['display_status_1']);
+	if (!isset($arg['display_status_2'])) $arg['display_status_2'] = stripslashes(@$options['display_status_2']);
+	if (!isset($arg['display_status_3'])) $arg['display_status_3'] = stripslashes(@$options['display_status_3']);
+
 	if (!isset($arg['adv_filter_check'])) $arg['adv_filter_check'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_2'])) $arg['adv_filter_check_2'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_3'])) $arg['adv_filter_check_3'] = stripslashes(@$options['adv_filter_check']);
