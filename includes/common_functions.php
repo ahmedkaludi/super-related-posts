@@ -103,6 +103,10 @@ function srp_set_options($option_key, $arg, $default_output_template) {
 	if (!isset($arg['display_status_2'])) $arg['display_status_2'] = stripslashes(@$options['display_status_2']);
 	if (!isset($arg['display_status_3'])) $arg['display_status_3'] = stripslashes(@$options['display_status_3']);
 
+	if (!isset($arg['sort_by_1'])) $arg['sort_by_1'] = stripslashes(@$options['sort_by_1']);
+	if (!isset($arg['sort_by_2'])) $arg['sort_by_2'] = stripslashes(@$options['sort_by_2']);
+	if (!isset($arg['sort_by_3'])) $arg['sort_by_3'] = stripslashes(@$options['sort_by_3']);
+
 	if (!isset($arg['adv_filter_check'])) $arg['adv_filter_check'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_2'])) $arg['adv_filter_check_2'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_3'])) $arg['adv_filter_check_3'] = stripslashes(@$options['adv_filter_check']);

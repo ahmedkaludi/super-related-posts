@@ -29,7 +29,7 @@ function srp_rp1_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srp_options_from_post($options, array('display_status_1', 'limit', 'age', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
+		$options = srp_options_from_post($options, array('sort_by_1','display_status_1', 'limit', 'age', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -54,6 +54,7 @@ function srp_rp1_options_subpage(){
 			if(isset($options['match_cat'])){
 				srp_display_match_cat($options['match_cat']);
 			}
+			srp_sort_post_by_recent_popular_i($options['sort_by_1'], $num);
 			if(isset($options['match_tags'])){
 				srp_display_match_tags($options['match_tags']);
 			}
@@ -106,7 +107,7 @@ function srp_rp2_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srp_options_from_post($options, array('display_status_2', 'limit_2', 'age', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
+		$options = srp_options_from_post($options, array('sort_by_2','display_status_2', 'limit_2', 'age', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -131,6 +132,7 @@ function srp_rp2_options_subpage(){
 				if(isset($options['match_cat_2'])){
 					srp_display_match_cat_i($options['match_cat_2'], $num);
 				}
+				srp_sort_post_by_recent_popular_i($options['sort_by_2'], $num);
 				if(isset($options['match_tags_2'])){
 					srp_display_match_tags_i($options['match_tags_2'], $num);
 				}
@@ -243,7 +245,7 @@ function srp_rp3_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srp_options_from_post($options, array('display_status_3', 'limit_3', 'age', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
+		$options = srp_options_from_post($options, array('sort_by_3', 'display_status_3', 'limit_3', 'age', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -269,6 +271,7 @@ function srp_rp3_options_subpage(){
 				if(isset($options['match_cat_3'])){
 					srp_display_match_cat_i($options['match_cat_3'], $num);
 				}
+				srp_sort_post_by_recent_popular_i($options['sort_by_3'], $num);
 				if(isset($options['match_tags_3'])){
 					srp_display_match_tags_i($options['match_tags_3'], $num);
 				}

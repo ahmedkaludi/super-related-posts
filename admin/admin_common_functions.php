@@ -262,14 +262,28 @@ function srp_display_just_current_post($just_current_post) {
 	<?php
 }
 
+function srp_sort_post_by_recent_popular_i($sort_by, $num) {
+	?>
+	<tr valign="top">
+		<th scope="row"><label for="sort_by_<?php echo $num; ?>"><?php _e('Sort post\'s by', 'post_plugin_library') ?></label></th>
+		<td>
+			<select name="sort_by_<?php echo $num; ?>" id="sort_by_<?php echo $num; ?>">			
+				<option <?php if($sort_by == 'recent') { echo 'selected="selected"'; } ?> value="recent">Recent</option>
+				<option <?php if($sort_by == 'popular') { echo 'selected="selected"'; } ?> value="popular">Popular</option>
+			</select>
+		</td>
+	</tr>
+	<?php
+}
+
 function srp_display_match_cat($match_cat) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="match_cat"><?php _e('Match the current post\'s category?', 'post_plugin_library') ?></label></th>
 		<td>
-			<select name="match_cat" id="match_cat">
-			<option <?php if($match_cat == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+			<select name="match_cat" id="match_cat">			
 			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+			<option <?php if($match_cat == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
 			</select>
 		</td>
 	</tr>
@@ -281,9 +295,9 @@ function srp_display_match_cat_i($match_cat, $num) {
 	<tr valign="top">
 		<th scope="row"><label for="match_cat_<?php echo $num; ?>"><?php _e('Match the current post\'s category?', 'post_plugin_library') ?></label></th>
 		<td>
-			<select name="match_cat_<?php echo $num; ?>" id="match_cat_<?php echo $num; ?>">
-			<option <?php if($match_cat == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+			<select name="match_cat_<?php echo $num; ?>" id="match_cat_<?php echo $num; ?>">			
 			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+			<option <?php if($match_cat == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
 			</select>
 		</td>
 	</tr>
@@ -358,7 +372,7 @@ function sprp_paragraph_i($para, $pos, $num) {
 	?>
 	<tr valign="top" <?php if($pos != 'ibc') { echo 'style="display:none"'; } ?>>
 		<th scope="row"><label for="para_rel_<?php echo $num; ?>"><?php _e('After Number of paragraphs?', 'post_plugin_library') ?></label></th>
-		<td><input name="para_rel_<?php echo $num; ?>" type="number" id="para_rel_<?php echo $num; ?>" style="width: 60px;" value="<?php echo $para; ?>" size="2" /></td>
+		<td><input min="1" name="para_rel_<?php echo $num; ?>" type="number" id="para_rel_<?php echo $num; ?>" style="width: 60px;" value="<?php echo $para; ?>" size="2" /></td>
 	</tr>
 	<?php
 }
