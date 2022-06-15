@@ -78,16 +78,17 @@ class SuperRelatedPosts {
 		$postid = srp_current_post_id($sprp_current_ID);
 		
 		$cache_key = $option_key.$postid.'tab1';
-		$result = srp_cache_fetch($cache_key);
-		if ($result !== false) {
-			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
-		}
+		// $result = srp_cache_fetch($cache_key);
+		// if ($result !== false) {
+		// 	return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
+		// }
 					
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = srp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
 		$options = srp_set_options($option_key, $options, $default_output_template);
+		
 		if (0 < $options['limit']) {
 			$match_tags = ($options['match_tags'] !== 'false' && $wp_version >= 2.3);
 			$exclude_cats = ($options['excluded_cats'] !== '');
@@ -97,8 +98,9 @@ class SuperRelatedPosts {
 			$exclude_posts = (trim($options['excluded_posts']) !== '');
 			$include_posts = (trim($options['included_posts']) !== '');
 			$match_category = ($options['match_cat'] === 'true');
+			$sort_by       = $options['sort_by_1'];
 			$use_tag_str = ('' != trim($options['tag_str']) && $wp_version >= 2.3);
-			$check_age = ('none' !== $options['age']['direction']);
+			$check_age = ('none' !== $options['age1']['direction']);
 			$check_custom = (trim($options['custom']['key']) !== '');
 			$limit = '0'.', '.$options['limit'];
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
@@ -124,36 +126,43 @@ class SuperRelatedPosts {
 			} else {
 				$forced_ids = '';
 			}
-			// the workhorse...
-			$sql = "SELECT * ";
-			//$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
-
-			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
-
-			// build the 'WHERE' clause
-			$where = array();
-			// $where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
-			// if (!function_exists('get_post_type')) {
-			// 	$where[] = where_hide_future();
-			// }
-			if ($match_category) $where[] = where_match_category($limit);			
-			if ($match_tags) $where[] = where_match_tags($options['match_tags']);
-			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
-			if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
-			if ($exclude_authors) $where[] = where_excluded_authors($options['excluded_authors']);
-			if ($include_authors) $where[] = where_included_authors($options['included_authors']);
-			if ($exclude_posts) $where[] = where_excluded_posts(trim($options['excluded_posts']));
-			if ($include_posts) $where[] = where_included_posts(trim($options['included_posts']));
-			if ($use_tag_str) $where[] = where_tag_str($options['tag_str']);
-			$where[] = where_omit_post($sprp_current_ID);
-			if ($check_age) $where[] = where_check_age($options['age']['direction'], $options['age']['length'], $options['age']['duration']);
-			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-			$sql .= "FROM `$table_name` LEFT JOIN `$wpdb->posts` ON `pID` = `ID` WHERE ".implode(' AND ', $where);
-			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY id DESC LIMIT $limit";						
 			
-			$srp_execute_sql = $sql;
+			$where = array();
+			
+			
+			//if ($match_tags) $where[]     = where_match_tags($options['match_tags']);
 
+			// if ($include_cats) $where[] = where_included_cats($options['included_cats']);
+			// if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
+			// if ($exclude_authors) $where[] = where_excluded_authors($options['excluded_authors']);
+			// if ($include_authors) $where[] = where_included_authors($options['included_authors']);
+			// if ($exclude_posts) $where[] = where_excluded_posts(trim($options['excluded_posts']));
+			// if ($include_posts) $where[] = where_included_posts(trim($options['included_posts']));
+			// if ($use_tag_str) $where[] = where_tag_str($options['tag_str']);
+			// $where[] = where_omit_post($sprp_current_ID);			 
+			  
+			// if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
+			//print_r($sprp_current_ID);die;
+			$sql = "SELECT * FROM `$wpdb->posts` p ";
+
+			if($sort_by == 'popular'){
+				$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
+			}
+
+			if ($match_category){
+				$sql = where_match_category($sql);
+			}
+			if ($check_age) {				
+				$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+			}
+			$sql .=' AND '. where_omit_post($sprp_current_ID);		
+			if($sort_by == 'recent'){
+				$sql .= " ORDER BY id DESC LIMIT $limit";	
+			}else{
+				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
+			}											
+			print_r($sql);die;
+			$srp_execute_sql = $sql;			
 			$results = $wpdb->get_results($sql);
 			$srp_execute_result = $results;
 			

@@ -75,15 +75,24 @@ function srp_parse_args($args) {
 
 function srp_set_options($option_key, $arg, $default_output_template) {
 	$options = get_option($option_key);	
+	
 	// deal with compound options
 	if (isset($arg['custom-key'])) {$arg['custom']['key'] = $arg['custom-key']; unset($arg['custom-key']);}
 	if (isset($arg['custom-op'])) {$arg['custom']['op'] = $arg['custom-op']; unset($arg['custom-op']);}
 	if (isset($arg['custom-value'])) {$arg['custom']['value'] = $arg['custom-value']; unset($arg['custom-value']);}
 
-	if (isset($arg['age-direction_1'])) {$arg['age_1']['direction'] = $arg['age-direction_1']; unset($arg['age-direction_1']);}
-	if (isset($arg['age-length_1'])) {$arg['age_1']['length'] = $arg['age-length_1']; unset($arg['age-length_1']);}
-	if (isset($arg['age-duration_1'])) {$arg['age_1']['duration'] = $arg['age-duration_1']; unset($arg['age-duration_1']);}
+	if (!isset($arg['age1']['direction'])) $arg['age1']['direction'] = stripslashes(@$options['age1']['direction']);
+	if (!isset($arg['age1']['length'])) $arg['age1']['length'] 		 = stripslashes(@$options['age1']['length']);
+	if (!isset($arg['age1']['duration'])) $arg['age1']['duration']   = stripslashes(@$options['age1']['duration']);
 
+	if (!isset($arg['age2']['direction'])) $arg['age2']['direction'] = stripslashes(@$options['age2']['direction']);
+	if (!isset($arg['age2']['length'])) $arg['age2']['length'] 		 = stripslashes(@$options['age2']['length']);
+	if (!isset($arg['age2']['duration'])) $arg['age2']['duration']   = stripslashes(@$options['age2']['duration']);
+
+	if (!isset($arg['age3']['direction'])) $arg['age3']['direction'] = stripslashes(@$options['age3']['direction']);
+	if (!isset($arg['age3']['length'])) $arg['age3']['length'] 		 = stripslashes(@$options['age3']['length']);
+	if (!isset($arg['age3']['duration'])) $arg['age3']['duration']   = stripslashes(@$options['age3']['duration']);
+	
 	if (isset($arg['sort-by1'])) {$arg['sort']['by1'] = $arg['sort-by1']; unset($arg['sort-by1']);}
 	if (isset($arg['sort-by2'])) {$arg['sort']['by2'] = $arg['sort-by2']; unset($arg['sort-by2']);}
 	// then fill in the defaults
@@ -356,7 +365,7 @@ if (!function_exists('get_objects_in_term')) {
 	}
 }
 
-function where_match_category($limit) {
+function where_match_category($sql) {
 	global $wpdb, $wp_version, $table_prefix;
 	$cat_ids = '';
 	foreach(get_the_category() as $cat) {
@@ -369,45 +378,19 @@ function where_match_category($limit) {
 		$catarray = array_merge($catarray, get_term_children($cat, 'category'));
 	}
 	
-	$catarray = array_unique($catarray);
+	$catarray = array_unique($catarray);		
+	if(!empty($catarray)){
 
-	global $srp_filter_ids;
-
-	if(!empty($catarray) && empty($srp_filter_ids)){
-
-		foreach ( $catarray as $value ) {
-			
-			$wp_posts_t   = $table_prefix.'posts';
 			$wp_term_re   = $table_prefix.'term_relationships';
 			$wp_terms     = $table_prefix.'terms';
-			$wp_term_taxo = $table_prefix.'term_taxonomy';
-
-			$sql = "select p.id from `$wp_posts_t` p
-			inner join `$wp_term_re` tr on tr.object_id = p.ID
+			$wp_term_taxo = $table_prefix.'term_taxonomy';			 
+			$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
 			inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
-			inner join `$wp_term_taxo` tt on tt.term_taxonomy_id = t.term_id
-			where p.post_status ='publish'
+			inner join `$wp_term_taxo` tt on tt.term_taxonomy_id = t.term_id			
+			and p.post_status = 'publish'
 			and tt.taxonomy = 'category'
-			and t.term_id = $value 
-			ORDER BY p.id DESC LIMIT $limit";
-
-			$results = $wpdb->get_results($sql, ARRAY_A);
-				
-			if(!empty($results)){
-				foreach ($results as $rval) {
-					$srp_filter_ids[] = $rval['id'];
-				}
-			}
-		}						
-	}			
-	
-	$srp_filter_ids = array_unique($srp_filter_ids);
-	if ( is_array($srp_filter_ids) && count($srp_filter_ids) > 0 ) {
-		$out_posts = "'" . implode("', '", $srp_filter_ids) . "'";
-		$sql = "$wpdb->posts.ID IN ($out_posts)";
-	} else {
-		$sql = "1 = 2";
-	}	
+			and t.term_id = $catarray[0]"; 			
+	}							
 	return $sql;
 }
 
