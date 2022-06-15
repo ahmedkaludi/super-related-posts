@@ -74,14 +74,16 @@ function srp_parse_args($args) {
 }
 
 function srp_set_options($option_key, $arg, $default_output_template) {
-	$options = get_option($option_key);
+	$options = get_option($option_key);	
 	// deal with compound options
 	if (isset($arg['custom-key'])) {$arg['custom']['key'] = $arg['custom-key']; unset($arg['custom-key']);}
 	if (isset($arg['custom-op'])) {$arg['custom']['op'] = $arg['custom-op']; unset($arg['custom-op']);}
 	if (isset($arg['custom-value'])) {$arg['custom']['value'] = $arg['custom-value']; unset($arg['custom-value']);}
-	if (isset($arg['age-direction'])) {$arg['age']['direction'] = $arg['age-direction']; unset($arg['age-direction']);}
-	if (isset($arg['age-length'])) {$arg['age']['length'] = $arg['age-length']; unset($arg['age-length']);}
-	if (isset($arg['age-duration'])) {$arg['age']['duration'] = $arg['age-duration']; unset($arg['age-duration']);}
+
+	if (isset($arg['age-direction_1'])) {$arg['age_1']['direction'] = $arg['age-direction_1']; unset($arg['age-direction_1']);}
+	if (isset($arg['age-length_1'])) {$arg['age_1']['length'] = $arg['age-length_1']; unset($arg['age-length_1']);}
+	if (isset($arg['age-duration_1'])) {$arg['age_1']['duration'] = $arg['age-duration_1']; unset($arg['age-duration_1']);}
+
 	if (isset($arg['sort-by1'])) {$arg['sort']['by1'] = $arg['sort-by1']; unset($arg['sort-by1']);}
 	if (isset($arg['sort-by2'])) {$arg['sort']['by2'] = $arg['sort-by2']; unset($arg['sort-by2']);}
 	// then fill in the defaults

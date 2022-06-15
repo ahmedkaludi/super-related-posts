@@ -61,11 +61,24 @@ function srp_options_from_post($options, $args) {
 				}
 			}
 			break;
-		case 'age':
-			$options['age']['direction'] = $_POST['age-direction'];
-			$options['age']['length'] = srp_check_cardinal($_POST['age-length']);
-			$options['age']['duration'] = $_POST['age-duration'];
-			break;
+		case 'age1':
+			$options['age1'] = array();
+			$options['age1']['direction'] = $_POST['age1-direction'];
+			$options['age1']['length'] = srp_check_cardinal($_POST['age1-length']);
+			$options['age1']['duration'] = $_POST['age1-duration'];
+				break;
+		case 'age2':
+			$options['age2'] = array();
+			$options['age2']['direction'] = $_POST['age2-direction'];
+			$options['age2']['length'] = srp_check_cardinal($_POST['age2-length']);
+			$options['age2']['duration'] = $_POST['age2-duration'];
+				break;
+		case 'age3':
+			$options['age3'] = array();
+			$options['age3']['direction'] = $_POST['age3-direction'];
+			$options['age3']['length'] = srp_check_cardinal($_POST['age3-length']);
+			$options['age3']['duration'] = $_POST['age3-duration'];
+				break;
 		case 'custom':
 			$options['custom']['key'] = $_POST['custom-key'];
 			$options['custom']['op'] = $_POST['custom-op'];
@@ -211,7 +224,7 @@ function srp_display_limit($limit) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit"><?php _e('Number of posts to show:', 'post_plugin_library') ?></label></th>
-		<td><input name="limit" type="number" id="limit" style="width: 60px;" value="<?php echo $limit; ?>" size="2" /></td>
+		<td><input min="1" name="limit" type="number" id="limit" style="width: 60px;" value="<?php echo $limit; ?>" size="2" /></td>
 	</tr>
 	<?php
 }
@@ -229,7 +242,7 @@ function srp_display_limit_i($limit, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php _e('Number of posts to show:', 'post_plugin_library') ?></label></th>
-		<td><input name="limit_<?php echo $num; ?>" type="number" id="limit_<?php echo $num; ?>" style="width: 60px;" value="<?php echo $limit; ?>" size="2" /></td>
+		<td><input min="1" name="limit_<?php echo $num; ?>" type="number" id="limit_<?php echo $num; ?>" style="width: 60px;" value="<?php echo $limit; ?>" size="2" /></td>
 	</tr>
 	<?php
 }
@@ -581,26 +594,24 @@ function srp_display_stripcodes($stripcodes) {
 	<?php
 }
 
-function srp_display_age($age) {
+function srp_display_age($age, $sort_by, $num) {
+	
 	?>
-	<tr valign="top">
-		<th scope="row"><label for="age-direction"><?php _e('Ignore posts:', 'post_plugin_library') ?></label></th>
+	<tr valign="top" <?php if($sort_by != 'popular') { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="age<?php echo $num; ?>-direction"><?php _e('Ignore posts:', 'post_plugin_library') ?></label></th>
 		<td>
-
-				<select name="age-direction" id="age-direction">
-				<option <?php if($age['direction'] == 'before') { echo 'selected="selected"'; } ?> value="before">less than</option>
-				<option <?php if($age['direction'] == 'after') { echo 'selected="selected"'; } ?> value="after">more than</option>
-				<option <?php if($age['direction'] == 'none') { echo 'selected="selected"'; } ?> value="none">-----</option>
+				<select name="age<?php echo $num; ?>-direction" id="age<?php echo $num; ?>-direction">
+				<option <?php if(!empty($age['direction']) && $age['direction'] == 'before') { echo 'selected="selected"'; } ?> value="before">less than</option>
+				<option <?php if(!empty($age['direction']) && $age['direction'] == 'after') { echo 'selected="selected"'; } ?> value="after">more than</option>
+				<option <?php if(!empty($age['direction']) && $age['direction'] == 'none') { echo 'selected="selected"'; } ?> value="none">-----</option>
 				</select>
-				<input style="vertical-align: middle; width: 60px;" name="age-length" type="number" id="age-length" value="<?php echo $age['length']; ?>" size="4" />
-
-				<select name="age-duration" id="age-duration">
-				<option <?php if($age['duration'] == 'day') { echo 'selected="selected"'; } ?> value="day">day(s)</option>
-				<option <?php if($age['duration'] == 'month') { echo 'selected="selected"'; } ?> value="month">month(s)</option>
-				<option <?php if($age['duration'] == 'year') { echo 'selected="selected"'; } ?> value="year">year(s)</option>
+				<input  name="age<?php echo $num; ?>-length" id="age<?php echo $num; ?>-length" value="<?php if( !empty($age['length']) ) echo $age['length']   ?>" style="vertical-align: middle; width: 60px;" type="number" size="4" min="1" />
+				<select name="age<?php echo $num; ?>-duration" id="age<?php echo $num; ?>-duration">
+				<option <?php if(!empty($age['duration']) && $age['duration'] == 'day') { echo 'selected="selected"'; } ?> value="day">day(s)</option>
+				<option <?php if(!empty($age['duration']) && $age['duration'] == 'month') { echo 'selected="selected"'; } ?> value="month">month(s)</option>
+				<option <?php if(!empty($age['duration']) && $age['duration'] == 'year') { echo 'selected="selected"'; } ?> value="year">year(s)</option>
 				</select>
 				old
-
 		</td>
 	</tr>
 	<?php
