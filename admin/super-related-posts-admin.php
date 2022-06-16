@@ -395,7 +395,7 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=5
 		'oembed_cache'
 	);
 	
-	$sql = "SELECT `ID`, `post_title`, `post_content`, `post_type` FROM $wpdb->posts WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".") LIMIT $start, $batch";	
+	$sql = "SELECT `ID`, `post_title`, `post_date`, `post_content`, `post_type` FROM $wpdb->posts WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".") LIMIT $start, $batch";	
 	$posts = $wpdb->get_results($sql, ARRAY_A);
 	
 	if($posts){
@@ -404,17 +404,18 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=5
 
 		foreach ($posts as $post) {
 																
-			$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
+			$title  = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
 			$postID = $post['ID'];
-			$tags = sp_get_tag_terms($postID, $utf8);
-			
+			$tags   = sp_get_tag_terms($postID, $utf8);
+			$sdate  = date("Ymd",strtotime($post['post_date']));							
 			$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
 			
 			if (is_null($pid)) {				
 				$to_be_inserted[] = array(
-					'pID'   => $postID,
-					'title' => $title,
-					'tags'  => $tags,
+					'pID'   	  => $postID,
+					'title' 	  => $title,
+					'tags'  	  => $tags,
+					'spost_date'  => $sdate,
 				);
 			}else{
 				//$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
@@ -428,11 +429,11 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=5
 			$values = $place_holders = array();
 
 			foreach($to_be_inserted as $data) {
-				array_push( $values, $data['pID'], $data['title'], $data['tags']);
-				$place_holders[] = "( %d, %s, %s)";
+				array_push( $values, $data['pID'], $data['title'], $data['tags'], $data['spost_date']);
+				$place_holders[] = "( %d, %s, %s, %d)";
 			}
 
-			$query           = "INSERT INTO `$table_name` (`pID`, `title`, `tags`) VALUES ";
+			$query           = "INSERT INTO `$table_name` (`pID`, `title`, `tags`, `spost_date`) VALUES ";
 			$query           .= implode( ', ', $place_holders );
 			$sql             = $wpdb->prepare( "$query ", $values );
 
@@ -512,34 +513,42 @@ function srp_start_posts_caching(){
 
 // this function gets called when the plugin is installed to set up the index and default options
 function super_related_posts_install() {
-   	global $wpdb, $table_prefix;
+   	global $wpdb;
 
-	$table_name = $table_prefix . 'super_related_posts';
-	$errorlevel = error_reporting(0);
-	$suppress = $wpdb->hide_errors();
-	$sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
-			`pID` bigint( 20 ) unsigned NOT NULL ,		
-			`title` text NOT NULL ,
-			`tags` text NOT NULL ,
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+	$charset_collate = $engine = '';	
+	
+	if(!empty($wpdb->charset)) {
+		$charset_collate .= " DEFAULT CHARACTER SET {$wpdb->charset}";
+	} 
+	if($wpdb->has_cap('collation') AND !empty($wpdb->collate)) {
+		$charset_collate .= " COLLATE {$wpdb->collate}";
+	}
+
+	$found_engine = $wpdb->get_var("SELECT ENGINE FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = '".DB_NAME."' AND `TABLE_NAME` = '{$wpdb->prefix}posts';");
+        
+	if(strtolower($found_engine) == 'innodb') {
+		$engine = ' ENGINE=InnoDB';
+	}
+
+	$found_tables = $wpdb->get_col("SHOW TABLES LIKE '{$wpdb->prefix}super_related%';");	
+    
+    if(!in_array("{$wpdb->prefix}super_related_posts", $found_tables)) {
+            
+		dbDelta("CREATE TABLE `{$wpdb->prefix}super_related_posts` (
+			`pID` bigint( 20 ) unsigned NOT NULL,
+			`title` text NOT NULL,
+			`tags` text NOT NULL,		
+			`spost_date` bigint unsigned NOT NULL,	
 			`views` bigint unsigned NOT NULL default 0,
 			FULLTEXT KEY `title` ( `title` ) ,			
 			FULLTEXT KEY `tags` ( `tags` ),
-			KEY `views` ( `views` )
-			) ENGINE = MyISAM CHARSET = utf8;";
-	$wpdb->query($sql);
-	// MySQL before 4.1 doesn't recognise the character set properly, so if there's an error we can try without
-	if ($wpdb->last_error !== '') {
-		$sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
-				`pID` bigint( 20 ) unsigned NOT NULL ,				
-				`title` text NOT NULL ,
-				`tags` text NOT NULL ,
-				`views` bigint unsigned NOT NULL default 0,
-				FULLTEXT KEY `title` ( `title` ) ,				
-				FULLTEXT KEY `tags` ( `tags` ),
-				KEY `views` ( `views` )
-				) ENGINE = MyISAM;";
-		$wpdb->query($sql);
-	}
+			KEY `views` ( `views` ),	
+			KEY `spost_date` ( `spost_date` )			
+		) ".$charset_collate.$engine.";");                
+    }
+
 	$options = (array) get_option('super-related-posts-feed');
 	// check each of the option values and, if empty, assign a default (doing it this long way
 	// lets us add new options in later versions)

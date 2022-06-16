@@ -142,7 +142,7 @@ class SuperRelatedPosts {
 			// $where[] = where_omit_post($sprp_current_ID);			 
 			  
 			// if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-			//print_r($sprp_current_ID);die;
+			
 			$sql = "SELECT * FROM `$wpdb->posts` p ";
 
 			if($sort_by == 'popular'){
@@ -161,11 +161,11 @@ class SuperRelatedPosts {
 			}else{
 				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
 			}											
-			print_r($sql);die;
+			
 			$srp_execute_sql = $sql;			
 			$results = $wpdb->get_results($sql);
 			$srp_execute_result = $results;
-			
+			print_r($sql);die;
 		} else {
 			$results = false;
 		}
