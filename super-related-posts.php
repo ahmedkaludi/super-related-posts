@@ -90,7 +90,7 @@ class SuperRelatedPosts {
 			$limit = '0'.', '.$options['limit'];
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
 												
-			$sql = "SELECT * FROM `$wpdb->posts` p ";
+			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p ";
 			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
@@ -124,9 +124,7 @@ class SuperRelatedPosts {
 						and tts.taxonomy = 'post_tag'
 						and tr.term_taxonomy_id = $tag_ids[0]"; 				
 			}
-
-			$sql .=" where p.post_status = 'publish'";	
-
+			
 			if($sort_by == 'recent'){
 				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
@@ -137,9 +135,10 @@ class SuperRelatedPosts {
 			}					
 							
 			$cpost_id 		   = where_omit_post($sprp_current_ID);			
+			
 			$srp_execute_sql_1 = $sql;			
 			$results = array();
-			
+						
 			$fetch_result = $wpdb->get_results($sql);
 			if(!empty($fetch_result)){
 				foreach ($fetch_result as $value) {					
@@ -202,7 +201,7 @@ class SuperRelatedPosts {
 			$des = isset($options['re_design_2']) ? $options['re_design_2'] : 'd1';
 
 			
-			$sql = "SELECT * FROM `$wpdb->posts` p ";
+			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p ";
 			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
@@ -236,9 +235,7 @@ class SuperRelatedPosts {
 						and tts.taxonomy = 'post_tag'
 						and tr.term_taxonomy_id = $tag_ids[0]"; 				
 			}
-
-			$sql .=" where p.post_status = 'publish'";	
-
+			
 			if($sort_by == 'recent'){
 				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
@@ -313,7 +310,7 @@ class SuperRelatedPosts {
 			$des = isset($options['re_design_3']) ? $options['re_design_3'] : 'd1';
 
 			
-			$sql = "SELECT * FROM `$wpdb->posts` p ";
+			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p ";
 			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
@@ -347,9 +344,7 @@ class SuperRelatedPosts {
 						and tts.taxonomy = 'post_tag'
 						and tr.term_taxonomy_id = $tag_ids[0]"; 				
 			}
-
-			$sql .=" where p.post_status = 'publish'";	
-
+			
 			if($sort_by == 'recent'){
 				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
