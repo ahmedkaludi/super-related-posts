@@ -73,16 +73,9 @@ class SuperRelatedPosts {
 
 
 	static function execute($args='', $default_output_template='<li>{imagesrc_shareaholic}</li>', $option_key='super-related-posts'){
-		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql, $srp_execute_result;
+		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_result;
 		$start_time = srp_microtime();
-		$postid = srp_current_post_id($sprp_current_ID);
-		
-		$cache_key = $option_key.$postid.'tab1';
-		// $result = srp_cache_fetch($cache_key);
-		// if ($result !== false) {
-		// 	return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
-		// }
-					
+											
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = srp_parse_args($args);
@@ -90,86 +83,79 @@ class SuperRelatedPosts {
 		$options = srp_set_options($option_key, $options, $default_output_template);
 		
 		if (0 < $options['limit']) {
-			$match_tags = ($options['match_tags'] !== 'false' && $wp_version >= 2.3);
-			$exclude_cats = ($options['excluded_cats'] !== '');
-			$include_cats = ($options['included_cats'] !== '');
-			$exclude_authors = ($options['excluded_authors'] !== '');
-			$include_authors = ($options['included_authors'] !== '');
-			$exclude_posts = (trim($options['excluded_posts']) !== '');
-			$include_posts = (trim($options['included_posts']) !== '');
+			$match_tags = ($options['match_tags'] !== 'false' && $wp_version >= 2.3);			
 			$match_category = ($options['match_cat'] === 'true');
-			$sort_by       = $options['sort_by_1'];
-			$use_tag_str = ('' != trim($options['tag_str']) && $wp_version >= 2.3);
-			$check_age = ('none' !== $options['age1']['direction']);
-			$check_custom = (trim($options['custom']['key']) !== '');
+			$sort_by       = $options['sort_by_1'];			
+			$check_age = ('none' !== $options['age1']['direction']);			
 			$limit = '0'.', '.$options['limit'];
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
-
-			list( $contentterms, $titleterms, $tagterms) = sp_terms_by_freq($postid, $options['num_terms']);
-	 		// these should add up to 1.0
-		
-			$weight_title = $options['weight_title'];
-			$weight_tags = $options['weight_tags'];
-			// below a threshold we ignore the weight completely and save some effort		
-			if ($weight_title < 0.001) $weight_title = (int) 0;
-			if ($weight_tags < 0.001) $weight_tags = (int) 0;
-
-			
-			$count_title = substr_count($titleterms, ' ') + 1;
-			$count_tags  = substr_count($tagterms, ' ') + 1;
-			
-			if ($weight_title) $weight_title = 18.0 * $weight_title / $count_title;
-			if ($weight_tags) $weight_tags = 24.0 * $weight_tags / $count_tags;
-			if ($options['hand_links'] === 'true') {
-				// check custom field for manual links
-				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'srp_related' ") ;
-			} else {
-				$forced_ids = '';
-			}
-			
-			$where = array();
-			
-			
-			//if ($match_tags) $where[]     = where_match_tags($options['match_tags']);
-
-			// if ($include_cats) $where[] = where_included_cats($options['included_cats']);
-			// if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
-			// if ($exclude_authors) $where[] = where_excluded_authors($options['excluded_authors']);
-			// if ($include_authors) $where[] = where_included_authors($options['included_authors']);
-			// if ($exclude_posts) $where[] = where_excluded_posts(trim($options['excluded_posts']));
-			// if ($include_posts) $where[] = where_included_posts(trim($options['included_posts']));
-			// if ($use_tag_str) $where[] = where_tag_str($options['tag_str']);
-			// $where[] = where_omit_post($sprp_current_ID);			 
-			  
-			// if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-			
+												
 			$sql = "SELECT * FROM `$wpdb->posts` p ";
-
-			if($sort_by == 'popular'){
-				$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
-			}
-
+			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
+			$cat_ids = $tag_ids = array();
 			if ($match_category){
-				$sql = where_match_category($sql);
+				$cat_ids = where_match_category();
+								
+			}	
+			if ($match_tags){			
+				$tag_ids     = where_match_tags();				
 			}
-			if ($check_age) {				
-				$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+			
+			if($cat_ids){				
+				$wp_term_re   = $table_prefix.'term_relationships';
+				$wp_terms     = $table_prefix.'terms';
+				$wp_term_taxo = $table_prefix.'term_taxonomy';
+
+				$sql .="inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id			
+						and tte.taxonomy = 'category'
+						and tt.term_taxonomy_id = $cat_ids[0] "; 				
 			}
-			$sql .=' AND '. where_omit_post($sprp_current_ID);		
+
+			if($tag_ids){				
+				$wp_term_re   = $table_prefix.'term_relationships';
+				$wp_terms     = $table_prefix.'terms';
+				$wp_term_taxo = $table_prefix.'term_taxonomy';
+
+				$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
+						inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
+						inner join `$wp_term_taxo` tts on tts.term_taxonomy_id = t.term_id			
+						and tts.taxonomy = 'post_tag'
+						and tr.term_taxonomy_id = $tag_ids[0]"; 				
+			}
+
+			$sql .=" where p.post_status = 'publish'";	
+
 			if($sort_by == 'recent'){
 				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
+				if ($check_age) {				
+					$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+				}
 				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
-			}											
+			}					
+							
+			$cpost_id 		   = where_omit_post($sprp_current_ID);			
+			$srp_execute_sql_1 = $sql;			
+			$results = array();
 			
-			$srp_execute_sql = $sql;			
-			$results = $wpdb->get_results($sql);
-			$srp_execute_result = $results;
-			print_r($sql);die;
+			$fetch_result = $wpdb->get_results($sql);
+			if(!empty($fetch_result)){
+				foreach ($fetch_result as $value) {					
+					if($value->ID == $cpost_id) {
+						continue;
+					}
+					$results[] = $value;
+				}
+			}			
+			
+			$srp_execute_result = $results;			
 		} else {
 			$results = false;
 		}
 	    if ($results) {
+			
 			$translations = srp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
 				$items[] = srp_expand_template($result, $options['output_template'], $translations, $option_key);
@@ -188,101 +174,98 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		if($output){
-			srp_cache_store($cache_key, $output);
-		}
+		// if($output){
+		// 	srp_cache_store($cache_key, $output);
+		// }
 		
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
 	}
 
 	static function execute2($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		
-		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql, $srp_execute_result;
+		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_sql_2, $srp_execute_result;
 		$start_time = srp_microtime();
-		$postid = srp_current_post_id($sprp_current_ID);		
-
-		$cache_key = $option_key.$postid.'tab2';
-		$result = srp_cache_fetch($cache_key);
-		if ($result !== false) {
-			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
-		}					
-
+						
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = srp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
 		$options = srp_set_options($option_key, $options, $default_output_template);
 		if (0 < $options['limit_2']) {
-			$match_tags = ($options['match_tags_2'] !== 'false' && $wp_version >= 2.3);
-			$exclude_cats = ($options['excluded_cats'] !== '');
-			$include_cats = ($options['included_cats'] !== '');
-			$exclude_authors = ($options['excluded_authors'] !== '');
-			$include_authors = ($options['included_authors'] !== '');
-			$exclude_posts = (trim($options['excluded_posts_2']) !== '');
-			$include_posts = (trim($options['included_posts_2']) !== '');
+			$match_tags = ($options['match_tags_2'] !== 'false' && $wp_version >= 2.3);			
 			$match_category = ($options['match_cat_2'] === 'true');
+			$sort_by       = $options['sort_by_2'];				
 			$use_tag_str = ('' != trim($options['tag_str_2']) && $wp_version >= 2.3);
-			$check_age = ('none' !== $options['age']['direction']);
+			$check_age = ('none' !== $options['age2']['direction']);
 			$check_custom = (trim($options['custom']['key']) !== '');
 			$limit = '0'.', '.$options['limit_2'];
 			$des = isset($options['re_design_2']) ? $options['re_design_2'] : 'd1';
 
-			list( $contentterms, $titleterms, $tagterms) = sp_terms_by_freq($postid, $options['num_terms']);
-	 		// these should add up to 1.0
-			$weight_content = $options['weight_content'];
-			$weight_title = $options['weight_title'];
-			$weight_tags = $options['weight_tags'];
-			// below a threshold we ignore the weight completely and save some effort
-			if ($weight_content < 0.001) $weight_content = (int) 0;
-			if ($weight_title < 0.001) $weight_title = (int) 0;
-			if ($weight_tags < 0.001) $weight_tags = (int) 0;
-
-			$count_content = substr_count($contentterms, ' ') + 1;
-			$count_title = substr_count($titleterms, ' ') + 1;
-			$count_tags  = substr_count($tagterms, ' ') + 1;
-			if ($weight_content) $weight_content = 57.0 * $weight_content / $count_content;
-			if ($weight_title) $weight_title = 18.0 * $weight_title / $count_title;
-			if ($weight_tags) $weight_tags = 24.0 * $weight_tags / $count_tags;
-			if ($options['hand_links'] === 'true') {
-				// check custom field for manual links
-				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'srp_related' ") ;
-			} else {
-				$forced_ids = '';
-			}
-			// the workhorse...
-			$sql = "SELECT * ";
-			//$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
-
-			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
-
-			// build the 'WHERE' clause
-			$where = array();
-			// $where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
-			// if (!function_exists('get_post_type')) {
-			// 	$where[] = where_hide_future();
-			// }
-			if ($match_category) $where[] = where_match_category($limit);
-			if ($match_tags) $where[] = where_match_tags($options['match_tags_2']);
-			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
-			if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
-			if ($exclude_authors) $where[] = where_excluded_authors($options['excluded_authors']);
-			if ($include_authors) $where[] = where_included_authors($options['included_authors']);
-			if ($exclude_posts) $where[] = where_excluded_posts(trim($options['excluded_posts_2']));
-			if ($include_posts) $where[] = where_included_posts(trim($options['included_posts_2']));
-			if ($use_tag_str) $where[] = where_tag_str($options['tag_str_2']);
-			$where[] = where_omit_post($sprp_current_ID);
-			if ($check_age) $where[] = where_check_age($options['age']['direction'], $options['age']['length'], $options['age']['duration']);
-			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-
-			$sql .= "FROM `$table_name` LEFT JOIN `$wpdb->posts` ON `pID` = `ID` WHERE ".implode(' AND ', $where);
-			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY id DESC LIMIT $limit";
 			
-			if($srp_execute_sql == $sql){
-				$results = $srp_execute_result;
-			}else{
-				$results = $wpdb->get_results($sql);
+			$sql = "SELECT * FROM `$wpdb->posts` p ";
+			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
+			$cat_ids = $tag_ids = array();
+			if ($match_category){
+				$cat_ids = where_match_category();
+								
+			}	
+			if ($match_tags){			
+				$tag_ids     = where_match_tags();				
 			}
+			
+			if($cat_ids){				
+				$wp_term_re   = $table_prefix.'term_relationships';
+				$wp_terms     = $table_prefix.'terms';
+				$wp_term_taxo = $table_prefix.'term_taxonomy';
+
+				$sql .="inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id			
+						and tte.taxonomy = 'category'
+						and tt.term_taxonomy_id = $cat_ids[0] "; 				
+			}
+
+			if($tag_ids){				
+				$wp_term_re   = $table_prefix.'term_relationships';
+				$wp_terms     = $table_prefix.'terms';
+				$wp_term_taxo = $table_prefix.'term_taxonomy';
+
+				$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
+						inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
+						inner join `$wp_term_taxo` tts on tts.term_taxonomy_id = t.term_id			
+						and tts.taxonomy = 'post_tag'
+						and tr.term_taxonomy_id = $tag_ids[0]"; 				
+			}
+
+			$sql .=" where p.post_status = 'publish'";	
+
+			if($sort_by == 'recent'){
+				$sql .= " ORDER BY id DESC LIMIT $limit";	
+			}else{
+				if ($check_age) {				
+					$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+				}
+				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
+			}					
+							
+			$cpost_id 		   = where_omit_post($sprp_current_ID);			
+			if($srp_execute_sql_1 === $sql){				
+				$sql =  strstr($sql, 'LIMIT', true);
+				$sql.= "LIMIT ".($options['limit']+1).",".$options['limit_2']; 
+			}
+			
+			$srp_execute_sql_2 = $sql;					
+			$results = array();
+			$fetch_result = $wpdb->get_results($sql);
+			if(!empty($fetch_result)){
+				foreach ($fetch_result as $value) {					
+					if($value->ID == $cpost_id) {
+						continue;
+					}
+					$results[] = $value;
+				}
+			}
+						
 			
 		} else {
 			$results = false;
@@ -306,101 +289,96 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		if($output){
-			srp_cache_store($cache_key, $output);
-		}		
+		// if($output){
+		// 	srp_cache_store($cache_key, $output);
+		// }		
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
 	}
 
 	static function execute3($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
-		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql, $srp_execute_result;
-		$start_time = srp_microtime();
-		$postid = srp_current_post_id($sprp_current_ID);
-		
-		$cache_key = $option_key.$postid.'tab3';
-		$result = srp_cache_fetch($cache_key);
-		if ($result !== false) 
-		{
-			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
-		}
-					
+		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_sql_2, $srp_execute_sql_3, $srp_execute_result;
+		$start_time = srp_microtime();		
+									
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = srp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
 		$options = srp_set_options($option_key, $options, $default_output_template);
 		if (0 < $options['limit_3']) {
-			$match_tags = ($options['match_tags_3'] !== 'false' && $wp_version >= 2.3);
-			$exclude_cats = ($options['excluded_cats'] !== '');
-			$include_cats = ($options['included_cats'] !== '');
-			$exclude_authors = ($options['excluded_authors'] !== '');
-			$include_authors = ($options['included_authors'] !== '');
-			$exclude_posts = (trim($options['excluded_posts_3']) !== '');
-			$include_posts = (trim($options['included_posts_3']) !== '');
-			$match_category = ($options['match_cat_3'] === 'true');
-			$use_tag_str = ('' != trim($options['tag_str_3']) && $wp_version >= 2.3);
-			$check_age = ('none' !== $options['age']['direction']);
-			$check_custom = (trim($options['custom']['key']) !== '');
+			$match_tags = ($options['match_tags_3'] !== 'false' && $wp_version >= 2.3);			
+			$sort_by       = $options['sort_by_3'];
+			$match_category = ($options['match_cat_3'] === 'true');			
+			$check_age = ('none' !== $options['age3']['direction']);			
 			$limit = '0'.', '.$options['limit_3'];
 			$des = isset($options['re_design_3']) ? $options['re_design_3'] : 'd1';
 
-			list( $contentterms, $titleterms, $tagterms) = sp_terms_by_freq($postid, $options['num_terms']);
-	 		// these should add up to 1.0
-			$weight_content = $options['weight_content'];
-			$weight_title = $options['weight_title'];
-			$weight_tags = $options['weight_tags'];
-			// below a threshold we ignore the weight completely and save some effort
-			if ($weight_content < 0.001) $weight_content = (int) 0;
-			if ($weight_title < 0.001) $weight_title = (int) 0;
-			if ($weight_tags < 0.001) $weight_tags = (int) 0;
-
-			$count_content = substr_count($contentterms, ' ') + 1;
-			$count_title = substr_count($titleterms, ' ') + 1;
-			$count_tags  = substr_count($tagterms, ' ') + 1;
-			if ($weight_content) $weight_content = 57.0 * $weight_content / $count_content;
-			if ($weight_title) $weight_title = 18.0 * $weight_title / $count_title;
-			if ($weight_tags) $weight_tags = 24.0 * $weight_tags / $count_tags;
-			if ($options['hand_links'] === 'true') {
-				// check custom field for manual links
-				$forced_ids = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $postid AND meta_key = 'srp_related' ") ;
-			} else {
-				$forced_ids = '';
+			
+			$sql = "SELECT * FROM `$wpdb->posts` p ";
+			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
+			$cat_ids = $tag_ids = array();
+			if ($match_category){
+				$cat_ids = where_match_category();
+								
+			}	
+			if ($match_tags){			
+				$tag_ids     = where_match_tags();				
 			}
-			// the workhorse...
-			$sql = "SELECT * ";
-			//$sql .= score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids);
 			
+			if($cat_ids){				
+				$wp_term_re   = $table_prefix.'term_relationships';
+				$wp_terms     = $table_prefix.'terms';
+				$wp_term_taxo = $table_prefix.'term_taxonomy';
 
-			if ($check_custom) $sql .= "LEFT JOIN $wpdb->postmeta ON post_id = ID ";
+				$sql .="inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id			
+						and tte.taxonomy = 'category'
+						and tt.term_taxonomy_id = $cat_ids[0] "; 				
+			}
 
-			// build the 'WHERE' clause
-			$where = array();
-			// $where[] = where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms);
-			// if (!function_exists('get_post_type')) {
-			// 	$where[] = where_hide_future();
-			// }
-			if ($match_category) $where[] = where_match_category($limit);
-			if ($match_tags) $where[] = where_match_tags($options['match_tags_3']);
-			if ($include_cats) $where[] = where_included_cats($options['included_cats']);
-			if ($exclude_cats) $where[] = where_excluded_cats($options['excluded_cats']);
-			if ($exclude_authors) $where[] = where_excluded_authors($options['excluded_authors']);
-			if ($include_authors) $where[] = where_included_authors($options['included_authors']);
-			if ($exclude_posts) $where[] = where_excluded_posts(trim($options['excluded_posts_3']));
-			if ($include_posts) $where[] = where_included_posts(trim($options['included_posts_3']));
-			if ($use_tag_str) $where[] = where_tag_str($options['tag_str_3']);
-			$where[] = where_omit_post($sprp_current_ID);
-			if ($check_age) $where[] = where_check_age($options['age']['direction'], $options['age']['length'], $options['age']['duration']);
-			if ($check_custom) $where[] = where_check_custom($options['custom']['key'], $options['custom']['op'], $options['custom']['value']);
-			$sql .= "FROM `$table_name` LEFT JOIN `$wpdb->posts` ON `pID` = `ID` WHERE ".implode(' AND ', $where);
-			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";
-			$sql .= " ORDER BY id DESC LIMIT $limit";			
-			
-			if($srp_execute_sql == $sql){
-				$results = $srp_execute_result;
+			if($tag_ids){				
+				$wp_term_re   = $table_prefix.'term_relationships';
+				$wp_terms     = $table_prefix.'terms';
+				$wp_term_taxo = $table_prefix.'term_taxonomy';
+
+				$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
+						inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
+						inner join `$wp_term_taxo` tts on tts.term_taxonomy_id = t.term_id			
+						and tts.taxonomy = 'post_tag'
+						and tr.term_taxonomy_id = $tag_ids[0]"; 				
+			}
+
+			$sql .=" where p.post_status = 'publish'";	
+
+			if($sort_by == 'recent'){
+				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
-				$results = $wpdb->get_results($sql);
-			}
+				if ($check_age) {				
+					$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+				}
+				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
+			}					
+							
+			$cpost_id 		   = where_omit_post($sprp_current_ID);			
 
+			if($sql === $srp_execute_sql_1 || $sql === $srp_execute_sql_2){							
+				$sql =  strstr($sql, 'LIMIT', true);
+				$sql.= "LIMIT ".($options['limit'] + $options['limit_2'] + 1).",".$options['limit_3']; 
+			}
+			$srp_execute_sql_3 = $sql;			
+			$results = array();
+			$fetch_result = $wpdb->get_results($sql);
+			if(!empty($fetch_result)){
+				foreach ($fetch_result as $value) {					
+					if($value->ID == $cpost_id) {
+						continue;
+					}
+					$results[] = $value;
+				}
+			}			
+			
+			$srp_execute_result = $results;			
+						
 		} else {
 			$results = false;
 		}

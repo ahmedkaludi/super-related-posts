@@ -298,34 +298,32 @@ function srp_current_post_id ($manual_current_ID = -1) {
 
 */
 
-function where_match_tags($match_tags) {
-	global $wpdb, $wp_version;
-	$args = array('fields' => 'ids');
-	$tag_ids = wp_get_object_terms(srp_current_post_id(), 'post_tag', $args);
-	if ( is_array($tag_ids) && count($tag_ids) > 0 )  {
-		if ($match_tags === 'any') {
-			$ids = get_objects_in_term($tag_ids, 'post_tag');
-		} else {
-			$ids = array();
-			foreach ($tag_ids as $tag_id){
-				if (count($ids) > 0) {
-					$ids = array_intersect($ids, get_objects_in_term($tag_id, 'post_tag'));
-				} else {
-					$ids = get_objects_in_term($tag_id, 'post_tag');
-				}
-			}
+function where_match_category() {
+	$cat_ids = '';
+	$catarray = array();
+	$cat_id_obj = get_the_category();
+	if(!empty($cat_id_obj)){
+		foreach($cat_id_obj as $cat) {
+			if ($cat->cat_ID) $cat_ids .= $cat->cat_ID . ',';
 		}
-		if ( is_array($ids) && count($ids) > 0 ) {
-			$ids = array_unique($ids);
-			$out_posts = "'" . implode("', '", $ids) . "'";
-			$sql = "$wpdb->posts.ID IN ($out_posts)";
-		} else {
-			$sql = "1 = 2";
-		}
-	} else {
-		$sql = "1 = 2";
-	}
-	return $sql;
+		$cat_ids = rtrim($cat_ids, ',');
+		$catarray = explode(',', $cat_ids);
+		
+		foreach ( $catarray as $cat ) {
+			$catarray = array_merge($catarray, get_term_children($cat, 'category'));
+		}	
+		$catarray = array_unique($catarray);	
+
+	}											
+	return $catarray;
+}
+
+function where_match_tags() {
+
+	$args 	  = array('fields' => 'ids');
+	$tag_ids  = wp_get_object_terms(srp_current_post_id(), 'post_tag', $args);
+
+	return $tag_ids;			
 }
 
 function where_show_status($status, $include_inherit='false') {
@@ -363,35 +361,6 @@ if (!function_exists('get_objects_in_term')) {
 		if (!$object_ids) return array();
 		return $object_ids;
 	}
-}
-
-function where_match_category($sql) {
-	global $wpdb, $wp_version, $table_prefix;
-	$cat_ids = '';
-	foreach(get_the_category() as $cat) {
-		if ($cat->cat_ID) $cat_ids .= $cat->cat_ID . ',';
-	}
-	$cat_ids = rtrim($cat_ids, ',');
-	$catarray = explode(',', $cat_ids);
-	
-	foreach ( $catarray as $cat ) {
-		$catarray = array_merge($catarray, get_term_children($cat, 'category'));
-	}
-	
-	$catarray = array_unique($catarray);		
-	if(!empty($catarray)){
-
-			$wp_term_re   = $table_prefix.'term_relationships';
-			$wp_terms     = $table_prefix.'terms';
-			$wp_term_taxo = $table_prefix.'term_taxonomy';			 
-			$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
-			inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
-			inner join `$wp_term_taxo` tt on tt.term_taxonomy_id = t.term_id			
-			and p.post_status = 'publish'
-			and tt.taxonomy = 'category'
-			and t.term_id = $catarray[0]"; 			
-	}							
-	return $sql;
 }
 
 function where_included_cats($included_cats) {
@@ -495,7 +464,7 @@ function where_tag_str($tag_str) {
 function where_omit_post($manual_current_ID = -1) {
 	$postid = srp_current_post_id($manual_current_ID);
 	if ($postid <= 1) $postid = -1;
-	return "ID != $postid";
+	return $postid;
 }
 
 function where_just_post() {
@@ -553,21 +522,18 @@ function where_comment_type($comment_type) {
 function where_check_age($direction, $length, $duration) {
 	global $wp_version;
 	if ('none' === $direction) return '';
-	$age = "DATE_SUB(CURDATE(), INTERVAL $length $duration)";
+	//$age = "DATE_SUB(CURDATE(), INTERVAL $length $duration)";
+	$today = date_create(date('Y-m-d'));
+	$age = date_sub($today,date_interval_create_from_date_string($length." ".$duration));
+	$age = $age->format('Ymd');	
+	
 	// we only filter out posts based on age, not pages
 	if ('before' === $direction) {
-		if (function_exists('get_post_type')) {
-			return "(post_date <= $age OR post_type='page')";
-		} else {
-			return "(post_date <= $age OR post_status='static')";
-		}
+		return "(sp.spost_date <= $age)";
 	} else {
-		if (function_exists('get_post_type')) {
-			return "(post_date >= $age OR post_type='page')";
-		} else {
-			return "(post_date >= $age OR post_status='static')";
-		}
+		return "(sp.spost_date >= $age)";
 	}
+
 }
 
 function where_check_custom($key, $op, $value) {
