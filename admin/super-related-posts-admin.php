@@ -36,7 +36,7 @@ function srp_rp1_options_subpage(){
 	}
 	//now we drop into html to display the option page form
 	?>
-		<div class="wrap superrelatedposts-tab-content">
+		<div class="wrap srpp-tab-content">
 			<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
 				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
 			<?php } ?>
@@ -101,7 +101,7 @@ function srp_rp2_options_subpage(){
 	}
 	//now we drop into html to display the option page form
 	?>
-		<div class="wrap superrelatedposts-tab-content">
+		<div class="wrap srpp-tab-content">
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
 				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
 		<?php } ?>
@@ -183,7 +183,7 @@ function srp_pi_options_subpage(){
 	$caching_status = get_option('srp_posts_caching_status');
 	
 	?>
-	<div class="wrap superrelatedposts-tab-content">	
+	<div class="wrap srpp-tab-content">	
 	<?php 
 		if($caching_status != 'finished'){
 			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).'% is completed. Please start again to finish</p></div>';	
@@ -225,7 +225,7 @@ function srp_rp3_options_subpage(){
 	}
 	//now we drop into html to display the option page form
 	?>
-		<div class="wrap superrelatedposts-tab-content">
+		<div class="wrap srpp-tab-content">
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
 				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
 		<?php } ?>

@@ -395,7 +395,7 @@ function sprp_adv_filter_switch($filter_check, $num){
 	<tr valign="top">
 	    <th scope="row"><label for="adv_filter_check_<?php echo $num; ?>" class="adv_filter_check_label">Advanced Filter Options</label></th>
 	    <td>
-	      <label class="switch">
+	      <label class="srpp-switch">
 	        <input type="checkbox" id="adv_filter_check_<?php echo $num; ?>" name="adv_filter_check_<?php echo $num; ?>" value="1" <?php if( $filter_check == 1 ){echo 'checked'; } ?> >
 	        <span class="slider round"></span>
 	      </label>            
@@ -408,7 +408,7 @@ function srp_display_status($filter_check, $num){
 	<tr valign="top">
 	    <th scope="row"><label for="display_status_<?php echo $num; ?>" class="display_status_label">On/Off</label></th>
 	    <td>
-	      <label class="switch">
+	      <label class="srpp-switch">
 	        <input type="checkbox" id="display_status_<?php echo $num; ?>" name="display_status_<?php echo $num; ?>" value="1" <?php if( $filter_check == 1 ){echo 'checked'; } ?> >
 	        <span class="slider round"></span>
 	      </label>            
@@ -479,7 +479,7 @@ function srp_display_authors($excluded_authors, $included_authors) {
 	<tr valign="top">
 		<th scope="row"><?php echo esc_html__('Authors to exclude/include:', 'super-related-posts') ?></th>
 		<td>
-			<table class="superrelatedposts-inner-table">
+			<table class="srpp-inner-table">
 			<?php
 				$users = $wpdb->get_results("SELECT ID, user_login FROM $wpdb->users ORDER BY user_login");
 				if ($users) {
@@ -513,7 +513,7 @@ function srp_display_cats($excluded_cats, $included_cats) {
 	<tr valign="top">
 		<th scope="row"><?php echo esc_html__('Categories to exclude/include:', 'super-related-posts') ?></th>
 		<td>
-			<table class="superrelatedposts-inner-table">
+			<table class="srpp-inner-table">
 			<?php
 				if (function_exists("get_categories")) {
 					$categories = get_categories();//('&hide_empty=1');

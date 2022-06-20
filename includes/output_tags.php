@@ -243,7 +243,7 @@ function otf_commentexcerpt($option_key, $result, $ext) {
 	}
 	switch ($type) {
 	case 'a':
-		$value = oth_trim_comment_excerpt($result->comment_content, $ext);
+		$value = srpp_oth_trim_comment_excerpt($result->comment_content, $ext);
 		break;
 	case 'b':
 		$value = $result->comment_content;
@@ -280,7 +280,7 @@ function otf_commentexcerpt($option_key, $result, $ext) {
 		$value = apply_filters('get_comment_text', $value);
 		break;
 	default:
-		$value = oth_trim_comment_excerpt($result->comment_content, $ext);
+		$value = srpp_oth_trim_comment_excerpt($result->comment_content, $ext);
 		break;
 	}
 	return $value;
@@ -1109,7 +1109,7 @@ function oth_trim_excerpt($content, $len) {
 	return $text;
 }
 
-function oth_trim_comment_excerpt($content, $len) {
+function srpp_oth_trim_comment_excerpt($content, $len) {
 	// adapted from the wp_trim_excerpt filter
 	$text = $content;
 	$text = apply_filters('get_comment_text', $text);
