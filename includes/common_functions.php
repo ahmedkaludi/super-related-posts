@@ -695,7 +695,7 @@ function srpp_post_filter_3($content) {
 	return $content;
 }
 
-function sprp_shortcode_content1($arg) {
+function srpp_shortcode_content1($arg) {
 	global $srp_filter_data;
 	foreach ($srp_filter_data as $data) {
 		$content = call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
@@ -703,7 +703,7 @@ function sprp_shortcode_content1($arg) {
 	return $content;
 }
 
-function sprp_shortcode_content2($arg) {
+function srpp_shortcode_content2($arg) {
 	global $srp_filter_data;
 	foreach ($srp_filter_data as $data) {
 		$content = call_user_func_array(array($data['class'], 'execute2'), array($data['parameters'], '<li>{link}</li>', $data['key']));
@@ -711,7 +711,7 @@ function sprp_shortcode_content2($arg) {
 	return $content;
 }
 
-function sprp_shortcode_content3($arg) {
+function srpp_shortcode_content3($arg) {
 	global $srp_filter_data;
 	foreach ($srp_filter_data as $data) {
 		$content = call_user_func_array(array($data['class'], 'execute3'), array($data['parameters'], '<li>{link}</li>', $data['key']));
@@ -733,7 +733,7 @@ function srpp_post_filter_init1() {
 			if(isset($srp_filter_data[0]['position']) && $srp_filter_data[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_1', 5);
 			}else{
-				add_shortcode('super-related-posts', 'sprp_shortcode_content1');
+				add_shortcode('super-related-posts', 'srpp_shortcode_content1');
 			}
 	
 		}
@@ -752,7 +752,7 @@ function srpp_post_filter_init2() {
 			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_2', 5);
 			}else{
-				add_shortcode('super-related-posts', 'sprp_shortcode_content2');
+				add_shortcode('super-related-posts', 'srpp_shortcode_content2');
 			}
 		}
 	}		
@@ -771,7 +771,7 @@ function srpp_post_filter_init3() {
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_3', 5);
 			}else{
-				add_shortcode('super-related-posts', 'sprp_shortcode_content3');
+				add_shortcode('super-related-posts', 'srpp_shortcode_content3');
 			}
 		}	
 	}		
