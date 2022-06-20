@@ -211,7 +211,7 @@ function srpp_prepare_template($template) {
 				$tag = $match;
 				$ext = false;
 			}
-			$action = output_tag_action($tag);
+			$action = srpp_output_tag_action($tag);
 			if (function_exists($action)) {
 				// store the action that instantiates the tag
 				$translations['acts'][] = $action;

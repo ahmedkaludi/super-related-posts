@@ -8,7 +8,7 @@
 define('SRPP_OT_LIBRARY', true);
 
 // Called by the post plugins to match output tags to the actions that evaluate them
-function output_tag_action($tag) {
+function srpp_output_tag_action($tag) {
 	return 'otf_'.$tag;
 }
 
@@ -18,7 +18,7 @@ function output_tag_action($tag) {
 
 // To add a new output template tag all you need to do is write a tag function like those below.
 
-// All the tag functions must follow the pattern of 'otf_title' below.
+// All the tag functions must follow the pattern of 'srpp_otf_title' below.
 //	the name is the tag name prefixed by 'otf_'
 //	the arguments are always $option_key, $result and $ext
 //		$option_key	the key to the plugin's options
@@ -28,17 +28,17 @@ function output_tag_action($tag) {
 
 
 
-function otf_title ($option_key, $result, $ext) {
+function srpp_otf_title ($option_key, $result, $ext) {
 	$value = oth_truncate_text($result->post_title, $ext);
 	return apply_filters('the_title', $value);
 }
 
-function otf_url($option_key, $result, $ext) {
+function srpp_otf_url($option_key, $result, $ext) {
 	$value = apply_filters('the_permalink', get_permalink($result->ID));
 	return oth_truncate_text($value, $ext);
 }
 
-function otf_author($option_key, $result, $ext) {
+function srp_otf_author($option_key, $result, $ext) {
 	$type = false;
 	if ($ext) {
 		$s = explode(':', $ext);
@@ -72,29 +72,29 @@ function otf_author($option_key, $result, $ext) {
 	return $author;
 }
 
-function otf_authorurl($option_key, $result, $ext) {
+function srpp_otf_authorurl($option_key, $result, $ext) {
 	return get_author_posts_url($result->post_author);
 }
 
-function otf_date($option_key, $result, $ext) {
+function srpp_otf_date($option_key, $result, $ext) {
 	if ($ext === 'raw') return $result->post_date;
 	else return oth_format_date($result->post_date, $ext);
 }
 
-function otf_dateedited($option_key, $result, $ext) {
+function srpp_otf_dateedited($option_key, $result, $ext) {
 	if ($ext === 'raw') return $result->post_modified;
 	else return oth_format_date($result->post_modified, $ext);
 }
 
-function otf_time($option_key, $result, $ext) {
+function srpp_otf_time($option_key, $result, $ext) {
 	return oth_format_time($result->post_date, $ext);
 }
 
-function otf_timeedited($option_key, $result, $ext) {
+function srpp_otf_timeedited($option_key, $result, $ext) {
 	return oth_format_time($result->post_modified, $ext);
 }
 
-function otf_excerpt($option_key, $result, $ext) {
+function srpp_otf_excerpt($option_key, $result, $ext) {
 	if (!$ext) {
 		$len = 55;
 		$type = 'a';
@@ -113,7 +113,7 @@ function otf_excerpt($option_key, $result, $ext) {
 			}
 			if (count($s) > 3) {
 				if ($s[3] === 'link') {
-					$url = otf_url($option_key, $result, '');
+					$url = srpp_otf_url($option_key, $result, '');
 					$more = '<a href="'.$url.'">'.$more.'</a>';
 				}
 			}
@@ -171,7 +171,7 @@ function otf_snippet($option_key, $result, $ext) {
 		if (isset($s[3]) && $s[3]) $link = $s[3];
 	}
 	if ($link === 'link') {
-		$url = otf_url($option_key, $result, '');
+		$url = srpp_otf_url($option_key, $result, '');
 		$more = '<a href="'.$url.'">'.$more.'</a>';
 	}
 	return oth_format_snippet($result->post_content, $option_key, $type, $len, $more);
@@ -188,7 +188,7 @@ function otf_snippetword($option_key, $result, $ext) {
 		if (isset($s[2]) && $s[2]) $link = $s[2];
 	}
 	if ($link === 'link') {
-		$url = otf_url($option_key, $result, '');
+		$url = srpp_otf_url($option_key, $result, '');
 		$more = '<a href="'.$url.'">'.$more.'</a>';
 	}
 	return oth_format_snippet($result->post_content, $option_key, 'word', $len, $more);
@@ -375,7 +375,7 @@ function otf_commentlink($option_key, $result, $ext) {
 	$ttl = '<span class="rc-commenter">' . $ttl . '</span>';
 	if (!$ext) $ext = ' commented on ';
 	$ttl .= $ext;
-	$ttl .= '<span class="rc-title">'.otf_title($option_key, $result, '').'</span>';
+	$ttl .= '<span class="rc-title">'.srpp_otf_title($option_key, $result, '').'</span>';
 	$pml = otf_commenturl($option_key, $result, '');
 	$pdt = oth_format_date($result->comment_date_gmt, '');
 	$pdt .= __(' at ', 'super-related-posts');
@@ -387,7 +387,7 @@ function otf_commentlink2($option_key, $result, $ext) {
 	$commenturl = otf_commenturl($option_key, $result, '');
 	$commentdate = otf_commentdate($option_key, $result, '');
 	$commenttime = otf_commenttime($option_key, $result, '');
-	$title = otf_title($option_key, $result, '');
+	$title = srpp_otf_title($option_key, $result, '');
 	$commenter = otf_commenter($option_key, $result, '');
 	$commentexcerpt = otf_commentexcerpt($option_key, $result, '10');
 	return "<a href=\"$commenturl\" rel=\"bookmark\" title=\"$commentdate at $commenttime on '$title'\">$commenter</a> - $commentexcerpt&hellip;";
@@ -499,22 +499,22 @@ function otf_totalpages($option_key, $result, $ext) {
 }
 
 /*function otf_link($option_key, $result, $ext) {
-	$ttl = otf_title($option_key, $result, $ext);
-	$pml = otf_url($option_key, $result, null);
-	$pdt = otf_date($option_key, $result, null);
+	$ttl = srpp_otf_title($option_key, $result, $ext);
+	$pml = srpp_otf_url($option_key, $result, null);
+	$pdt = srpp_otf_date($option_key, $result, null);
 	return "<a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\">$ttl</a>";
 }*/
 
 function otf_link($option_key, $result, $ext) {
-	$ttl = otf_title($option_key, $result, $ext);
-	$pml = otf_url($option_key, $result, null);
+	$ttl = srpp_otf_title($option_key, $result, $ext);
+	$pml = srpp_otf_url($option_key, $result, null);
 	$queryArg['utm_source']   = 'click';
 	$queryArg['utm_medium']   = 'relatedpost';
 	$queryArg['utm_campaign'] = 'relatedpost';
 	$pml = add_query_arg( 'utm_source',$queryArg['utm_source'] , $pml );
 	$pml = add_query_arg( 'utm_medium',$queryArg['utm_medium'] , $pml );
 	$pml = add_query_arg( 'utm_campaign',$queryArg['utm_campaign'] , $pml );
-	$pdt = otf_date($option_key, $result, null);
+	$pdt = srpp_otf_date($option_key, $result, null);
 	$img = otf_imagesrc_shareaholic($option_key, $result, null);
 	if(empty($img)){
 		$img = SRPP_PLUGIN_URI.'/images/default-image.png';
