@@ -158,7 +158,7 @@ function srpp_otf_excerpt($option_key, $result, $ext) {
 	return $value;
 }
 
-function otf_snippet($option_key, $result, $ext) {
+function srpp_otf_snippet($option_key, $result, $ext) {
 	$len = 100;
 	$type = 'char';
 	$more = '';
@@ -177,7 +177,7 @@ function otf_snippet($option_key, $result, $ext) {
 	return oth_format_snippet($result->post_content, $option_key, $type, $len, $more);
 }
 
-function otf_snippetword($option_key, $result, $ext) {
+function srpp_otf_snippetword($option_key, $result, $ext) {
 	$len = 100;
 	$more = '';
 	$link = 'nolink';
@@ -194,7 +194,7 @@ function otf_snippetword($option_key, $result, $ext) {
 	return oth_format_snippet($result->post_content, $option_key, 'word', $len, $more);
 }
 
-function otf_fullpost($option_key, $result, $ext) {
+function srpp_otf_fullpost($option_key, $result, $ext) {
 	remove_filter( 'the_content', 'srpp_content_filter', 5 );
 	remove_filter( 'the_content', 'srp_post_filter', 5 );
 	$value = apply_filters('the_content', $result->post_content);
@@ -203,7 +203,7 @@ function otf_fullpost($option_key, $result, $ext) {
 	return str_replace(']]>', ']]&gt;', $value);
 }
 
-function otf_commentcount($option_key, $result, $ext) {
+function srpp_otf_commentcount($option_key, $result, $ext) {
 	$value = $result->comment_count;
 	if ($ext) {
 		$s = explode(':', $ext);
@@ -216,7 +216,7 @@ function otf_commentcount($option_key, $result, $ext) {
 	return $value;
 }
 
-function otf_commentexcerpt($option_key, $result, $ext) {
+function srpp_otf_commentexcerpt($option_key, $result, $ext) {
 	if (!$ext) {
 		$len = 55;
 		$type = 'a';
@@ -286,7 +286,7 @@ function otf_commentexcerpt($option_key, $result, $ext) {
 	return $value;
 }
 
-function otf_commentsnippet($option_key, $result, $ext) {
+function srpp_otf_commentsnippet($option_key, $result, $ext) {
 	$len = 100;
 	$type = 'char';
 	$more = '';
@@ -305,7 +305,7 @@ function otf_commentsnippet($option_key, $result, $ext) {
 	return oth_format_snippet($result->comment_content, $option_key, $type, $len, $more);
 }
 
-function otf_commentsnippetword($option_key, $result, $ext) {
+function srp_otf_commentsnippetword($option_key, $result, $ext) {
 	$len = 100;
 	$more = '';
 	$link = 'nolink';
@@ -389,7 +389,7 @@ function otf_commentlink2($option_key, $result, $ext) {
 	$commenttime = otf_commenttime($option_key, $result, '');
 	$title = srpp_otf_title($option_key, $result, '');
 	$commenter = otf_commenter($option_key, $result, '');
-	$commentexcerpt = otf_commentexcerpt($option_key, $result, '10');
+	$commentexcerpt = srpp_otf_commentexcerpt($option_key, $result, '10');
 	return "<a href=\"$commenturl\" rel=\"bookmark\" title=\"$commentdate at $commenttime on '$title'\">$commenter</a> - $commentexcerpt&hellip;";
 }
 
