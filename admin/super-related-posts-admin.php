@@ -10,7 +10,7 @@ function srp_option_menu() {
 
 function srp_options_page(){
 	echo '<div class="wrap"><h2>';
-	_e('Super Related Posts ', 'super_related_posts');
+	esc_html__('Super Related Posts ', 'super_related_posts');
 	echo '</h2></div>';
 	$m = new srp_admin_subpages();
 	$m->add_subpage('Related Post1',  'related_post1', 'srp_rp1_options_subpage');
@@ -79,7 +79,7 @@ function srp_rp1_options_subpage(){
 			?>
 		</table>
 
-		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php _e('Save Settings', 'super_related_posts') ?>" /></div>
+		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
 		<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
 		</form>
 	</div>
@@ -151,7 +151,7 @@ function srp_rp2_options_subpage(){
 			?>
 		</table>
 
-		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php _e('Save Settings', 'super_related_posts') ?>" /></div>
+		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
 		<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
 		</form>
 	</div>
@@ -194,7 +194,7 @@ function srp_pi_options_subpage(){
     </div>
 	<table class="optiontable form-table">
 	<tr valign="top">
-		<th scope="row"><label for=""><?php _e('Cache Posts:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for=""><?php esc_html__('Cache Posts:', 'super-related-posts') ?></label></th>
 		<td>
 		<?php if($caching_status != 'finished'){ ?>	
 			<button type="button" id="start-caching-btn" class="button button-primary"><?php esc_html_e( 'Start Caching', 'super-related-posts' )?></button>
@@ -273,7 +273,7 @@ function srp_rp3_options_subpage(){
 			?>
 		</table>
 
-		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php _e('Save Settings', 'super_related_posts') ?>" /></div>
+		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
 		<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
 		</form>
 	</div>
