@@ -25,15 +25,6 @@ if (!defined('SRPP_OT_LIBRARY')) require(SRPP_DIR_NAME.'/includes/output_tags.ph
 if (!defined('SRPP_ASRP_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin_common_functions.php');
 if (!defined('SRPP_ADMIN_SUBPAGES_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin-subpages.php');
 
-function super_related_posts($args = '') {
-	echo SuperRelatedPosts::execute($args);
-}
-
-function super_related_posts_mark_current(){
-	global $post, $sprp_current_ID;
-	$sprp_current_ID = $post->ID;
-}
-
 $sprp_current_ID = -1;
 
 class SuperRelatedPosts {
@@ -59,7 +50,7 @@ class SuperRelatedPosts {
 
   // add settings link to plugins page
   static function plugin_action_links($links) {
-    $settings_link = '<a href="' . admin_url('options-general.php?page=super-related-posts') . '" title="Settings for Super Related Posts">Settings</a>';
+    $settings_link = '<a href="' . esc_url(admin_url('options-general.php?page=super-related-posts')) . '" title="Settings for Super Related Posts">Settings</a>';
 
     array_unshift($links, $settings_link);
 
@@ -69,20 +60,20 @@ class SuperRelatedPosts {
 
 	static function execute($args='', $default_output_template='<li>{imagesrc_shareaholic}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_result;
-		$start_time = srp_microtime();
+		$start_time = srpp_microtime();
 											
-		$postid = srp_current_post_id($sprp_current_ID);
+		$postid = srpp_current_post_id($sprp_current_ID);
 		$cache_key = $option_key.$postid.$args.'re1';
-		$result = srp_cache_fetch($postid, $cache_key);
+		$result = srpp_cache_fetch($postid, $cache_key);
 		if ($result !== false) {
-			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
+			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srpp_microtime() - $start_time));
 		}
 
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
-		$options = srp_parse_args($args);
+		$options = srpp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
-		$options = srp_set_options($option_key, $options, $default_output_template);
+		$options = srpp_set_options($option_key, $options, $default_output_template);
 		
 		if (0 < $options['limit']) {
 			$match_tags = ($options['match_tags'] !== 'false' && $wp_version >= 2.3);			
@@ -96,11 +87,11 @@ class SuperRelatedPosts {
 			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
-				$cat_ids = where_match_category();
+				$cat_ids = srpp_where_match_category();
 								
 			}	
 			if ($match_tags){			
-				$tag_ids     = where_match_tags();				
+				$tag_ids     = srpp_where_match_tags();				
 			}
 			
 			if($cat_ids){				
@@ -131,12 +122,12 @@ class SuperRelatedPosts {
 				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
 				if ($check_age) {				
-					$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
 				}
 				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
 			}					
 							
-			$cpost_id 		   = where_omit_post($sprp_current_ID);			
+			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
 			
 			$srp_execute_sql_1 = $sql;			
 			$results = array();
@@ -157,11 +148,11 @@ class SuperRelatedPosts {
 		}
 	    if ($results) {
 			
-			$translations = srp_prepare_template($options['output_template']);
+			$translations = srpp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
-				$items[] = srp_expand_template($result, $options['output_template'], $translations, $option_key);
+				$items[] = srpp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
-			if ($options['sort']['by1'] !== '') $items = srp_sort_items($options['sort'], $results, $option_key, $items);
+			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
@@ -171,35 +162,35 @@ class SuperRelatedPosts {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = srp_prepare_template($options['none_text']);
-				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$translations = srpp_prepare_template($options['none_text']);
+				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
 		
 		if($output){
-			srp_cache_store($postid, $cache_key, $output);
+			srpp_cache_store($postid, $cache_key, $output);
 		}
 		
-		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
+		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srpp_microtime() - $start_time)) : '';
 	}
 
 	static function execute2($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_sql_2, $srp_execute_result;
-		$start_time = srp_microtime();
-		$postid = srp_current_post_id($sprp_current_ID);	
+		$start_time = srpp_microtime();
+		$postid = srpp_current_post_id($sprp_current_ID);	
 
 		$cache_key = $option_key.$postid.$args.'re2';
-		$result = srp_cache_fetch($postid, $cache_key);
+		$result = srpp_cache_fetch($postid, $cache_key);
 		if ($result !== false) {
-			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
+			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srpp_microtime() - $start_time));
 		}
 
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
-		$options = srp_parse_args($args);
+		$options = srpp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
-		$options = srp_set_options($option_key, $options, $default_output_template);
+		$options = srpp_set_options($option_key, $options, $default_output_template);
 		if (0 < $options['limit_2']) {
 			$match_tags = ($options['match_tags_2'] !== 'false' && $wp_version >= 2.3);			
 			$match_category = ($options['match_cat_2'] === 'true');
@@ -215,11 +206,11 @@ class SuperRelatedPosts {
 			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
-				$cat_ids = where_match_category();
+				$cat_ids = srpp_where_match_category();
 								
 			}	
 			if ($match_tags){			
-				$tag_ids     = where_match_tags();				
+				$tag_ids     = srpp_where_match_tags();				
 			}
 			
 			if($cat_ids){				
@@ -250,12 +241,12 @@ class SuperRelatedPosts {
 				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
 				if ($check_age) {				
-					$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
 				}
 				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
 			}					
 							
-			$cpost_id 		   = where_omit_post($sprp_current_ID);			
+			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
 			if($srp_execute_sql_1 === $sql){				
 				$sql =  strstr($sql, 'LIMIT', true);
 				$sql.= "LIMIT ".($options['limit']+1).",".$options['limit_2']; 
@@ -278,11 +269,11 @@ class SuperRelatedPosts {
 			$results = false;
 		}
 	    if ($results) {
-			$translations = srp_prepare_template($options['output_template']);
+			$translations = srpp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
-				$items[] = srp_expand_template($result, $options['output_template'], $translations, $option_key);
+				$items[] = srpp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
-			if ($options['sort']['by1'] !== '') $items = srp_sort_items($options['sort'], $results, $option_key, $items);
+			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
@@ -292,33 +283,33 @@ class SuperRelatedPosts {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = srp_prepare_template($options['none_text']);
-				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$translations = srpp_prepare_template($options['none_text']);
+				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
 		if($output){
-			srp_cache_store($postid, $cache_key, $output);
+			srpp_cache_store($postid, $cache_key, $output);
 		}		
-		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
+		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srpp_microtime() - $start_time)) : '';
 	}
 
 	static function execute3($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_sql_2, $srp_execute_sql_3, $srp_execute_result;
-		$start_time = srp_microtime();		
-		$postid = srp_current_post_id($sprp_current_ID);
+		$start_time = srpp_microtime();		
+		$postid = srpp_current_post_id($sprp_current_ID);
 
 		$cache_key = $option_key.$postid.$args.'re3';
-		$result = srp_cache_fetch($postid, $cache_key);
+		$result = srpp_cache_fetch($postid, $cache_key);
 		if ($result !== false)
 		{
-			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
+			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srpp_microtime() - $start_time));
 		}
 		
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
-		$options = srp_parse_args($args);
+		$options = srpp_parse_args($args);
 		// Next we retrieve the stored options and use them unless a value has been overridden via the arguments
-		$options = srp_set_options($option_key, $options, $default_output_template);
+		$options = srpp_set_options($option_key, $options, $default_output_template);
 		if (0 < $options['limit_3']) {
 			$match_tags = ($options['match_tags_3'] !== 'false' && $wp_version >= 2.3);			
 			$sort_by       = $options['sort_by_3'];
@@ -332,11 +323,11 @@ class SuperRelatedPosts {
 			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
-				$cat_ids = where_match_category();
+				$cat_ids = srpp_where_match_category();
 								
 			}	
 			if ($match_tags){			
-				$tag_ids     = where_match_tags();				
+				$tag_ids     = srpp_where_match_tags();				
 			}
 			
 			if($cat_ids){				
@@ -367,12 +358,12 @@ class SuperRelatedPosts {
 				$sql .= " ORDER BY id DESC LIMIT $limit";	
 			}else{
 				if ($check_age) {				
-					$sql .= ' AND '.where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
 				}
 				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
 			}					
 							
-			$cpost_id 		   = where_omit_post($sprp_current_ID);			
+			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
 
 			if($sql === $srp_execute_sql_1 || $sql === $srp_execute_sql_2){							
 				$sql =  strstr($sql, 'LIMIT', true);
@@ -396,11 +387,11 @@ class SuperRelatedPosts {
 			$results = false;
 		}
 	    if ($results) {
-			$translations = srp_prepare_template($options['output_template']);
+			$translations = srpp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
-				$items[] = srp_expand_template($result, $options['output_template'], $translations, $option_key);
+				$items[] = srpp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
-			if ($options['sort']['by1'] !== '') $items = srp_sort_items($options['sort'], $results, $option_key, $items);
+			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
@@ -410,15 +401,15 @@ class SuperRelatedPosts {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = srp_prepare_template($options['none_text']);
-				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$translations = srpp_prepare_template($options['none_text']);
+				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
 		if($output){
-			srp_cache_store($postid,$cache_key, $output);
+			srpp_cache_store($postid,$cache_key, $output);
 		}
 				
-		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
+		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srpp_microtime() - $start_time)) : '';
 	}
 
   // save some info
@@ -434,19 +425,9 @@ class SuperRelatedPosts {
 
 } // SuperRelatedPosts class
 
-function sp_terms_by_freq($ID, $num_terms = 20) {
-	if (!$ID) return array('', '', '');
-	global $wpdb, $table_prefix;
-	$table_name = $table_prefix . 'super_related_posts';	
-	$results = $wpdb->get_results("SELECT title, tags FROM $table_name WHERE pID=$ID LIMIT 1", ARRAY_A);
-	if ($results) {		
-		$res[] = $results[0]['title'];
-		$res[] = $results[0]['tags'];
- 	}
-	return $res;
-}
 
-function sp_save_index_entry($postID) {
+
+function srpp_save_index_entry($postID) {
 	global $wpdb, $table_prefix;
 	$table_name = $table_prefix . 'super_related_posts';
 	$post = $wpdb->get_row("SELECT post_content, post_date, post_title, post_type FROM $wpdb->posts WHERE ID = $postID", ARRAY_A);
@@ -459,8 +440,8 @@ function sp_save_index_entry($postID) {
 	if(isset($options['use_stemmer'])){
 		$use_stemmer = $options['use_stemmer'];
 	}	
-	$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
-	$tags = sp_get_tag_terms($postID, $utf8);
+	$title = srpp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
+	$tags = srpp_get_tag_terms($postID, $utf8);
 	$sdate  = date("Ymd",strtotime($post['post_date']));	
 	//check to see if the field is set
 	$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
@@ -473,14 +454,14 @@ function sp_save_index_entry($postID) {
 	return $postID;
 }
 
-function sp_delete_index_entry($postID) {
+function srpp_delete_index_entry($postID) {
 	global $wpdb, $table_prefix;
 	$table_name = $table_prefix . 'super_related_posts';
 	$wpdb->query("DELETE FROM $table_name WHERE pID = $postID ");
 	return $postID;
 }
 
-function sp_clean_words($text) {
+function srpp_clean_words($text) {
 	$text = strip_tags($text);
 	$text = strtolower($text);
 	$text = str_replace("’", "'", $text); // convert MSWord apostrophe
@@ -488,7 +469,7 @@ function sp_clean_words($text) {
 	return $text;
 }
 
-function sp_mb_clean_words($text) {
+function srpp_mb_clean_words($text) {
 	mb_regex_encoding('UTF-8');
 	mb_internal_encoding('UTF-8');
 	$text = strip_tags($text);
@@ -498,7 +479,7 @@ function sp_mb_clean_words($text) {
 	return 	$text;
 }
 
-function sp_mb_str_pad($text, $n, $c) {
+function srpp_mb_str_pad($text, $n, $c) {
 	mb_internal_encoding('UTF-8');
 	$l = mb_strlen($text);
 	if ($l > 0 && $l < $n) {
@@ -507,7 +488,7 @@ function sp_mb_str_pad($text, $n, $c) {
 	return $text;
 }
 
-function sp_cjk_digrams($string) {
+function srpp_cjk_digrams($string) {
 	mb_internal_encoding("UTF-8");
     $strlen = mb_strlen($string);
 	$ascii = '';
@@ -522,7 +503,7 @@ function sp_cjk_digrams($string) {
 				$ascii = '';
 				$prev = $c;
 			} else {
-				$result[] = sp_mb_str_pad($prev.$c, 4, '_');
+				$result[] = srpp_mb_str_pad($prev.$c, 4, '_');
 				$prev = $c;
 			}
 		} else {
@@ -533,77 +514,32 @@ function sp_cjk_digrams($string) {
     return implode(' ', $result);
 }
 
-function sp_get_post_terms($text, $utf8, $use_stemmer, $cjk) {
-	global $overusedwords;
-	if ($utf8) {
-		mb_regex_encoding('UTF-8');
-		mb_internal_encoding('UTF-8');
-		$wordlist = mb_split("\W+", sp_mb_clean_words($text));
-		$words = '';
-		foreach ($wordlist as $word) {
-			if ( mb_strlen($word) > 3 && !isset($overusedwords[$word])) {
-				switch ($use_stemmer) {
-				case 'true':
-					$words .= sp_mb_str_pad(stem($word), 4, '_') . ' ';
-					break;
-				case 'fuzzy':
-					$words .= sp_mb_str_pad(metaphone($word), 4, '_') . ' ';
-					break;
-				case 'false':
-				default:
-					$words .= $word . ' ';
-				}
-			}
-		}
-	} else {
-		$wordlist = str_word_count(sp_clean_words($text), 1);
-		$words = '';
-		foreach ($wordlist as $word) {
-			if ( strlen($word) > 3 && !isset($overusedwords[$word])) {
-				switch ($use_stemmer) {
-				case 'true':
-					$words .= str_pad(stem($word), 4, '_') . ' ';
-					break;
-				case 'fuzzy':
-					$words .= str_pad(metaphone($word), 4, '_') . ' ';
-					break;
-				case 'false':
-				default:
-					$words .= $word . ' ';
-				}
-			}
-		}
-	}
-	if ($cjk) $words = sp_cjk_digrams($words);
-	return $words;
-}
-
 $tinywords = array('the' => 1, 'and' => 1, 'of' => 1, 'a' => 1, 'for' => 1, 'on' => 1);
 
-function sp_get_title_terms($text, $utf8, $use_stemmer, $cjk) {
+function srpp_get_title_terms($text, $utf8, $use_stemmer, $cjk) {
 	global $tinywords;
 	if ($utf8) {
 		mb_regex_encoding('UTF-8');
 		mb_internal_encoding('UTF-8');
-		$wordlist = mb_split("\W+", sp_mb_clean_words($text));
+		$wordlist = mb_split("\W+", srpp_mb_clean_words($text));
 		$words = '';
 		foreach ($wordlist as $word) {
 			if (!isset($tinywords[$word])) {
 				switch ($use_stemmer) {
 				case 'true':
-					$words .= sp_mb_str_pad(stem($word), 4, '_') . ' ';
+					$words .= srpp_mb_str_pad(stem($word), 4, '_') . ' ';
 					break;
 				case 'fuzzy':
-					$words .= sp_mb_str_pad(metaphone($word), 4, '_') . ' ';
+					$words .= srpp_mb_str_pad(metaphone($word), 4, '_') . ' ';
 					break;
 				case 'false':
 				default:
-					$words .= sp_mb_str_pad($word, 4, '_') . ' ';
+					$words .= srpp_mb_str_pad($word, 4, '_') . ' ';
 				}
 			}
 		}
 	} else {
-		$wordlist = str_word_count(sp_clean_words($text), 1);
+		$wordlist = str_word_count(srpp_clean_words($text), 1);
 		$words = '';
 		foreach ($wordlist as $word) {
 			if (!isset($tinywords[$word])) {
@@ -621,11 +557,11 @@ function sp_get_title_terms($text, $utf8, $use_stemmer, $cjk) {
 			}
 		}
 	}
-	if ($cjk) $words = sp_cjk_digrams($words);
+	if ($cjk) $words = srpp_cjk_digrams($words);
 	return $words;
 }
 
-function sp_get_tag_terms($ID, $utf8) {
+function srpp_get_tag_terms($ID, $utf8) {
 	global $wpdb;
 	if (!function_exists('get_object_term_cache')) return '';
 	$tags = array();
@@ -635,7 +571,7 @@ function sp_get_tag_terms($ID, $utf8) {
 		if ($utf8) {
 			mb_internal_encoding('UTF-8');
 			foreach ($tags as $tag) {
-				$newtags[] = sp_mb_str_pad(mb_strtolower(str_replace('"', "'", $tag)), 4, '_');
+				$newtags[] = srpp_mb_str_pad(mb_strtolower(str_replace('"', "'", $tag)), 4, '_');
 			}
 		} else {
 			foreach ($tags as $tag) {
@@ -654,66 +590,52 @@ if ( is_admin() ) {
 	require(SRPP_DIR_NAME.'/admin/super-related-posts-admin.php');
 }
 
-function sp_is_user_allowed_to_add_php_code() {
-	// If File Editing in Admin Area is disabled via override
-	if ( defined( 'DISALLOW_FILE_EDIT' ) && true === DISALLOW_FILE_EDIT) {
-		return false;
-	 }
-
-	// If current user has been given adequate permission
-	if ( current_user_can( 'unfiltered_html' ) && current_user_can( 'edit_plugins' ) ) {
-	 	return true;
-	 }
-
-    // Default to no edit
-	return false;
-}
-
 global $overusedwords;
 if(is_array($overusedwords)) {
 	$overusedwords = array_flip($overusedwords);
 }
 
-function super_related_posts_wp_admin_style() {
+function srpp_wp_admin_style() {
   if (SuperRelatedPosts::is_plugin_admin_page('settings')) {
         wp_register_style( 'super-related-posts-admin', plugins_url('', __FILE__) . '/css/super-related-posts-admin.css', false, SuperRelatedPosts::$version );
         wp_enqueue_style( 'super-related-posts-admin' );
   }
 }
 
-function super_related_posts_init () {
-	global $overusedwords, $wp_db_version;
+function srpp_init_start () {
+	global $wp_db_version;
 	load_plugin_textdomain('super_related_posts');
 
-  SuperRelatedPosts::get_plugin_version();
+  	SuperRelatedPosts::get_plugin_version();
 
 	$options = get_option('super-related-posts');
-	if (isset($options['content_filter']) && $options['content_filter'] === 'true' && function_exists('srp_register_content_filter')) srp_register_content_filter('SuperRelatedPosts');
+	if (isset($options['content_filter']) && $options['content_filter'] === 'true' && function_exists('srpp_register_content_filter')) srpp_register_content_filter('SuperRelatedPosts');
 	$condition = 'true';
 	$condition = (stristr($condition, "return")) ? $condition : "return ".$condition;
 	$condition = rtrim($condition, '; ') . ';';
 
-	srp_register_post_filter('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
+	srpp_register_post_filter('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 	
-	srp_register_post_filter_2('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
+	srpp_register_post_filter_2('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 	
-	srp_register_post_filter_3('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
+	srpp_register_post_filter_3('append', 'super-related-posts', 'SuperRelatedPosts', $condition);
 
 	//install the actions to keep the index up to date
-	add_action('save_post', 'sp_save_index_entry', 1);
-	add_action('delete_post', 'sp_delete_index_entry', 1);
+	add_action('save_post', 'srpp_save_index_entry', 1);
+	add_action('delete_post', 'srpp_delete_index_entry', 1);
+	
 	if ($wp_db_version < 3308 ) {
-		add_action('edit_post', 'sp_save_index_entry', 1);
-		add_action('publish_post', 'sp_save_index_entry', 1);
+		add_action('edit_post', 'srpp_save_index_entry', 1);
+		add_action('publish_post', 'srpp_save_index_entry', 1);
 	}
-	add_action( 'admin_enqueue_scripts', 'super_related_posts_wp_admin_style' );
+	add_action( 'admin_enqueue_scripts', 'srpp_wp_admin_style' );
 
   // aditional links in plugin description
   add_filter('plugin_action_links_' . basename(dirname(__FILE__)) . '/' . basename(__FILE__),
              array('SuperRelatedPosts', 'plugin_action_links'));
 } // init
 
-add_action ('init', 'super_related_posts_init', 1);
+add_action ('init', 'srpp_init_start', 1);
 register_activation_hook(__FILE__, array('SuperRelatedPosts', 'activate'));
 
 add_action('wp_enqueue_scripts', 'sprp_front_css_and_js');
@@ -742,11 +664,11 @@ add_action( 'wp_ajax_srp_update_post_views_ajax', 'srp_update_post_views_via_aja
 function srp_update_post_views_via_ajax(){
 
 	 if ( ! isset( $_POST['srp_security_nonce'] ) ){
-		return; 
+		return;
 	 }
 	 
 	 if ( !wp_verify_nonce( $_POST['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
-		return;  
+		return;
 	 }
    
 	if(isset($_POST['post_id'])){

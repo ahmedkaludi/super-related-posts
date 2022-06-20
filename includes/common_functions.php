@@ -13,7 +13,7 @@ function srp_cache_flush(){
 	$wpdb->query( "TRUNCATE TABLE {$table}" );
 }
 
-function srp_cache_fetch($postid, $cache_key){
+function srpp_cache_fetch($postid, $cache_key){
 
 	global $wpdb;	
 	$table = $wpdb->prefix.'super_related_cached';	
@@ -26,7 +26,7 @@ function srp_cache_fetch($postid, $cache_key){
 	}
 }
 
-function srp_cache_store($postid, $cache_key, $output){
+function srpp_cache_store($postid, $cache_key, $output){
 	global $wpdb;
 	if ( is_scalar( $cache_key ) ) {
 		$cache_key = trim( $cache_key );
@@ -46,7 +46,7 @@ function srp_cache_store($postid, $cache_key, $output){
 	
 }
 
-function srp_parse_args($args) {
+function srpp_parse_args($args) {
 	// 	$args is of the form 'key1=val1&key2=val2'
 	//	The code copes with null values, e.g., 'key1=&key2=val2'
 	//	and arguments with embedded '=', e.g. 'output_template=<li class="stuff">{...}</li>'.
@@ -79,7 +79,7 @@ function srp_parse_args($args) {
 	return $result;
 }
 
-function srp_set_options($option_key, $arg, $default_output_template) {
+function srpp_set_options($option_key, $arg, $default_output_template) {
 	$options = get_option($option_key);	
 	
 	// deal with compound options
@@ -193,7 +193,7 @@ function srp_set_options($option_key, $arg, $default_output_template) {
 	return $arg;
 }
 
-function srp_prepare_template($template) {
+function srpp_prepare_template($template) {
 	// Now we process the output_template to find the embedded tags which are to be replaced
 	// with values taken from the database.
 	// A tag is of the form, {tag:ext}, where the tag part will be evaluated and replaced
@@ -225,7 +225,7 @@ function srp_prepare_template($template) {
 	return $translations;
 }
 
-function srp_expand_template($result, $template, $translations, $option_key) {
+function srpp_expand_template($result, $template, $translations, $option_key) {
 	global $wpdb, $wp_version;
 	$replacements = array();
 
@@ -244,17 +244,17 @@ function srp_expand_template($result, $template, $translations, $option_key) {
 }
 
 
-function srp_sort_items($sort, $results, $option_key, $items) {
-	$translations1 = srp_prepare_template($sort['by1']);
+function srpp_sort_items($sort, $results, $option_key, $items) {
+	$translations1 = srpp_prepare_template($sort['by1']);
 	foreach ($results as $result) {
-		$key1 = srp_expand_template($result, $sort['by1'], $translations1, $option_key);
+		$key1 = srpp_expand_template($result, $sort['by1'], $translations1, $option_key);
 		if ($sort['case1'] !== 'false') $key1 = strtolower($key1);
 		$keys1[] = $key1;
 	}
 	if ($sort['by2'] !== '') {
-		$translations2 = srp_prepare_template($sort['by2']);
+		$translations2 = srpp_prepare_template($sort['by2']);
 		foreach ($results as $result) {
-			$key2 = srp_expand_template($result, $sort['by2'], $translations2, $option_key);
+			$key2 = srpp_expand_template($result, $sort['by2'], $translations2, $option_key);
 			if ($sort['case2'] !== 'false') $key2 = strtolower($key2);
 			$keys2[] = $key2;
 		}
@@ -266,12 +266,12 @@ function srp_sort_items($sort, $results, $option_key, $items) {
 	}
 	// merge the group titles into the items
 	if ($group_template) {
-		$group_translations = srp_prepare_template($group_template);
+		$group_translations = srpp_prepare_template($group_template);
 		$prev_key = '';
 		$insertions = 0;
 		foreach ($keys1 as $n => $key) {
 			if ($prev_key !== $key) {
-				array_splice($items, $n+$insertions, 0, srp_expand_template($results[$n], $group_template, $group_translations, $option_key));
+				array_splice($items, $n+$insertions, 0, srpp_expand_template($results[$n], $group_template, $group_translations, $option_key));
 				$insertions++;
 			}
 			$prev_key = $key;
@@ -282,7 +282,7 @@ function srp_sort_items($sort, $results, $option_key, $items) {
 
 // the $post global can be overwritten by the use of $wp_query so we go back to the source
 // note the addition of a 'manual overide' allowing the current posts to me marked by super_related_posts_mark_current for example
-function srp_current_post_id ($manual_current_ID = -1) {
+function srpp_current_post_id ($manual_current_ID = -1) {
 	$the_ID = -1;
 	if ($manual_current_ID > 0) {
 		$the_ID = $manual_current_ID;
@@ -304,7 +304,7 @@ function srp_current_post_id ($manual_current_ID = -1) {
 
 */
 
-function where_match_category() {
+function srpp_where_match_category() {
 	$cat_ids = '';
 	$catarray = array();
 	$cat_id_obj = get_the_category();
@@ -324,10 +324,10 @@ function where_match_category() {
 	return $catarray;
 }
 
-function where_match_tags() {
+function srpp_where_match_tags() {
 
 	$args 	  = array('fields' => 'ids');
-	$tag_ids  = wp_get_object_terms(srp_current_post_id(), 'post_tag', $args);
+	$tag_ids  = wp_get_object_terms(srpp_current_post_id(), 'post_tag', $args);
 
 	return $tag_ids;			
 }
@@ -467,14 +467,14 @@ function where_tag_str($tag_str) {
 }
 
 // note the addition of a 'manual overide' allowing the current posts to me marked by super_related_posts_mark_current for example
-function where_omit_post($manual_current_ID = -1) {
-	$postid = srp_current_post_id($manual_current_ID);
+function srpp_where_omit_post($manual_current_ID = -1) {
+	$postid = srpp_current_post_id($manual_current_ID);
 	if ($postid <= 1) $postid = -1;
 	return $postid;
 }
 
 function where_just_post() {
-	$postid = srp_current_post_id();
+	$postid = srpp_current_post_id();
 	if ($postid <= 1) $postid = -1;
 	return "ID = $postid";
 }
@@ -525,7 +525,7 @@ function where_comment_type($comment_type) {
 	return $sql;
 }
 
-function where_check_age($direction, $length, $duration) {
+function srpp_where_check_age($direction, $length, $duration) {
 	global $wp_version;
 	if ('none' === $direction) return '';
 	//$age = "DATE_SUB(CURDATE(), INTERVAL $length $duration)";
@@ -556,7 +556,7 @@ function where_check_custom($key, $op, $value) {
 
 */
 
-function srp_microtime() {
+function srpp_microtime() {
 	list($usec, $sec) = explode(" ", microtime());
 	return ((float)$usec + (float)$sec);
 }
@@ -572,7 +572,7 @@ global $srp_filter_data;
 $srp_filter_data = array();
 
 // each plugin calls this on startup to have content scanned for its own tag
-function srp_register_post_filter($type, $key, $class, $condition='') {
+function srpp_register_post_filter($type, $key, $class, $condition='') {
 
 	global $srp_filter_data;
 	$options = get_option($key);	
@@ -628,7 +628,7 @@ function srp_post_filter_1($content) {
 	return $content;
 }
 
-function srp_register_post_filter_2($type, $key, $class, $condition='') {
+function srpp_register_post_filter_2($type, $key, $class, $condition='') {
 
 	global $srp_filter_data2;
 	$options = get_option($key);			
@@ -683,7 +683,7 @@ function srp_post_filter_2($content) {
 	return $content;
 }
 
-function srp_register_post_filter_3($type, $key, $class, $condition='') {
+function srpp_register_post_filter_3($type, $key, $class, $condition='') {
 
 	global $srp_filter_data3;
 	$options = get_option($key);		
@@ -832,7 +832,7 @@ add_action ('init', 'srp_post_filter_init3');
 global $srp_filter_tags;
 
 // each plugin calls this on startup to have content scanned for its own tag
-function srp_register_content_filter($tag) {
+function srpp_register_content_filter($tag) {
 	global $srp_filter_tags;
 	if (!$srp_filter_tags) {
 		$srp_filter_tags = $tag;

@@ -124,7 +124,7 @@ function srp_check_cardinal($string) {
 
 function srp_display_available_tags($plugin_name) {
 	?>
-		<h3><?php esc_html__('Available Tags', 'super-related-posts'); ?></h3>
+		<h3><?php echo esc_html__('Available Tags', 'super-related-posts'); ?></h3>
 		<ul style="list-style-type: none;">
 		<li title="">{author}</li>
 		<li title="">{authorurl}</li>
@@ -194,8 +194,6 @@ function get_plugin_version($prefix) {
 	return ${$plugin_version};
 }
 
-
-
 /*
 
 	inserts a form button to completely remove the plugin and all its options etc.
@@ -216,7 +214,6 @@ function srp_deactivate_plugin($plugin_file) {
 	}
 }
 
-
 /*
 
 	For the display of the option pages
@@ -226,7 +223,7 @@ function srp_deactivate_plugin($plugin_file) {
 function srp_display_limit($limit) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="limit"><?php esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="limit"><?php echo esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
 		<td><input min="1" name="limit" type="number" id="limit" style="width: 60px;" value="<?php echo $limit; ?>" size="2" /></td>
 	</tr>
 	<?php
@@ -235,7 +232,7 @@ function srp_display_limit($limit) {
 function sprp_display_shortcode($num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
 		<td><strong>[super-related-posts]</strong></td>
 	</tr>
 	<?php
@@ -244,7 +241,7 @@ function sprp_display_shortcode($num) {
 function srp_display_limit_i($limit, $num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php echo esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
 		<td><input min="1" name="limit_<?php echo $num; ?>" type="number" id="limit_<?php echo $num; ?>" style="width: 60px;" value="<?php echo $limit; ?>" size="2" /></td>
 	</tr>
 	<?php
@@ -253,7 +250,7 @@ function srp_display_limit_i($limit, $num) {
 function srp_display_unique($unique) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="unique"><?php esc_html__('Show just one comment per post?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="unique"><?php echo esc_html__('Show just one comment per post?', 'super-related-posts') ?></label></th>
 		<td>
 		<select name="unique" id="unique" >
 		<option <?php if($unique == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
@@ -267,7 +264,7 @@ function srp_display_unique($unique) {
 function srp_display_just_current_post($just_current_post) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="just_current_post"><?php esc_html__('Show just the current post?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="just_current_post"><?php echo esc_html__('Show just the current post?', 'super-related-posts') ?></label></th>
 		<td>
 		<select name="just_current_post" id="just_current_post" >
 		<option <?php if($just_current_post == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
@@ -281,7 +278,7 @@ function srp_display_just_current_post($just_current_post) {
 function srp_sort_post_by_recent_popular_i($sort_by, $num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="sort_by_<?php echo $num; ?>"><?php esc_html__('Sort post\'s by', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="sort_by_<?php echo $num; ?>"><?php echo esc_html__('Sort post\'s by', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="sort_by_<?php echo $num; ?>" id="sort_by_<?php echo $num; ?>">			
 				<option <?php if($sort_by == 'recent') { echo 'selected="selected"'; } ?> value="recent">Recent</option>
@@ -295,7 +292,7 @@ function srp_sort_post_by_recent_popular_i($sort_by, $num) {
 function srp_display_match_cat($match_cat) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_cat"><?php esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_cat"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat" id="match_cat">			
 			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
@@ -309,7 +306,7 @@ function srp_display_match_cat($match_cat) {
 function srp_display_match_cat_i($match_cat, $num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_cat_<?php echo $num; ?>"><?php esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_cat_<?php echo $num; ?>"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat_<?php echo $num; ?>" id="match_cat_<?php echo $num; ?>">			
 			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
@@ -324,7 +321,7 @@ function srp_display_match_tags($match_tags) {
 	global $wp_version;
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_tags"><?php esc_html__('Match the current post\'s tags?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_tags"><?php echo esc_html__('Match the current post\'s tags?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_tags" id="match_tags" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
 			<option <?php if($match_tags == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
@@ -340,7 +337,7 @@ function srp_display_match_tags_i($match_tags, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_tags_<?php echo $num; ?>"><?php esc_html__('Match the current post\'s tags?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_tags_<?php echo $num; ?>"><?php echo esc_html__('Match the current post\'s tags?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_tags_<?php echo $num; ?>" id="match_tags_<?php echo $num; ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
 			<option <?php if($match_tags == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
@@ -356,7 +353,7 @@ function sprp_position_related_i($pstn_rel, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="pstn_rel_<?php echo $num; ?>"><?php esc_html__('Position:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="pstn_rel_<?php echo $num; ?>"><?php echo esc_html__('Position:', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="pstn_rel_<?php echo $num; ?>" id="pstn_rel_<?php echo $num; ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
 			<option <?php if($pstn_rel == 'atc') { echo 'selected="selected"'; } ?> value="atc">After the Content</option>
@@ -372,7 +369,7 @@ function sprp_design_related_i($design, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="re_design_<?php echo $num; ?>"><?php esc_html__('Design:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="re_design_<?php echo $num; ?>"><?php echo esc_html__('Design:', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="re_design_<?php echo $num; ?>" id="re_design_<?php echo $num; ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
 			<option <?php if($design == 'd1') { echo 'selected="selected"'; } ?> value="d1">Design 1</option>
@@ -387,7 +384,7 @@ function sprp_design_related_i($design, $num) {
 function sprp_paragraph_i($para, $pos, $num) {
 	?>
 	<tr valign="top" <?php if($pos != 'ibc') { echo 'style="display:none"'; } ?>>
-		<th scope="row"><label for="para_rel_<?php echo $num; ?>"><?php esc_html__('After Number of paragraphs?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="para_rel_<?php echo $num; ?>"><?php echo esc_html__('After Number of paragraphs?', 'super-related-posts') ?></label></th>
 		<td><input min="1" name="para_rel_<?php echo $num; ?>" type="number" id="para_rel_<?php echo $num; ?>" style="width: 60px;" value="<?php echo $para; ?>" size="2" /></td>
 	</tr>
 	<?php
@@ -424,7 +421,7 @@ function srp_display_tag_str($tag_str) {
 	global $wp_version;
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="tag_str"><?php esc_html__('Match posts with tags:<br />(a,b matches posts with either tag, a+b only matches posts with both tags)', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="tag_str"><?php echo esc_html__('Match posts with tags:<br />(a,b matches posts with either tag, a+b only matches posts with both tags)', 'super-related-posts') ?></label></th>
 		<td><input name="tag_str" type="text" id="tag_str" value="<?php echo $tag_str; ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> size="40" /></td>
 	</tr>
 	<?php
@@ -434,7 +431,7 @@ function srp_display_tag_str_i($tag_str, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="tag_str_<?php echo $num; ?>"><?php esc_html__('Match posts with tags:<br />(a,b matches posts with either tag, a+b only matches posts with both tags)', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="tag_str_<?php echo $num; ?>"><?php echo esc_html__('Match posts with tags:<br />(a,b matches posts with either tag, a+b only matches posts with both tags)', 'super-related-posts') ?></label></th>
 		<td><input name="tag_str_<?php echo $num; ?>" type="text" id="tag_str_<?php echo $num; ?>" value="<?php echo $tag_str; ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> size="40" /></td>
 	</tr>
 	<?php
@@ -443,8 +440,8 @@ function srp_display_tag_str_i($tag_str, $num) {
 function srp_display_excluded_posts($excluded_posts) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="excluded_posts"><?php esc_html__('Posts to exclude:', 'super-related-posts') ?></label></th>
-		<td><input name="excluded_posts" type="text" id="excluded_posts" value="<?php echo $excluded_posts; ?>" size="40" /> <?php esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
+		<th scope="row"><label for="excluded_posts"><?php echo esc_html__('Posts to exclude:', 'super-related-posts') ?></label></th>
+		<td><input name="excluded_posts" type="text" id="excluded_posts" value="<?php echo $excluded_posts; ?>" size="40" /> <?php echo esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
 	</tr>
 	<?php
 }
@@ -452,8 +449,8 @@ function srp_display_excluded_posts($excluded_posts) {
 function srp_display_excluded_posts_i($excluded_posts, $num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="excluded_posts_<?php echo $num; ?>"><?php esc_html__('Posts to exclude:', 'super-related-posts') ?></label></th>
-		<td><input name="excluded_posts_<?php echo $num; ?>" type="text" id="excluded_posts_<?php echo $num; ?>" value="<?php echo $excluded_posts; ?>" size="40" /> <?php esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
+		<th scope="row"><label for="excluded_posts_<?php echo $num; ?>"><?php echo esc_html__('Posts to exclude:', 'super-related-posts') ?></label></th>
+		<td><input name="excluded_posts_<?php echo $num; ?>" type="text" id="excluded_posts_<?php echo $num; ?>" value="<?php echo $excluded_posts; ?>" size="40" /> <?php echo esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
 	</tr>
 	<?php
 }
@@ -461,8 +458,8 @@ function srp_display_excluded_posts_i($excluded_posts, $num) {
 function srp_display_included_posts($included_posts) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="included_posts"><?php esc_html__('Posts to include:', 'super-related-posts') ?></label></th>
-		<td><input name="included_posts" type="text" id="included_posts" value="<?php echo $included_posts; ?>" size="40" /> <?php esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
+		<th scope="row"><label for="included_posts"><?php echo esc_html__('Posts to include:', 'super-related-posts') ?></label></th>
+		<td><input name="included_posts" type="text" id="included_posts" value="<?php echo $included_posts; ?>" size="40" /> <?php echo esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
 	</tr>
 	<?php
 }
@@ -470,8 +467,8 @@ function srp_display_included_posts($included_posts) {
 function srp_display_included_posts_i($included_posts, $num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="included_posts_<?php echo $num; ?>"><?php esc_html__('Posts to include:', 'super-related-posts') ?></label></th>
-		<td><input name="included_posts_<?php echo $num; ?>" type="text" id="included_posts_<?php echo $num; ?>" value="<?php echo $included_posts; ?>" size="40" /> <?php esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
+		<th scope="row"><label for="included_posts_<?php echo $num; ?>"><?php echo esc_html__('Posts to include:', 'super-related-posts') ?></label></th>
+		<td><input name="included_posts_<?php echo $num; ?>" type="text" id="included_posts_<?php echo $num; ?>" value="<?php echo $included_posts; ?>" size="40" /> <?php echo esc_html__('comma-separated IDs', 'super-related-posts'); ?></td>
 	</tr>
 	<?php
 }
@@ -480,7 +477,7 @@ function srp_display_authors($excluded_authors, $included_authors) {
 	global $wpdb;
 	?>
 	<tr valign="top">
-		<th scope="row"><?php esc_html__('Authors to exclude/include:', 'super-related-posts') ?></th>
+		<th scope="row"><?php echo esc_html__('Authors to exclude/include:', 'super-related-posts') ?></th>
 		<td>
 			<table class="superrelatedposts-inner-table">
 			<?php
@@ -514,7 +511,7 @@ function srp_display_cats($excluded_cats, $included_cats) {
 	global $wpdb;
 	?>
 	<tr valign="top">
-		<th scope="row"><?php esc_html__('Categories to exclude/include:', 'super-related-posts') ?></th>
+		<th scope="row"><?php echo esc_html__('Categories to exclude/include:', 'super-related-posts') ?></th>
 		<td>
 			<table class="superrelatedposts-inner-table">
 			<?php
@@ -571,7 +568,7 @@ function srp_display_age($age, $sort_by, $num) {
 	
 	?>
 	<tr valign="top" <?php if($sort_by != 'popular') { echo 'style="display:none"'; } ?>>
-		<th scope="row"><label for="age<?php echo $num; ?>-direction"><?php esc_html__('Ignore posts:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="age<?php echo $num; ?>-direction"><?php echo esc_html__('Ignore posts:', 'super-related-posts') ?></label></th>
 		<td>
 				<select name="age<?php echo $num; ?>-direction" id="age<?php echo $num; ?>-direction">
 				<option <?php if(!empty($age['direction']) && $age['direction'] == 'before') { echo 'selected="selected"'; } ?> value="before">less than</option>
@@ -593,7 +590,7 @@ function srp_display_age($age, $sort_by, $num) {
 function srp_display_custom($custom) {
 	?>
 	<tr valign="top">
-		<th scope="row"><?php esc_html__('Match posts by custom field:', 'super-related-posts') ?></th>
+		<th scope="row"><?php echo esc_html__('Match posts by custom field:', 'super-related-posts') ?></th>
 		<td>
 			<table>
 			<tr><td style="border-bottom-width: 0">Field Name</td><td style="border-bottom-width: 0"></td><td style="border-bottom-width: 0">Field Value</td></tr>
@@ -647,7 +644,7 @@ function srp_display_orderby($options) {
 
 	?>
 	<tr valign="top">
-		<th scope="row"><?php esc_html__('Select output by custom field:', 'super-related-posts') ?></th>
+		<th scope="row"><?php echo esc_html__('Select output by custom field:', 'super-related-posts') ?></th>
 		<td>
 			<table>
 			<tr><td style="border-bottom-width: 0">Field</td><td style="border-bottom-width: 0">Order</td><td style="border-bottom-width: 0">Case</td></tr>
@@ -680,7 +677,7 @@ function srp_display_orderby($options) {
 function srp_display_show_type($show_type) {
 	?>
 	<tr valign="top">
-		<th scope="row" title=""><label for="show_type"><?php esc_html__('Type of comment to show:', 'super-related-posts') ?></label></th>
+		<th scope="row" title=""><label for="show_type"><?php echo esc_html__('Type of comment to show:', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="show_type" id="show_type">
 			<option <?php if($show_type == 'all') { echo 'selected="selected"'; } ?> value="all">All kinds of comment</option>
@@ -695,7 +692,7 @@ function srp_display_show_type($show_type) {
 function srp_display_group_by($group_by) {
 	?>
 	<tr valign="top">
-		<th scope="row" title=""><?php esc_html__('Type of grouping:', 'super-related-posts') ?></th>
+		<th scope="row" title=""><?php echo esc_html__('Type of grouping:', 'super-related-posts') ?></th>
 		<td>
 			<select name="group_by" id="group_by">
 			<option <?php if($group_by == 'post') { echo 'selected="selected"'; } ?> value="post">By Post</option>
@@ -711,7 +708,7 @@ function srp_display_group_by($group_by) {
 function srp_display_no_author_comments($no_author_comments) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="no_author_comments"><?php esc_html__('Omit comments by the post author?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="no_author_comments"><?php echo esc_html__('Omit comments by the post author?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="no_author_comments" id="no_author_comments">
 			<option <?php if($no_author_comments == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
@@ -725,7 +722,7 @@ function srp_display_no_author_comments($no_author_comments) {
 function srp_display_no_user_comments($no_user_comments) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="no_user_comments"><?php esc_html__('Omit comments by registered users?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="no_user_comments"><?php echo esc_html__('Omit comments by registered users?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="no_user_comments" id="no_user_comments">
 			<option <?php if($no_user_comments == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
@@ -739,7 +736,7 @@ function srp_display_no_user_comments($no_user_comments) {
 function srp_display_date_modified($date_modified) {
 	?>
 	<tr valign="top">
-		<th scope="row"><?php esc_html__('Order by date of last edit rather than date of creation?', 'super-related-posts') ?></th>
+		<th scope="row"><?php echo esc_html__('Order by date of last edit rather than date of creation?', 'super-related-posts') ?></th>
 		<td>
 			<select name="date_modified" id="date_modified">
 			<option <?php if($date_modified == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
