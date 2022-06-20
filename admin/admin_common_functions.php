@@ -220,7 +220,7 @@ function srp_deactivate_plugin($plugin_file) {
 
 */
 
-function srp_display_limit($limit) {
+function srpp_display_limit($limit) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit"><?php echo esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
@@ -238,7 +238,7 @@ function sprp_display_shortcode($num) {
 	<?php
 }
 
-function srp_display_limit_i($limit, $num) {
+function srpp_display_limit_i($limit, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php echo esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
@@ -275,7 +275,7 @@ function srp_display_just_current_post($just_current_post) {
 	<?php
 }
 
-function srp_sort_post_by_recent_popular_i($sort_by, $num) {
+function srpp_sort_post_by_recent_popular_i($sort_by, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="sort_by_<?php echo $num; ?>"><?php echo esc_html__('Sort post\'s by', 'super-related-posts') ?></label></th>
@@ -289,7 +289,7 @@ function srp_sort_post_by_recent_popular_i($sort_by, $num) {
 	<?php
 }
 
-function srp_display_match_cat($match_cat) {
+function srpp_display_match_cat($match_cat) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="match_cat"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
@@ -303,7 +303,7 @@ function srp_display_match_cat($match_cat) {
 	<?php
 }
 
-function srp_display_match_cat_i($match_cat, $num) {
+function srpp_display_match_cat_i($match_cat, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="match_cat_<?php echo $num; ?>"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
@@ -317,7 +317,7 @@ function srp_display_match_cat_i($match_cat, $num) {
 	<?php
 }
 
-function srp_display_match_tags($match_tags) {
+function srpp_display_match_tags($match_tags) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -333,7 +333,7 @@ function srp_display_match_tags($match_tags) {
 	<?php
 }
 
-function srp_display_match_tags_i($match_tags, $num) {
+function srpp_display_match_tags_i($match_tags, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -349,7 +349,7 @@ function srp_display_match_tags_i($match_tags, $num) {
 	<?php
 }
 
-function sprp_position_related_i($pstn_rel, $num) {
+function srpp_position_related_i($pstn_rel, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -365,7 +365,7 @@ function sprp_position_related_i($pstn_rel, $num) {
 	<?php
 }
 
-function sprp_design_related_i($design, $num) {
+function srpp_design_related_i($design, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -381,7 +381,7 @@ function sprp_design_related_i($design, $num) {
 	<?php
 }
 
-function sprp_paragraph_i($para, $pos, $num) {
+function srpp_paragraph_i($para, $pos, $num) {
 	?>
 	<tr valign="top" <?php if($pos != 'ibc') { echo 'style="display:none"'; } ?>>
 		<th scope="row"><label for="para_rel_<?php echo $num; ?>"><?php echo esc_html__('After Number of paragraphs?', 'super-related-posts') ?></label></th>
@@ -390,7 +390,7 @@ function sprp_paragraph_i($para, $pos, $num) {
 	<?php
 }
 
-function sprp_adv_filter_switch($filter_check, $num){
+function srpp_adv_filter_switch($filter_check, $num){
 	?>
 	<tr valign="top">
 	    <th scope="row"><label for="adv_filter_check_<?php echo $num; ?>" class="adv_filter_check_label">Advanced Filter Options</label></th>
@@ -403,7 +403,7 @@ function sprp_adv_filter_switch($filter_check, $num){
 	</tr>
 	<?php 
 }
-function srp_display_status($filter_check, $num){
+function srpp_display_status($filter_check, $num){
 	?>
 	<tr valign="top">
 	    <th scope="row"><label for="display_status_<?php echo $num; ?>" class="display_status_label">On/Off</label></th>
@@ -417,7 +417,7 @@ function srp_display_status($filter_check, $num){
 	<?php 
 }
 
-function srp_display_tag_str($tag_str) {
+function srpp_display_tag_str($tag_str) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -427,7 +427,7 @@ function srp_display_tag_str($tag_str) {
 	<?php
 }
 
-function srp_display_tag_str_i($tag_str, $num) {
+function srpp_display_tag_str_i($tag_str, $num) {
 	global $wp_version;
 	?>
 	<tr valign="top">
@@ -437,7 +437,7 @@ function srp_display_tag_str_i($tag_str, $num) {
 	<?php
 }
 
-function srp_display_excluded_posts($excluded_posts) {
+function srpp_display_excluded_posts($excluded_posts) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="excluded_posts"><?php echo esc_html__('Posts to exclude:', 'super-related-posts') ?></label></th>
@@ -446,7 +446,7 @@ function srp_display_excluded_posts($excluded_posts) {
 	<?php
 }
 
-function srp_display_excluded_posts_i($excluded_posts, $num) {
+function srpp_display_excluded_posts_i($excluded_posts, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="excluded_posts_<?php echo $num; ?>"><?php echo esc_html__('Posts to exclude:', 'super-related-posts') ?></label></th>
@@ -455,7 +455,7 @@ function srp_display_excluded_posts_i($excluded_posts, $num) {
 	<?php
 }
 
-function srp_display_included_posts($included_posts) {
+function srpp_display_included_posts($included_posts) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="included_posts"><?php echo esc_html__('Posts to include:', 'super-related-posts') ?></label></th>
@@ -464,7 +464,7 @@ function srp_display_included_posts($included_posts) {
 	<?php
 }
 
-function srp_display_included_posts_i($included_posts, $num) {
+function srpp_display_included_posts_i($included_posts, $num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="included_posts_<?php echo $num; ?>"><?php echo esc_html__('Posts to include:', 'super-related-posts') ?></label></th>
@@ -473,7 +473,7 @@ function srp_display_included_posts_i($included_posts, $num) {
 	<?php
 }
 
-function srp_display_authors($excluded_authors, $included_authors) {
+function srpp_display_authors($excluded_authors, $included_authors) {
 	global $wpdb;
 	?>
 	<tr valign="top">
@@ -507,7 +507,7 @@ function srp_display_authors($excluded_authors, $included_authors) {
 	<?php
 }
 
-function srp_display_cats($excluded_cats, $included_cats) {
+function srpp_display_cats($excluded_cats, $included_cats) {
 	global $wpdb;
 	?>
 	<tr valign="top">
@@ -564,7 +564,7 @@ function srp_display_cats($excluded_cats, $included_cats) {
 	<?php
 }
 
-function srp_display_age($age, $sort_by, $num) {
+function srpp_display_age($age, $sort_by, $num) {
 	
 	?>
 	<tr valign="top" <?php if($sort_by != 'popular') { echo 'style="display:none"'; } ?>>
@@ -587,7 +587,7 @@ function srp_display_age($age, $sort_by, $num) {
 	<?php
 }
 
-function srp_display_custom($custom) {
+function srpp_display_custom($custom) {
 	?>
 	<tr valign="top">
 		<th scope="row"><?php echo esc_html__('Match posts by custom field:', 'super-related-posts') ?></th>
