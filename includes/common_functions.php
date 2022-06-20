@@ -7,37 +7,34 @@
 
 define('SRP_LIBRARY', true);
 
-function srp_get_transient_keys_with_prefix( $prefix ) {
+function srp_cache_flush(){
+	global $wpdb;	
+	$table = $wpdb->prefix.'super_related_cached';
+	$wpdb->query( "TRUNCATE TABLE {$table}" );
+}
+
+function srp_cache_fetch($postid, $cache_key){
+
+	global $wpdb;	
+	$table = $wpdb->prefix.'super_related_cached';	
+	$row = $wpdb->get_row( $wpdb->prepare( "SELECT cvalue FROM $table WHERE cpID = %d AND ckey = %s  LIMIT 1", $postid, $cache_key ) );	
+	
+	if ( is_object( $row ) ) {
+			return $row->cvalue;
+	}else{
+			return false;
+	}
+}
+
+function srp_cache_store($postid, $cache_key, $output){
 
 	global $wpdb;
-
-	$prefix = stripslashes($wpdb->esc_like( '_transient_' . $prefix ));	
-	$sql    = "SELECT `option_name` FROM $wpdb->options WHERE `option_name` LIKE '%s'";
-	$keys   = $wpdb->get_results( $wpdb->prepare( $sql, $prefix . '%' ), ARRAY_A );	
+	$table = $wpdb->prefix.'super_related_cached';	
+	$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $table (`cpID`, `ckey`, `cvalue`) VALUES (%d, %s, %s) ON DUPLICATE KEY UPDATE `cpID` = VALUES(`cpID`), `ckey` = VALUES(`ckey`), `cvalue` = VALUES(`cvalue`)", $postid, $cache_key, $output ) );
+	if ( ! $result ) {
+		return false;
+	}
 	
-	if ( is_wp_error( $keys ) ) {
-		return [];
-	}
-
-	return array_map( function( $key ) {
-		return str_replace('_transient_', '', $key['option_name']);
-	}, $keys );
-}
-
-function srp_cache_flush(){
-	$prefix = 'super-related-posts';
-	foreach ( srp_get_transient_keys_with_prefix( $prefix ) as $key ) {				
-		delete_transient( trim($key) );
-	}
-}
-
-function srp_cache_fetch($cache_key){	
-	return get_transient($cache_key);
-}
-
-function srp_cache_store($cache_key, $output){
-
-	set_transient( $cache_key, $output, 24 * 7 * HOUR_IN_SECONDS );
 }
 
 function srp_parse_args($args) {

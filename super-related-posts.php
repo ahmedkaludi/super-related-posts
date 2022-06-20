@@ -76,6 +76,13 @@ class SuperRelatedPosts {
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_result;
 		$start_time = srp_microtime();
 											
+		$postid = srp_current_post_id($sprp_current_ID);
+		$cache_key = $option_key.$postid.$args.'re1';
+		$result = srp_cache_fetch($postid, $cache_key);
+		if ($result !== false) {
+			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
+		}
+
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = srp_parse_args($args);
@@ -173,9 +180,10 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		// if($output){
-		// 	srp_cache_store($cache_key, $output);
-		// }
+		
+		if($output){
+			srp_cache_store($postid, $cache_key, $output);
+		}
 		
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
 	}
@@ -184,7 +192,14 @@ class SuperRelatedPosts {
 		
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_sql_2, $srp_execute_result;
 		$start_time = srp_microtime();
-						
+		$postid = srp_current_post_id($sprp_current_ID);	
+
+		$cache_key = $option_key.$postid.$args.'re2';
+		$result = srp_cache_fetch($postid, $cache_key);
+		if ($result !== false) {
+			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
+		}
+
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = srp_parse_args($args);
@@ -286,16 +301,24 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		// if($output){
-		// 	srp_cache_store($cache_key, $output);
-		// }		
+		if($output){
+			srp_cache_store($postid, $cache_key, $output);
+		}		
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
 	}
 
 	static function execute3($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_sql_2, $srp_execute_sql_3, $srp_execute_result;
 		$start_time = srp_microtime();		
-									
+		$postid = srp_current_post_id($sprp_current_ID);
+
+		$cache_key = $option_key.$postid.$args.'re3';
+		$result = srp_cache_fetch($postid, $cache_key);
+		if ($result !== false)
+		{
+			return $result . sprintf("<!-- Super Related Posts took %.3f ms (cached) -->", 1000 * (srp_microtime() - $start_time));
+		}
+		
 		$table_name = $table_prefix . 'super_related_posts';
 		// First we process any arguments to see if any defaults have been overridden
 		$options = srp_parse_args($args);
@@ -397,7 +420,7 @@ class SuperRelatedPosts {
 			}
 		}
 		if($output){
-			srp_cache_store($cache_key, $output);
+			srp_cache_store($postid,$cache_key, $output);
 		}
 				
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srp_microtime() - $start_time)) : '';
