@@ -12,7 +12,7 @@ function srpp_options_from_post($options, $args) {
 		switch ($arg) {
 		case 'limit':
 		case 'skip':
-		    $options[$arg] = srp_check_cardinal(intval($_POST[$arg]));
+		    $options[$arg] = srpp_check_cardinal(intval($_POST[$arg]));
 			break;
 		case 'excluded_cats':
 		case 'included_cats':			
@@ -46,7 +46,7 @@ function srpp_options_from_post($options, $args) {
 			$check = explode(',', rtrim(sanitize_text_field($_POST[$arg])));
 			$ids = array();
 			foreach ($check as $id) {
-				$id = srp_check_cardinal($id);
+				$id = srpp_check_cardinal($id);
 				if ($id !== 0) $ids[] = $id;
 			}
 			$options[$arg] = implode(',', array_unique($ids));
@@ -67,19 +67,19 @@ function srpp_options_from_post($options, $args) {
 		case 'age1':
 			$options['age1'] = array();
 			$options['age1']['direction'] = sanitize_text_field($_POST['age1-direction']);
-			$options['age1']['length'] 	  = srp_check_cardinal(intval($_POST['age1-length']));
+			$options['age1']['length'] 	  = srpp_check_cardinal(intval($_POST['age1-length']));
 			$options['age1']['duration']  = sanitize_text_field($_POST['age1-duration']);
 				break;
 		case 'age2':
 			$options['age2'] = array();
 			$options['age2']['direction'] = sanitize_text_field($_POST['age2-direction']);
-			$options['age2']['length']    = srp_check_cardinal(intval($_POST['age2-length']));
+			$options['age2']['length']    = srpp_check_cardinal(intval($_POST['age2-length']));
 			$options['age2']['duration']  = sanitize_text_field($_POST['age2-duration']);
 				break;
 		case 'age3':
 			$options['age3'] = array();
 			$options['age3']['direction'] = sanitize_text_field($_POST['age3-direction']);
-			$options['age3']['length']    = srp_check_cardinal(intval($_POST['age3-length']));
+			$options['age3']['length']    = srpp_check_cardinal(intval($_POST['age3-length']));
 			$options['age3']['duration']  = sanitize_text_field($_POST['age3-duration']);
 				break;
 		case 'custom':
@@ -117,12 +117,12 @@ function srpp_options_from_post($options, $args) {
 	return $options;
 }
 
-function srp_check_cardinal($string) {
+function srpp_check_cardinal($string) {
 	$value = intval($string);
 	return ($value > 0) ? $value : 0;
 }
 
-function srp_display_available_tags($plugin_name) {
+function srpp_display_available_tags($plugin_name) {
 	?>
 		<h3><?php echo esc_html__('Available Tags', 'super-related-posts'); ?></h3>
 		<ul style="list-style-type: none;">
