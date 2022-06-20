@@ -2,26 +2,26 @@
 
 // Admin stuff for Super Related Posts Plugin, Version 2.6.2.0
 
-add_action('admin_menu', 'srp_option_menu', 1);
+add_action('admin_menu', 'srpp_option_menu', 1);
 
-function srp_option_menu() {
-	add_options_page(__('Super Related Posts Options', 'super_related_posts'), __('Super Related Posts', 'super_related_posts'), 'edit_theme_options', 'super-related-posts', 'srp_options_page');
+function srpp_option_menu() {
+	add_options_page(__('Super Related Posts Options', 'super_related_posts'), __('Super Related Posts', 'super_related_posts'), 'edit_theme_options', 'super-related-posts', 'srpp_options_page');
 }
 
-function srp_options_page(){
+function srpp_options_page(){
 	echo '<div class="wrap"><h2>';
 	esc_html__('Super Related Posts ', 'super_related_posts');
 	echo '</h2></div>';
 	$m = new srp_admin_subpages();
-	$m->add_subpage('Related Post1',  'related_post1', 'srp_rp1_options_subpage');
-	$m->add_subpage('Related Post2',  'related_post2', 'srp_rp2_options_subpage');
-	$m->add_subpage('Related Post3',  'related_post3', 'srp_rp3_options_subpage');
-	$m->add_subpage('Posts Caching', 'posts_caching', 'srp_pi_options_subpage');
+	$m->add_subpage('Related Post1',  'related_post1', 'srpp_rp1_options_subpage');
+	$m->add_subpage('Related Post2',  'related_post2', 'srpp_rp2_options_subpage');
+	$m->add_subpage('Related Post3',  'related_post3', 'srpp_rp3_options_subpage');
+	$m->add_subpage('Posts Caching', 'posts_caching', 'srpp_pi_options_subpage');
 	$m->display();
 }
 
 
-function srp_rp1_options_subpage(){
+function srpp_rp1_options_subpage(){
 	global $wpdb, $wp_version;
 	$options = get_option('super-related-posts');
 	$num = 1;
@@ -29,7 +29,7 @@ function srp_rp1_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srp_options_from_post($options, array('age1','sort_by_1','display_status_1', 'limit', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
+		$options = srpp_options_from_post($options, array('age1','sort_by_1','display_status_1', 'limit', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -38,7 +38,7 @@ function srp_rp1_options_subpage(){
 	?>
 		<div class="wrap srpp-tab-content">
 			<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
-				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
+				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 			<?php } ?>
 		<form method="post" action="">
 
@@ -86,7 +86,7 @@ function srp_rp1_options_subpage(){
 	<?php
 }
 
-function srp_rp2_options_subpage(){
+function srpp_rp2_options_subpage(){
 	global $wpdb, $wp_version;
 	$options = get_option('super-related-posts');
 	$num = 2;
@@ -94,7 +94,7 @@ function srp_rp2_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srp_options_from_post($options, array('sort_by_2','display_status_2', 'limit_2', 'age2', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
+		$options = srpp_options_from_post($options, array('sort_by_2','display_status_2', 'limit_2', 'age2', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -158,7 +158,7 @@ function srp_rp2_options_subpage(){
 	<?php
 }
 
-function srp_pi_options_subpage(){
+function srpp_pi_options_subpage(){
 
 	
 	global $wpdb, $table_prefix;
@@ -209,7 +209,7 @@ function srp_pi_options_subpage(){
 	<?php
 }
 
-function srp_rp3_options_subpage(){
+function srpp_rp3_options_subpage(){
 	global $wpdb, $wp_version;
 	$options = get_option('super-related-posts');
 	$num = 3;
@@ -218,7 +218,7 @@ function srp_rp3_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srp_options_from_post($options, array('sort_by_3', 'display_status_3', 'limit_3', 'age3', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
+		$options = srpp_options_from_post($options, array('sort_by_3', 'display_status_3', 'limit_3', 'age3', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';

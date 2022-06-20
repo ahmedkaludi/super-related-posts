@@ -7,7 +7,7 @@
 
 define('SRPP_ASRP_LIBRARY', true);
 
-function srp_options_from_post($options, $args) {
+function srpp_options_from_post($options, $args) {
 	foreach ($args as $arg) {
 		switch ($arg) {
 		case 'limit':
