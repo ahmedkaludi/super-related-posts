@@ -5,7 +5,7 @@
 	Uses no javascript but 'borrows' some CSS it shouldn't
 */
 
-define('SRP_ADMIN_SUBPAGES_LIBRARY', true);
+define('SRPP_ADMIN_SUBPAGES_LIBRARY', true);
 
 class srp_admin_subpages {
 	var $pages = array();

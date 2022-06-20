@@ -5,7 +5,7 @@
 	-- provides the routines which the plugins share
 */
 
-define('SRP_LIBRARY', true);
+define('SRPP_LIBRARY', true);
 
 function srp_cache_flush(){
 	global $wpdb;	

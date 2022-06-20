@@ -19,6 +19,12 @@ if ( ! defined( 'SRPP_VERSION' ) ) {
 
 define('SRPP_DIR_NAME', dirname( __FILE__ ));
 define('SRPP_PLUGIN_URI', plugin_dir_url(__FILE__));
+
+if (!defined('SRPP_LIBRARY')) require(SRPP_DIR_NAME.'/includes/common_functions.php');
+if (!defined('SRPP_OT_LIBRARY')) require(SRPP_DIR_NAME.'/includes/output_tags.php');
+if (!defined('SRPP_ASRP_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin_common_functions.php');
+if (!defined('SRPP_ADMIN_SUBPAGES_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin-subpages.php');
+
 function super_related_posts($args = '') {
 	echo SuperRelatedPosts::execute($args);
 }
@@ -27,17 +33,6 @@ function super_related_posts_mark_current(){
 	global $post, $sprp_current_ID;
 	$sprp_current_ID = $post->ID;
 }
-
-define ('POST_PLUGIN_LIBRARY', true);
-
-if (!defined('SRP_LIBRARY')) require(SRPP_DIR_NAME.'/includes/common_functions.php');
-if (!defined('SRP_OT_LIBRARY')) require(SRPP_DIR_NAME.'/includes/output_tags.php');
-if (!defined('ASRP_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin_common_functions.php');
-if (!defined('SRP_ADMIN_SUBPAGES_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin-subpages.php');
-
-if (!defined('DSEP')) define('DSEP', DIRECTORY_SEPARATOR);
-if (!defined('POST_PLUGIN_LIBRARY')) SuperRelatedPosts::install_post_plugin_library();
-
 
 $sprp_current_ID = -1;
 

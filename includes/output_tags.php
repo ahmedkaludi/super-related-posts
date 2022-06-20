@@ -5,7 +5,7 @@
 	-- provides the routines which evaluate output template tags
 */
 
-define('SRP_OT_LIBRARY', true);
+define('SRPP_OT_LIBRARY', true);
 
 // Called by the post plugins to match output tags to the actions that evaluate them
 function output_tag_action($tag) {
@@ -378,7 +378,7 @@ function otf_commentlink($option_key, $result, $ext) {
 	$ttl .= '<span class="rc-title">'.otf_title($option_key, $result, '').'</span>';
 	$pml = otf_commenturl($option_key, $result, '');
 	$pdt = oth_format_date($result->comment_date_gmt, '');
-	$pdt .= __(' at ', 'post_plugin_library');
+	$pdt .= __(' at ', 'super-related-posts');
 	$pdt .= oth_format_time($result->comment_date_gmt, '');
 	return "<a href=\"$pml\" rel=\"bookmark\" title=\"$pdt\">$ttl</a>";
 }
@@ -419,7 +419,7 @@ function otf_categorylinks($option_key, $result, $ext) {
 	foreach ($cats as $cat) {
 		if ($n > 0) $value .= $ext;
 		$catname = apply_filters('single_cat_title', $cat->cat_name);
-		$value .= '<a href="' . get_category_link($cat->cat_ID) . '" title="' . sprintf(__("View all posts in %s", 'post_plugin_library'), $catname) . '" rel="category tag">'.$catname.'</a> ';
+		$value .= '<a href="' . get_category_link($cat->cat_ID) . '" title="' . sprintf(__("View all posts in %s", 'super-related-posts'), $catname) . '" rel="category tag">'.$catname.'</a> ';
 		++$n;
 	}
 	return $value;

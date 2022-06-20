@@ -194,7 +194,7 @@ function srp_pi_options_subpage(){
     </div>
 	<table class="optiontable form-table">
 	<tr valign="top">
-		<th scope="row"><label for=""><?php _e('Cache Posts:', 'post_plugin_library') ?></label></th>
+		<th scope="row"><label for=""><?php _e('Cache Posts:', 'super-related-posts') ?></label></th>
 		<td>
 		<?php if($caching_status != 'finished'){ ?>	
 			<button type="button" id="start-caching-btn" class="button button-primary"><?php esc_html_e( 'Start Caching', 'super-related-posts' )?></button>
