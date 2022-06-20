@@ -26,9 +26,7 @@ function output_tag_action($tag) {
 //		$ext			some extra data which a tag may use
 //	the return value is the value of the tag as a string
 
-function otf_postid ($option_key, $result, $ext) {
-	return $result->ID;
-}
+
 
 function otf_title ($option_key, $result, $ext) {
 	$value = oth_truncate_text($result->post_title, $ext);
@@ -519,7 +517,7 @@ function otf_link($option_key, $result, $ext) {
 	$pdt = otf_date($option_key, $result, null);
 	$img = otf_imagesrc_shareaholic($option_key, $result, null);
 	if(empty($img)){
-		$img = SPRP_PLUGIN_URI.'/images/default-image.png';
+		$img = SRPP_PLUGIN_URI.'/images/default-image.png';
 	}
 	return "<div class=\"sprp-wrpr\"><div class=\"sprp-txt\"><a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\">$ttl</a></div><div class=\"sprp-img\"><a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\"><img src=\"$img\" width=\"250\" height=\"175\"></a></div></div>";
 }
@@ -839,46 +837,6 @@ function oth_splitapart($subject) {
 	}
 	return $newbits;
 }
-
-function otf_if($option_key, $result, $ext) {
-	global $post;
-	$ID = srp_current_post_id();
-	$condition = 'true';
-	$true = '';
-	$false = '';
-	if ($ext) {
-		$s = oth_splitapart($ext);
-		if (isset($s[0])) $condition = $s[0];
-		if (isset($s[1])) $true = $s[1];
-		if (isset($s[2])) $false = $s[2];
-	}
-	if (strpos($condition, '{')!==false) {
-		$condition = srp_expand_template($result, $condition, srp_prepare_template($condition), $option_key);
-	}
-	if (eval("return ($condition);")) $tag = $true; else $tag = $false;
-	// if the replacement tag contains pseudotags expand them
-	if (strpos($tag, '}')!==false) {
-		$tag = srp_expand_template($result, $tag, srp_prepare_template($tag), $option_key);
-	}
-	return $tag;
-}
-
-function otf_php($option_key, $result, $ext) {
-	global $post;
-	$ID = srp_current_post_id();
-	$value = '';
-	if ($ext) {
-		if (strpos($ext, '{')!==false) {
-			$ext = srp_expand_template($result, $ext, srp_prepare_template($ext), $option_key);
-		}
-		ob_start();
-		eval($ext);
-		$value = ob_get_contents();
-		ob_end_clean();
-	}
-	return $value;
-}
-
 
 // ****************************** Helper Functions *********************************************
 

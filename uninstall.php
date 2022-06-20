@@ -11,4 +11,7 @@
 
 		$table_name = $table_prefix . 'super_related_posts';
 		$wpdb->query("DROP TABLE `$table_name`");
+
+		$cached_table = $table_prefix . 'super_related_cached';
+		$wpdb->query("DROP TABLE `$cached_table`");
 	}

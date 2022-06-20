@@ -697,7 +697,7 @@ function srp_enqueue_style_js( $hook ) {
 						
 		$data = apply_filters('srp_localize_filter',$data,'srp_localize_data');					   
 	
-		wp_register_script( 'srp-admin-js', SPRP_PLUGIN_URI . 'js/srp-admin.js', array('jquery'), SuperRelatedPosts::$version , true );					
+		wp_register_script( 'srp-admin-js', SRPP_PLUGIN_URI . 'js/srp-admin.js', array('jquery'), SuperRelatedPosts::$version , true );					
 		wp_localize_script( 'srp-admin-js', 'srp_localize_data', $data );	
 		wp_enqueue_script( 'srp-admin-js' );			
 
@@ -710,21 +710,19 @@ add_action( 'admin_notices', 'srp_admin_notice' );
 function srp_admin_notice(){
 	
 	if(get_option('srp_posts_caching_status') != 'finished'){
-	
-		$setup_notice = '<div class="notice notice-warning">'
-                    . '<p>'
-                    . '<strong>Welcome to Super Related Posts</strong>'
-                    .' - '.'To work this plugin faster you need to cache the posts'
-                    . '</p>'
-                    . '<p>'
-                    . '<a class="button button-primary" href="'.esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )).'">'
-                    . 'Start Caching'
-                    . '</a> '                    
-                    . '</p>'
-                    . '</div>';        
-
-    	echo $setup_notice;					
-
+	?>
+					<div class="notice notice-warning">
+                    	<p>
+                    		<strong><?php echo esc_html__( 'Welcome to Super Related Posts' , 'super-related-posts') ?></strong> <?php echo esc_html__( '- To work this plugin faster you need to cache the posts' , 'super-related-posts') ?>
+						</p>
+						<p>
+						<a class="button button-primary" href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )); ?>">
+						<?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a>
+						</p>
+						</div>
+                    
+	<?php
+	    
 	}	
 
 }

@@ -15,32 +15,35 @@ function srp_options_from_post($options, $args) {
 		    $options[$arg] = srp_check_cardinal($_POST[$arg]);
 			break;
 		case 'excluded_cats':
-		case 'included_cats':
-			if (isset($_POST[$arg])) {
-				// get the subcategories too
+		case 'included_cats':			
+			if (!empty($_POST[$arg])) {
+				
 				if (function_exists('get_term_children')) {
 					$catarray = $_POST[$arg];
+					// Sanitize $_POST;
+					$catarray = array_map( 'intval', $catarray );
 					foreach ($catarray as $cat) {
 						$catarray = array_merge($catarray, get_term_children($cat, 'category'));
 					}
-					$_POST[$arg] = array_unique($catarray);
+					$argids = array_unique($catarray);
 				}
-				$options[$arg] = implode(',', $_POST[$arg]);
+				$options[$arg] = implode(',', $argids);
 			} else {
 				$options[$arg] = '';
 			}
 			break;
 		case 'excluded_authors':
-		case 'included_authors':
-			if (isset($_POST[$arg])) {
-				$options[$arg] = implode(',', $_POST[$arg]);
+		case 'included_authors':						
+			if (!empty($_POST[$arg])) {
+				$authorIds = array_map( 'intval', $_POST[$arg]);
+				$options[$arg] = implode(',', $authorIds);
 			} else {
 				$options[$arg] = '';
 			}
 			break;
 		case 'excluded_posts':
 		case 'included_posts':
-			$check = explode(',', rtrim($_POST[$arg]));
+			$check = explode(',', rtrim(sanitize_text_field($_POST[$arg])));
 			$ids = array();
 			foreach ($check as $id) {
 				$id = srp_check_cardinal($id);
@@ -49,8 +52,8 @@ function srp_options_from_post($options, $args) {
 			$options[$arg] = implode(',', array_unique($ids));
 			break;
 		case 'stripcodes':
-			$st = explode("\n", trim($_POST['starttags']));
-			$se = explode("\n", trim($_POST['endtags']));
+			$st = explode("\n", trim(sanitize_text_field($_POST['starttags'])));
+			$se = explode("\n", trim(sanitize_text_field($_POST['endtags'])));
 			if (count($st) != count($se)) {
 				$options['stripcodes'] = array(array());
 			} else {
@@ -63,36 +66,36 @@ function srp_options_from_post($options, $args) {
 			break;
 		case 'age1':
 			$options['age1'] = array();
-			$options['age1']['direction'] = $_POST['age1-direction'];
-			$options['age1']['length'] = srp_check_cardinal($_POST['age1-length']);
-			$options['age1']['duration'] = $_POST['age1-duration'];
+			$options['age1']['direction'] = sanitize_text_field($_POST['age1-direction']);
+			$options['age1']['length'] 	  = srp_check_cardinal(intval($_POST['age1-length']));
+			$options['age1']['duration']  = sanitize_text_field($_POST['age1-duration']);
 				break;
 		case 'age2':
 			$options['age2'] = array();
-			$options['age2']['direction'] = $_POST['age2-direction'];
-			$options['age2']['length'] = srp_check_cardinal($_POST['age2-length']);
-			$options['age2']['duration'] = $_POST['age2-duration'];
+			$options['age2']['direction'] = sanitize_text_field($_POST['age2-direction']);
+			$options['age2']['length']    = srp_check_cardinal(intval($_POST['age2-length']));
+			$options['age2']['duration']  = sanitize_text_field($_POST['age2-duration']);
 				break;
 		case 'age3':
 			$options['age3'] = array();
-			$options['age3']['direction'] = $_POST['age3-direction'];
-			$options['age3']['length'] = srp_check_cardinal($_POST['age3-length']);
-			$options['age3']['duration'] = $_POST['age3-duration'];
+			$options['age3']['direction'] = sanitize_text_field($_POST['age3-direction']);
+			$options['age3']['length']    = srp_check_cardinal(intval($_POST['age3-length']));
+			$options['age3']['duration']  = sanitize_text_field($_POST['age3-duration']);
 				break;
 		case 'custom':
-			$options['custom']['key'] = $_POST['custom-key'];
-			$options['custom']['op'] = $_POST['custom-op'];
-			$options['custom']['value'] = $_POST['custom-value'];
+			$options['custom']['key'] = sanitize_text_field($_POST['custom-key']);
+			$options['custom']['op']   = sanitize_text_field($_POST['custom-op']);
+			$options['custom']['value'] = sanitize_text_field($_POST['custom-value']);
 			break;
 		case 'sort':
-			$options['sort']['by1'] = $_POST['sort-by1'];
-			$options['sort']['order1'] = $_POST['sort-order1'];
+			$options['sort']['by1'] = sanitize_text_field($_POST['sort-by1']);
+			$options['sort']['order1'] = sanitize_text_field($_POST['sort-order1']);
 			if ($options['sort']['order1'] === 'SORT_ASC') $options['sort']['order1'] = SORT_ASC; else $options['sort']['order1'] = SORT_DESC;
-			$options['sort']['case1'] = $_POST['sort-case1'];
-			$options['sort']['by2'] = $_POST['sort-by2'];
-			$options['sort']['order2'] = $_POST['sort-order2'];
+			$options['sort']['case1'] = sanitize_text_field($_POST['sort-case1']);
+			$options['sort']['by2'] = sanitize_text_field($_POST['sort-by2']);
+			$options['sort']['order2'] = sanitize_text_field($_POST['sort-order2']);
 			if ($options['sort']['order2'] === 'SORT_ASC') $options['sort']['order2'] = SORT_ASC; else $options['sort']['order2'] = SORT_DESC;
-			$options['sort']['case2'] = $_POST['sort-case2'];
+			$options['sort']['case2'] = sanitize_text_field($_POST['sort-case2']);
 			if ($options['sort']['by1'] === '') {
 				$options['sort']['order1'] = SORT_ASC;
 				$options['sort']['case1'] = 'false';
@@ -104,11 +107,11 @@ function srp_options_from_post($options, $args) {
 			}
 			break;
 		case 'num_terms':
-			$options['num_terms'] = $_POST['num_terms'];
+			$options['num_terms'] = sanitize_text_field($_POST['num_terms']);
 			if ($options['num_terms'] < 1) $options['num_terms'] = 20;
 			break;
 		default:
-			$options[$arg] = isset( $_POST[ $arg ] ) ? trim( $_POST[ $arg ] ) : '';
+			$options[$arg] = isset( $_POST[ $arg ] ) ? trim( sanitize_text_field($_POST[ $arg ]) ) : '';
 		}
 	}
 	return $options;
@@ -558,36 +561,6 @@ function srp_display_cats($excluded_cats, $included_cats) {
 					}
 				}
 			?>
-			</table>
-		</td>
-	</tr>
-	<?php
-}
-
-function srp_display_stripcodes($stripcodes) {
-	?>
-	<tr valign="top">
-		<th scope="row"><?php _e('Other plugins\' tags to remove from snippet:', 'post_plugin_library') ?></th>
-		<td>
-			<table>
-			<tr><td style="border-bottom-width: 0"><label for="starttags"><?php _e('opening', 'post_plugin_library') ?></label></td><td style="border-bottom-width: 0"><label for="endtags"><?php _e('closing', 'post_plugin_library') ?></label></td></tr>
-			<tr valign="top"><td style="border-bottom-width: 0">
-                <textarea name="starttags" id="starttags" rows="4" cols="20"><?php
-				foreach ($stripcodes as $tag) {
-					if(array_key_exists('start',$tag)){
-						echo htmlspecialchars(stripslashes($tag['start']))."\n";
-					}
-				}
-				?></textarea></td><td style="border-bottom-width: 0">
-
-                <textarea name="endtags" id="endtags" rows="4" cols="20"><?php
-				foreach ($stripcodes as $tag) {
-					if(array_key_exists('end',$tag)){
-						echo htmlspecialchars(stripslashes($tag['end']))."\n";
-					}
-				}
-				?></textarea>
-            </td></tr>
 			</table>
 		</td>
 	</tr>

@@ -13,12 +13,12 @@ License: GPL2
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! defined( 'SUPER_RELATED_POSTS_VERSION' ) ) {
-    define( 'SUPER_RELATED_POSTS_VERSION', '1.0' );
+if ( ! defined( 'SRPP_VERSION' ) ) {
+    define( 'SRPP_VERSION', '1.0' );
 }
 
-define('SPRP_DIR_NAME', dirname( __FILE__ ));
-define('SPRP_PLUGIN_URI', plugin_dir_url(__FILE__));
+define('SRPP_DIR_NAME', dirname( __FILE__ ));
+define('SRPP_PLUGIN_URI', plugin_dir_url(__FILE__));
 function super_related_posts($args = '') {
 	echo SuperRelatedPosts::execute($args);
 }
@@ -30,10 +30,10 @@ function super_related_posts_mark_current(){
 
 define ('POST_PLUGIN_LIBRARY', true);
 
-if (!defined('SRP_LIBRARY')) require(SPRP_DIR_NAME.'/includes/common_functions.php');
-if (!defined('SRP_OT_LIBRARY')) require(SPRP_DIR_NAME.'/includes/output_tags.php');
-if (!defined('ASRP_LIBRARY')) require(SPRP_DIR_NAME.'/admin/admin_common_functions.php');
-if (!defined('SRP_ADMIN_SUBPAGES_LIBRARY')) require(SPRP_DIR_NAME.'/admin/admin-subpages.php');
+if (!defined('SRP_LIBRARY')) require(SRPP_DIR_NAME.'/includes/common_functions.php');
+if (!defined('SRP_OT_LIBRARY')) require(SRPP_DIR_NAME.'/includes/output_tags.php');
+if (!defined('ASRP_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin_common_functions.php');
+if (!defined('SRP_ADMIN_SUBPAGES_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin-subpages.php');
 
 if (!defined('DSEP')) define('DSEP', DIRECTORY_SEPARATOR);
 if (!defined('POST_PLUGIN_LIBRARY')) SuperRelatedPosts::install_post_plugin_library();
@@ -656,7 +656,7 @@ function sp_get_tag_terms($ID, $utf8) {
 }
 
 if ( is_admin() ) {
-	require(SPRP_DIR_NAME.'/admin/super-related-posts-admin.php');
+	require(SRPP_DIR_NAME.'/admin/super-related-posts-admin.php');
 }
 
 function sp_is_user_allowed_to_add_php_code() {
@@ -736,7 +736,7 @@ function sprp_front_css_and_js(){
 
 	$local = apply_filters('srp_front_data',$local,'srp_localize_front_data');
 
-	wp_register_script( 'srp-front-js', SPRP_PLUGIN_URI . 'js/srp.js', array('jquery'), SuperRelatedPosts::$version , true );                        
+	wp_register_script( 'srp-front-js', SRPP_PLUGIN_URI . 'js/srp.js', array('jquery'), SuperRelatedPosts::$version , true );                        
 	wp_localize_script( 'srp-front-js', 'srp_localize_front_data', $local );        
 	wp_enqueue_script( 'srp-front-js');
 }
