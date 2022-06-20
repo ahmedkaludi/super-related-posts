@@ -454,7 +454,7 @@ function sp_terms_by_freq($ID, $num_terms = 20) {
 function sp_save_index_entry($postID) {
 	global $wpdb, $table_prefix;
 	$table_name = $table_prefix . 'super_related_posts';
-	$post = $wpdb->get_row("SELECT post_content, post_title, post_type FROM $wpdb->posts WHERE ID = $postID", ARRAY_A);
+	$post = $wpdb->get_row("SELECT post_content, post_date, post_title, post_type FROM $wpdb->posts WHERE ID = $postID", ARRAY_A);
 	if ($post['post_type'] === 'revision') return $postID;
 	//extract its terms
 	$options = get_option('super-related-posts');
@@ -466,13 +466,14 @@ function sp_save_index_entry($postID) {
 	}	
 	$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
 	$tags = sp_get_tag_terms($postID, $utf8);
+	$sdate  = date("Ymd",strtotime($post['post_date']));	
 	//check to see if the field is set
 	$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
 	//then insert if empty
 	if (is_null($pid)) {
-		$wpdb->query("INSERT INTO $table_name (pID, title, tags) VALUES ($postID, \"$title\", \"$tags\")");
+		$wpdb->query("INSERT INTO $table_name (pID, title, tags, spost_date) VALUES ($postID, \"$title\", \"$tags\", \"$sdate\")");
 	} else {
-		$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\" WHERE pID=$postID" );
+		$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\", spost_date=\"$sdate\" WHERE pID=$postID" );
 	}
 	return $postID;
 }

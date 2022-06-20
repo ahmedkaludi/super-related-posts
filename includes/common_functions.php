@@ -27,8 +27,17 @@ function srp_cache_fetch($postid, $cache_key){
 }
 
 function srp_cache_store($postid, $cache_key, $output){
-
 	global $wpdb;
+	if ( is_scalar( $cache_key ) ) {
+		$cache_key = trim( $cache_key );
+	}
+
+	if ( empty( $cache_key ) ) {
+		return false;
+	}
+	
+	$output = maybe_serialize( $output );
+	
 	$table = $wpdb->prefix.'super_related_cached';	
 	$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $table (`cpID`, `ckey`, `cvalue`) VALUES (%d, %s, %s) ON DUPLICATE KEY UPDATE `cpID` = VALUES(`cpID`), `ckey` = VALUES(`ckey`), `cvalue` = VALUES(`cvalue`)", $postid, $cache_key, $output ) );
 	if ( ! $result ) {
