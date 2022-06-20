@@ -755,4 +755,3 @@ function srpp_get_plugin_data($plugin_file) {
 	}
 	return $plugin_data;
 }
-
