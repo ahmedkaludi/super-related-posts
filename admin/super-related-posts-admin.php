@@ -280,8 +280,8 @@ function srpp_rp3_options_subpage(){
 	<?php
 }
 
-add_action( 'admin_footer', 'srp_admin_footer' );
-function srp_admin_footer() {
+add_action( 'admin_footer', 'srpp_admin_footer' );
+function srpp_admin_footer() {
 	$current_screen = get_current_screen();
 	if ( 'settings_page_super-related-posts' !== $current_screen->id && 'widgets' !== $current_screen->id ) {
 		return;
@@ -377,7 +377,7 @@ function srp_admin_footer() {
 }
 
 // sets up the index for the blog
-function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=500, $cjk=false) {
+function srpp_save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=500, $cjk=false) {
 
 	global $wpdb, $table_prefix;
 	
@@ -454,9 +454,9 @@ function save_index_entries ($start, $utf8=false, $use_stemmer='false', $batch=5
 	return $termcount;
 }
 
-add_action( 'wp_ajax_srp_start_posts_caching', 'srp_start_posts_caching'); 
+add_action( 'wp_ajax_srpp_start_posts_caching', 'srpp_start_posts_caching'); 
 
-function srp_start_posts_caching(){
+function srpp_start_posts_caching(){
 			
 	 if ( ! isset( $_GET['srp_security_nonce'] ) ){
 		return; 
@@ -499,7 +499,7 @@ function srp_start_posts_caching(){
 	
 		$percentage = round( (($start / $posts_count) * 100), 2);					
 		
-	 	$result = save_index_entries ($start, true, 'false', 500, true);		
+	 	$result = srpp_save_index_entries ($start, true, 'false', 500, true);		
 		if($result > 0){
 			$status = array('status' => 'continue', 'percentage' => $percentage."%");
 		}else{
@@ -512,7 +512,7 @@ function srp_start_posts_caching(){
 }
 
 // this function gets called when the plugin is installed to set up the index and default options
-function super_related_posts_install() {
+function srpp_super_related_posts_install() {
    	global $wpdb;
 
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -670,9 +670,9 @@ function super_related_posts_install() {
 	error_reporting($errorlevel);
 }
 
-if (!function_exists('srp_plugin_basename')) {
+if (!function_exists('srpp_plugin_basename')) {
 	if ( !defined('WP_PLUGIN_DIR') ) define( 'WP_PLUGIN_DIR', ABSPATH . 'wp-content/plugins' );
-	function srp_plugin_basename($file) {
+	function srpp_plugin_basename($file) {
 		$file = str_replace('\\','/',$file); // sanitize for Win32 installs
 		$file = preg_replace('|/+|','/', $file); // remove any duplicate slash
 		$plugin_dir = str_replace('\\','/',WP_PLUGIN_DIR); // sanitize for Win32 installs
@@ -682,11 +682,11 @@ if (!function_exists('srp_plugin_basename')) {
 	}
 }
 
-add_action('activate_super-related-posts/super-related-posts.php', 'super_related_posts_install');
+add_action('activate_super-related-posts/super-related-posts.php', 'srpp_super_related_posts_install');
 
-add_action( 'admin_enqueue_scripts', 'srp_enqueue_style_js' );
+add_action( 'admin_enqueue_scripts', 'srpp_enqueue_style_js' );
 
-function srp_enqueue_style_js( $hook ) {              		
+function srpp_enqueue_style_js( $hook ) {              		
 	
 	if( $hook == 'settings_page_super-related-posts'){
 
@@ -705,9 +705,9 @@ function srp_enqueue_style_js( $hook ) {
 	
 }
 
-add_action( 'admin_notices', 'srp_admin_notice' );
+add_action( 'admin_notices', 'srpp_admin_notice' );
 
-function srp_admin_notice(){
+function srpp_admin_notice(){
 	
 	if(get_option('srp_posts_caching_status') != 'finished'){
 	?>

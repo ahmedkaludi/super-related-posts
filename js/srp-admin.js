@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
     function srp_start_caching_ajax(current){
         current.addClass('updating-message');
         $.get( ajaxurl,{                    
-            action:"srp_start_posts_caching", 
+            action:"srpp_start_posts_caching", 
             srp_security_nonce:srp_localize_data.srp_security_nonce
             }, function(response) {
                 $("#srp-percentage-div").addClass('srpp_dnone');
