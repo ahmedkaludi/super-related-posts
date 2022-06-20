@@ -234,7 +234,7 @@ function srpp_rp3_options_subpage(){
 		<table class="optiontable form-table">
 			<?php
 				srpp_display_status($options['display_status_3'], $num);	
-				sprp_display_shortcode($num);
+				srpp_display_shortcode($num);
 				srpp_display_limit_i($options['limit_3'], $num);				
 				srpp_sort_post_by_recent_popular_i($options['sort_by_3'], $num);
 				srpp_display_age($options['age3'], $options['sort_by_3'], $num);

@@ -162,7 +162,7 @@ function srpp_display_available_tags($plugin_name) {
 	<?php
 }
 
-function srp_display_available_comment_tags() {
+function srpp_display_available_comment_tags() {
 	?>
 		<ul style="list-style-type: none;">
 		<li title="">{commentexcerpt}</li>
@@ -185,26 +185,15 @@ function srp_display_available_comment_tags() {
 
 /*
 
-	inserts a form button to submit a bug report to my web site
-
-*/
-function get_plugin_version($prefix) {
-	$plugin_version = str_replace('-', '_', $prefix) . '_version';
-	global $$plugin_version;
-	return ${$plugin_version};
-}
-
-/*
-
 	inserts a form button to completely remove the plugin and all its options etc.
 
 */
 
-function srp_confirm_eradicate() {
+function srpp_confirm_eradicate() {
  return (isset($_POST['eradicate-check']) && 'yes'===$_POST['eradicate-check']);
 }
 
-function srp_deactivate_plugin($plugin_file) {
+function srpp_deactivate_plugin($plugin_file) {
 	$current = get_option('active_plugins');
 	$plugin_file = substr($plugin_file, strlen(WP_PLUGIN_DIR)+1);
 	$plugin_file = str_replace('\\', '/', $plugin_file);
@@ -229,7 +218,7 @@ function srpp_display_limit($limit) {
 	<?php
 }
 
-function sprp_display_shortcode($num) {
+function srpp_display_shortcode($num) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="limit_<?php echo $num; ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
@@ -247,7 +236,7 @@ function srpp_display_limit_i($limit, $num) {
 	<?php
 }
 
-function srp_display_unique($unique) {
+function srpp_display_unique($unique) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="unique"><?php echo esc_html__('Show just one comment per post?', 'super-related-posts') ?></label></th>
@@ -261,7 +250,7 @@ function srp_display_unique($unique) {
 	<?php
 }
 
-function srp_display_just_current_post($just_current_post) {
+function srpp_display_just_current_post($just_current_post) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="just_current_post"><?php echo esc_html__('Show just the current post?', 'super-related-posts') ?></label></th>
@@ -618,7 +607,7 @@ function srpp_display_custom($custom) {
 	<?php
 }
 
-function srp_display_orderby($options) {
+function srpp_display_orderby($options) {
 	global $wpdb;
 	$limit = 30;
 	$keys = $wpdb->get_col( "
@@ -674,7 +663,7 @@ function srp_display_orderby($options) {
 
 // now for recent_comments
 
-function srp_display_show_type($show_type) {
+function srpp_display_show_type($show_type) {
 	?>
 	<tr valign="top">
 		<th scope="row" title=""><label for="show_type"><?php echo esc_html__('Type of comment to show:', 'super-related-posts') ?></label></th>
@@ -689,7 +678,7 @@ function srp_display_show_type($show_type) {
 	<?php
 }
 
-function srp_display_group_by($group_by) {
+function srpp_display_group_by($group_by) {
 	?>
 	<tr valign="top">
 		<th scope="row" title=""><?php echo esc_html__('Type of grouping:', 'super-related-posts') ?></th>
@@ -705,7 +694,7 @@ function srp_display_group_by($group_by) {
 	<?php
 }
 
-function srp_display_no_author_comments($no_author_comments) {
+function srpp_display_no_author_comments($no_author_comments) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="no_author_comments"><?php echo esc_html__('Omit comments by the post author?', 'super-related-posts') ?></label></th>
@@ -719,7 +708,7 @@ function srp_display_no_author_comments($no_author_comments) {
 	<?php
 }
 
-function srp_display_no_user_comments($no_user_comments) {
+function srpp_display_no_user_comments($no_user_comments) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="no_user_comments"><?php echo esc_html__('Omit comments by registered users?', 'super-related-posts') ?></label></th>
@@ -733,7 +722,7 @@ function srp_display_no_user_comments($no_user_comments) {
 	<?php
 }
 
-function srp_display_date_modified($date_modified) {
+function srpp_display_date_modified($date_modified) {
 	?>
 	<tr valign="top">
 		<th scope="row"><?php echo esc_html__('Order by date of last edit rather than date of creation?', 'super-related-posts') ?></th>
@@ -748,7 +737,7 @@ function srp_display_date_modified($date_modified) {
 }
 
 // 'borrowed', with adaptations, from Stephen Rider at http://striderweb.com/nerdaphernalia/
-function srp_get_plugin_data($plugin_file) {
+function srpp_get_plugin_data($plugin_file) {
 	// You can optionally pass a specific value to fetch, e.g. 'Version' -- but it's inefficient to do that multiple times
 	// As of WP 2.5.1: 'Name', 'Title', 'Description', 'Author', 'Version'
 	// As of WP 2.7-bleeding: 'Name', 'PluginURI', 'Description', 'Author', 'AuthorURI', 'Version', 'TextDomain', 'DomainPath'
