@@ -329,7 +329,7 @@ function srpp_where_match_tags() {
 	return $tag_ids;			
 }
 
-function where_included_cats($included_cats) {
+function srpp_where_included_cats($included_cats) {
 	global $wpdb, $wp_version;
 	$catarray = explode(',', $included_cats);
 	foreach ( $catarray as $cat ) {
@@ -347,7 +347,7 @@ function where_included_cats($included_cats) {
 	return $sql;
 }
 
-function where_excluded_cats($excluded_cats) {
+function srpp_where_excluded_cats($excluded_cats) {
 	global $wpdb, $wp_version;
 	$catarray = explode(',', $excluded_cats);
 	foreach ( $catarray as $cat ) {
@@ -364,23 +364,23 @@ function where_excluded_cats($excluded_cats) {
 	return $sql;
 }
 
-function where_excluded_authors($excluded_authors){
+function srpp_where_excluded_authors($excluded_authors){
 	return "post_author NOT IN ( $excluded_authors )";
 }
 
-function where_included_authors($included_authors){
+function srpp_where_included_authors($included_authors){
 	return "post_author IN ( $included_authors )";
 }
 
-function where_excluded_posts($excluded_posts) {
+function srpp_where_excluded_posts($excluded_posts) {
 	return "ID NOT IN ( $excluded_posts )";
 }
 
-function where_included_posts($included_posts) {
+function srpp_where_included_posts($included_posts) {
 	return "ID IN ( $included_posts )";
 }
 
-function where_tag_str($tag_str) {
+function srpp_where_tag_str($tag_str) {
 	global $wpdb;
 	if ( strpos($tag_str, ',') !== false ) {
 		$intags = explode(',', $tag_str);
@@ -433,13 +433,13 @@ function srpp_where_omit_post($manual_current_ID = -1) {
 	return $postid;
 }
 
-function where_just_post() {
+function srpp_where_just_post() {
 	$postid = srpp_current_post_id();
 	if ($postid <= 1) $postid = -1;
 	return "ID = $postid";
 }
 
-function where_hide_future() {
+function srpp_where_hide_future() {
 	// from wp 2.1 future posts are taken care of by post status
 	$time_difference = get_option('gmt_offset');
 	$now = gmdate("Y-m-d H:i:s",(time()+($time_difference*3600)));
@@ -447,23 +447,23 @@ function where_hide_future() {
 	return $sql;
 }
 
-function where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms) {
+function srpp_where_fulltext_match($weight_title, $titleterms, $contentterms, $weight_tags, $tagterms) {
 	$wsql = array();
 	if ($weight_title) $wsql[] = "MATCH (`title`) AGAINST ( \"$titleterms\" )";	
 	if ($weight_tags) $wsql[] = "MATCH (`tags`) AGAINST ( \"$tagterms\" )";
 	return '(' . implode(' OR ', $wsql) . ') ' ;
 }
 
-function where_author_comments() {
+function srpp_where_author_comments() {
 	$author_email = get_the_author_email();
 	return "'$author_email' != comment_author_email";
 }
 
-function where_user_comments() {
+function srpp_where_user_comments() {
 	return "user_id = 0";
 }
 
-function score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids='') {
+function srpp_score_fulltext_match($table_name, $weight_title, $titleterms, $contentterms, $weight_tags, $tagterms, $forced_ids='') {
 	global $wpdb;
 	$wsql = array();
 	if ($weight_title) $wsql[] = "(".number_format($weight_title, 4, '.', '')." * (MATCH (`title`) AGAINST ( \"$titleterms\" )))";	
@@ -479,7 +479,7 @@ function score_fulltext_match($table_name, $weight_title, $titleterms, $contentt
 	return '(' . implode(' + ', $wsql) . "  ) as score FROM `$table_name` LEFT JOIN `$wpdb->posts` ON `pID` = `ID` ";
 }
 
-function where_comment_type($comment_type) {
+function srpp_where_comment_type($comment_type) {
 	if ($comment_type === 'comments') $sql = "comment_type = ''";
 	elseif ($comment_type === 'trackbacks') $sql = "comment_type != ''";
 	return $sql;
@@ -502,7 +502,7 @@ function srpp_where_check_age($direction, $length, $duration) {
 
 }
 
-function where_check_custom($key, $op, $value) {
+function srpp_where_check_custom($key, $op, $value) {
 	if ($op === 'EXISTS') {
 		return "meta_key = '$key'";
 	} else {
@@ -564,7 +564,7 @@ function srpp_register_post_filter($type, $key, $class, $condition='') {
 	sort($srp_filter_data);
 }
 
-function srp_post_filter_1($content) {
+function srpp_post_filter_1($content) {
 	global $srp_filter_data;
 	foreach ($srp_filter_data as $data) {
 		if($data['position'] == 'atc'){
@@ -619,7 +619,7 @@ function srpp_register_post_filter_2($type, $key, $class, $condition='') {
 	sort($srp_filter_data2);
 }
 
-function srp_post_filter_2($content) {
+function srpp_post_filter_2($content) {
 	global $srp_filter_data2;
 	foreach ($srp_filter_data2 as $data) {
 		if($data['position'] == 'atc'){
@@ -671,7 +671,7 @@ function srpp_register_post_filter_3($type, $key, $class, $condition='') {
 	sort($srp_filter_data3);
 }
 
-function srp_post_filter_3($content) {
+function srpp_post_filter_3($content) {
 	global $srp_filter_data3;
 	foreach ($srp_filter_data3 as $data) {
 		if($data['position'] == 'atc'){
@@ -719,7 +719,7 @@ function sprp_shortcode_content3($arg) {
 	return $content;
 }
 
-function srp_post_filter_init1() {
+function srpp_post_filter_init1() {
 
 	if(!is_admin()){
 		global $srp_options;
@@ -731,7 +731,7 @@ function srp_post_filter_init1() {
 			global $srp_filter_data;
 			if (!$srp_filter_data) return;
 			if(isset($srp_filter_data[0]['position']) && $srp_filter_data[0]['position'] != 'sc'){
-				add_filter('the_content', 'srp_post_filter_1', 5);
+				add_filter('the_content', 'srpp_post_filter_1', 5);
 			}else{
 				add_shortcode('super-related-posts', 'sprp_shortcode_content1');
 			}
@@ -740,7 +740,7 @@ function srp_post_filter_init1() {
 	}				
 }
 
-function srp_post_filter_init2() {
+function srpp_post_filter_init2() {
 	if(!is_admin()){
 		global $srp_options;
 		if(!$srp_options){
@@ -750,7 +750,7 @@ function srp_post_filter_init2() {
 			global $srp_filter_data2;
 			if (!$srp_filter_data2) return;
 			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
-				add_filter('the_content', 'srp_post_filter_2', 5);
+				add_filter('the_content', 'srpp_post_filter_2', 5);
 			}else{
 				add_shortcode('super-related-posts', 'sprp_shortcode_content2');
 			}
@@ -758,7 +758,7 @@ function srp_post_filter_init2() {
 	}		
 }
 
-function srp_post_filter_init3() {
+function srpp_post_filter_init3() {
 
 	if(!is_admin()){
 		global $srp_options;
@@ -769,7 +769,7 @@ function srp_post_filter_init3() {
 			global $srp_filter_data3;
 			if (!$srp_filter_data3) return;
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
-				add_filter('the_content', 'srp_post_filter_3', 5);
+				add_filter('the_content', 'srpp_post_filter_3', 5);
 			}else{
 				add_shortcode('super-related-posts', 'sprp_shortcode_content3');
 			}
@@ -778,14 +778,12 @@ function srp_post_filter_init3() {
 }
 
 // watch out that the registration functions are called earlier
-add_action ('init', 'srp_post_filter_init1');
-add_action ('init', 'srp_post_filter_init2');
-add_action ('init', 'srp_post_filter_init3');
+add_action ('init', 'srpp_post_filter_init1');
+add_action ('init', 'srpp_post_filter_init2');
+add_action ('init', 'srpp_post_filter_init3');
 
 /*
-
 	Now some routines to handle content filtering
-
 */
 
 // the '|'-separated list of valid content filter tags
@@ -805,7 +803,7 @@ function srpp_register_content_filter($tag) {
 }
 
 
-function srp_do_replace($matches) {
+function srpp_do_replace($matches) {
 	return call_user_func(array($matches[1], 'execute'), $matches[2]);
 }
 
@@ -813,7 +811,7 @@ function srpp_content_filter($content) {
 	global $srp_filter_tags;
 	// replaces every instance of "<!--RecentPosts-->", for example, with the output of the plugin
 	// the filter tag can be followed by text which will be used as a parameter string to change the behaviour of the plugin
-	return preg_replace_callback("/<!--($srp_filter_tags)\s*(.*)-->/", "srp_do_replace", $content);
+	return preg_replace_callback("/<!--($srp_filter_tags)\s*(.*)-->/", "srpp_do_replace", $content);
 }
 
 function srpp_content_filter_init() {
