@@ -68,12 +68,12 @@ input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transfor
  .slider.round {border-radius: 34px;}
 .slider.round:before {border-radius: 50%;}
 /* progress bar css starts here */
-.srp_progress_bar {
+.srpp_progress_bar {
     background-color: rgb(192, 192, 192);
     width: 100%;
     border-radius: 4px;
 }      
-.srp_progress_bar_body {    
+.srpp_progress_bar_body {    
     background-color: rgb(116, 194, 92);
     color: white;
     padding: 0.4%;
@@ -81,7 +81,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transfor
     font-size: 20px;
     border-radius: 4px;
 }      
-.srp_dnone{
+.srpp_dnone{
     display: none;
 }
 /* progress bar css ends here */

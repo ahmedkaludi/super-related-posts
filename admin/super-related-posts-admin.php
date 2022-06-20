@@ -189,8 +189,8 @@ function srp_pi_options_subpage(){
 			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).'% is completed. Please start again to finish</p></div>';	
 		}
 	?>			
-	<div class="srp_progress_bar srp_dnone">
-        <div class="srp_progress_bar_body" style="width: 50%;">50%</div>
+	<div class="srpp_progress_bar srpp_dnone">
+        <div class="srpp_progress_bar_body" style="width: 50%;">50%</div>
     </div>
 	<table class="optiontable form-table">
 	<tr valign="top">

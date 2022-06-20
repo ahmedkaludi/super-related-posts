@@ -6,18 +6,18 @@ jQuery(document).ready(function($){
             action:"srp_start_posts_caching", 
             srp_security_nonce:srp_localize_data.srp_security_nonce
             }, function(response) {
-                $("#srp-percentage-div").addClass('srp_dnone');
+                $("#srp-percentage-div").addClass('srpp_dnone');
                 current.removeClass('updating-message');                 
                 if(response.status === 'continue'){
-                    $(".srp_progress_bar").removeClass('srp_dnone');
-                    $(".srp_progress_bar_body").css("width", response.percentage);
-                    $(".srp_progress_bar_body").text(response.percentage);
+                    $(".srpp_progress_bar").removeClass('srpp_dnone');
+                    $(".srpp_progress_bar_body").css("width", response.percentage);
+                    $(".srpp_progress_bar_body").text(response.percentage);
                     srp_start_caching_ajax(current);
                 }
                 if(response.status === 'finished'){                                           
-                    $(".srp_progress_bar_body").css("width", response.percentage);
-                    $(".srp_progress_bar_body").text(response.percentage);
-                    $(".srp_progress_bar").addClass('srp_dnone');         
+                    $(".srpp_progress_bar_body").css("width", response.percentage);
+                    $(".srpp_progress_bar_body").text(response.percentage);
+                    $(".srpp_progress_bar").addClass('srpp_dnone');         
                     alert('Cached Successfully');        
                 }                
         },'json')
