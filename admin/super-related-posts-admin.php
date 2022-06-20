@@ -549,6 +549,28 @@ function super_related_posts_install() {
 		) ".$charset_collate.$engine.";");                
     }
 
+	if(!in_array("{$wpdb->prefix}super_related_cached", $found_tables)) {
+		
+		dbDelta("CREATE TABLE `{$wpdb->prefix}super_related_cached` (
+			`cpID` bigint( 20 ) unsigned NOT NULL,
+			`key` varchar(60) NOT NULL default '',
+			`value` TEXT,									
+			KEY `cpID` ( `cpID` ),	
+			KEY `key` ( `key` )			
+		) ".$charset_collate.$engine.";");
+    }
+
+	if(!in_array("{$wpdb->prefix}super_related_taxonomy", $found_tables)) {		
+		dbDelta("CREATE TABLE `{$wpdb->prefix}super_related_taxonomy` (
+			`tpID` bigint( 20 ) unsigned NOT NULL,
+			`taxonomy` varchar(32) NOT NULL,
+			`taxonomy_id` bigint( 20 ) unsigned NOT NULL,
+			KEY `tpID` ( `tpID` ),	
+			KEY `taxonomy_key` ( `taxonomy` ),
+			KEY `taxonomy_id_key` ( `taxonomy_id` )			
+		) ".$charset_collate.$engine.";");
+    }
+
 	$options = (array) get_option('super-related-posts-feed');
 	// check each of the option values and, if empty, assign a default (doing it this long way
 	// lets us add new options in later versions)
