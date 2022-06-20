@@ -9,7 +9,7 @@ define('SRPP_OT_LIBRARY', true);
 
 // Called by the post plugins to match output tags to the actions that evaluate them
 function srpp_output_tag_action($tag) {
-	return 'otf_'.$tag;
+	return 'srpp_otf_'.$tag;
 }
 
 /*
@@ -19,7 +19,7 @@ function srpp_output_tag_action($tag) {
 // To add a new output template tag all you need to do is write a tag function like those below.
 
 // All the tag functions must follow the pattern of 'srpp_otf_title' below.
-//	the name is the tag name prefixed by 'otf_'
+//	the name is the tag name prefixed by 'srpp_otf_'
 //	the arguments are always $option_key, $result and $ext
 //		$option_key	the key to the plugin's options
 //		$result		the particular row of the query result
@@ -29,16 +29,16 @@ function srpp_output_tag_action($tag) {
 
 
 function srpp_otf_title ($option_key, $result, $ext) {
-	$value = oth_truncate_text($result->post_title, $ext);
+	$value = srpp_oth_truncate_text($result->post_title, $ext);
 	return apply_filters('the_title', $value);
 }
 
 function srpp_otf_url($option_key, $result, $ext) {
 	$value = apply_filters('the_permalink', get_permalink($result->ID));
-	return oth_truncate_text($value, $ext);
+	return srpp_oth_truncate_text($value, $ext);
 }
 
-function srp_otf_author($option_key, $result, $ext) {
+function srp_srpp_otf_author($option_key, $result, $ext) {
 	$type = false;
 	if ($ext) {
 		$s = explode(':', $ext);
@@ -78,20 +78,20 @@ function srpp_otf_authorurl($option_key, $result, $ext) {
 
 function srpp_otf_date($option_key, $result, $ext) {
 	if ($ext === 'raw') return $result->post_date;
-	else return oth_format_date($result->post_date, $ext);
+	else return srpp_oth_format_date($result->post_date, $ext);
 }
 
 function srpp_otf_dateedited($option_key, $result, $ext) {
 	if ($ext === 'raw') return $result->post_modified;
-	else return oth_format_date($result->post_modified, $ext);
+	else return srpp_oth_format_date($result->post_modified, $ext);
 }
 
 function srpp_otf_time($option_key, $result, $ext) {
-	return oth_format_time($result->post_date, $ext);
+	return srpp_oth_format_time($result->post_date, $ext);
 }
 
 function srpp_otf_timeedited($option_key, $result, $ext) {
-	return oth_format_time($result->post_modified, $ext);
+	return srpp_oth_format_time($result->post_modified, $ext);
 }
 
 function srpp_otf_excerpt($option_key, $result, $ext) {
@@ -126,14 +126,14 @@ function srpp_otf_excerpt($option_key, $result, $ext) {
 	case 'a':
 		$value = trim($result->post_excerpt);
 		if ($value == '') $value = $result->post_content;
-		$value = oth_trim_excerpt($value, $ext);
+		$value = srpp_oth_trim_excerpt($value, $ext);
 		break;
 	case 'b':
 		$value = trim($result->post_excerpt);
 		if ($value === '') {
 			$value = $result->post_content;
 			$value = convert_smilies($value);
-			$value = oth_trim_extract($value, $len, $more, $numsent);
+			$value = srpp_oth_trim_extract($value, $len, $more, $numsent);
 			$value = apply_filters('get_the_content', $value);
 			remove_filter('the_content', 'srpp_content_filter', 5);
 			remove_filter('the_content', 'srp_post_filter', 5);
@@ -152,7 +152,7 @@ function srpp_otf_excerpt($option_key, $result, $ext) {
 	default:
 		$value = trim($result->post_excerpt);
 		if ($value == '') $value = $result->post_content;
-		$value = oth_trim_excerpt($value, $len);
+		$value = srpp_oth_trim_excerpt($value, $len);
 		break;
 	}
 	return $value;
@@ -174,7 +174,7 @@ function srpp_otf_snippet($option_key, $result, $ext) {
 		$url = srpp_otf_url($option_key, $result, '');
 		$more = '<a href="'.$url.'">'.$more.'</a>';
 	}
-	return oth_format_snippet($result->post_content, $option_key, $type, $len, $more);
+	return srpp_oth_format_snippet($result->post_content, $option_key, $type, $len, $more);
 }
 
 function srpp_otf_snippetword($option_key, $result, $ext) {
@@ -191,7 +191,7 @@ function srpp_otf_snippetword($option_key, $result, $ext) {
 		$url = srpp_otf_url($option_key, $result, '');
 		$more = '<a href="'.$url.'">'.$more.'</a>';
 	}
-	return oth_format_snippet($result->post_content, $option_key, 'word', $len, $more);
+	return srpp_oth_format_snippet($result->post_content, $option_key, 'word', $len, $more);
 }
 
 function srpp_otf_fullpost($option_key, $result, $ext) {
@@ -235,7 +235,7 @@ function srpp_otf_commentexcerpt($option_key, $result, $ext) {
 			}
 			if (count($s) > 3) {
 				if ($s[3] === 'link') {
-					$url = otf_commenturl($option_key, $result, '');
+					$url = srpp_otf_commenturl($option_key, $result, '');
 					$more = '<a href="'.$url.'">'.$more.'</a>';
 				}
 			}
@@ -299,13 +299,13 @@ function srpp_otf_commentsnippet($option_key, $result, $ext) {
 		if (isset($s[3]) && $s[3]) $link = $s[3];
 	}
 	if ($link === 'link') {
-		$url = otf_commenturl($option_key, $result, '');
+		$url = srpp_otf_commenturl($option_key, $result, '');
 		$more = '<a href="'.$url.'">'.$more.'</a>';
 	}
-	return oth_format_snippet($result->comment_content, $option_key, $type, $len, $more);
+	return srpp_oth_format_snippet($result->comment_content, $option_key, $type, $len, $more);
 }
 
-function srp_otf_commentsnippetword($option_key, $result, $ext) {
+function srp_srpp_otf_commentsnippetword($option_key, $result, $ext) {
 	$len = 100;
 	$more = '';
 	$link = 'nolink';
@@ -316,84 +316,84 @@ function srp_otf_commentsnippetword($option_key, $result, $ext) {
 		if (isset($s[2]) && $s[2]) $link = $s[2];
 	}
 	if ($link === 'link') {
-		$url = otf_commenturl($option_key, $result, '');
+		$url = srpp_otf_commenturl($option_key, $result, '');
 		$more = '<a href="'.$url.'">'.$more.'</a>';
 	}
-	return oth_format_snippet($result->comment_content, $option_key, 'word', $len, $more);
+	return srpp_oth_format_snippet($result->comment_content, $option_key, 'word', $len, $more);
 }
 
-function otf_commentdate($option_key, $result, $ext) {
+function srpp_otf_commentdate($option_key, $result, $ext) {
 	if ($ext === 'raw') return $result->comment_date;
-	return oth_format_date($result->comment_date, $ext);
+	return srpp_oth_format_date($result->comment_date, $ext);
 }
 
-function otf_commenttime($option_key, $result, $ext) {
-	return oth_format_time($result->comment_date, $ext);
+function srpp_otf_commenttime($option_key, $result, $ext) {
+	return srpp_oth_format_time($result->comment_date, $ext);
 }
 
-function otf_commentdategmt($option_key, $result, $ext) {
+function srpp_otf_commentdategmt($option_key, $result, $ext) {
 	if ($ext === 'raw') return $result->comment_date_gmt;
-	return oth_format_date($result->comment_date_gmt, $ext);
+	return srpp_oth_format_date($result->comment_date_gmt, $ext);
 }
 
-function otf_commenttimegmt($option_key, $result, $ext) {
-	return oth_format_time($result->comment_date_gmt, $ext);
+function srpp_otf_commenttimegmt($option_key, $result, $ext) {
+	return srpp_oth_format_time($result->comment_date_gmt, $ext);
 }
 
-function otf_commenter($option_key, $result, $ext) {
+function srpp_otf_commenter($option_key, $result, $ext) {
 	$value = $result->comment_author;
 	$value = apply_filters('get_comment_author', $value);
 	$value = apply_filters('comment_author', $value);
-	return oth_truncate_text($value, $ext);
+	return srpp_oth_truncate_text($value, $ext);
 }
 
-function otf_commenterurl($option_key, $result, $ext) {
+function srpp_otf_commenterurl($option_key, $result, $ext) {
 	$value = $result->comment_author_url;
 	$value = apply_filters('get_comment_author_url', $value);
-	return oth_truncate_text($value, $ext);
+	return srpp_oth_truncate_text($value, $ext);
 }
 
-function otf_commenterlink($option_key, $result, $ext) {
-	$url = otf_commenterurl($option_key, $result, '');
-	$author = otf_commenter($option_key, $result, $ext);
+function srpp_otf_commenterlink($option_key, $result, $ext) {
+	$url = srpp_otf_commenterurl($option_key, $result, '');
+	$author = srpp_otf_commenter($option_key, $result, $ext);
 	if (empty($url) || $url == 'http://') $value = $author;
 	else $value = "<a href='$url' rel='external nofollow'>$author</a>";
 	return $value;
 }
 
-function otf_commenterip($option_key, $result, $ext) {
+function srpp_otf_commenterip($option_key, $result, $ext) {
 	return $result->comment_author_IP;
 }
 
-function otf_commenturl($option_key, $result, $ext) {
+function srpp_otf_commenturl($option_key, $result, $ext) {
 	$value = apply_filters('the_permalink', get_permalink($result->ID)) . '#comment-' . $result->comment_ID;
-	return oth_truncate_text($value, $ext);
+	return srpp_oth_truncate_text($value, $ext);
 }
 
-function otf_commentlink($option_key, $result, $ext) {
-	$ttl = otf_commenter($option_key, $result, '');
+function srpp_otf_commentlink($option_key, $result, $ext) {
+	$ttl = srpp_otf_commenter($option_key, $result, '');
 	$ttl = '<span class="rc-commenter">' . $ttl . '</span>';
 	if (!$ext) $ext = ' commented on ';
 	$ttl .= $ext;
 	$ttl .= '<span class="rc-title">'.srpp_otf_title($option_key, $result, '').'</span>';
-	$pml = otf_commenturl($option_key, $result, '');
-	$pdt = oth_format_date($result->comment_date_gmt, '');
+	$pml = srpp_otf_commenturl($option_key, $result, '');
+	$pdt = srpp_oth_format_date($result->comment_date_gmt, '');
 	$pdt .= __(' at ', 'super-related-posts');
-	$pdt .= oth_format_time($result->comment_date_gmt, '');
+	$pdt .= srpp_oth_format_time($result->comment_date_gmt, '');
 	return "<a href=\"$pml\" rel=\"bookmark\" title=\"$pdt\">$ttl</a>";
 }
 
-function otf_commentlink2($option_key, $result, $ext) {
-	$commenturl = otf_commenturl($option_key, $result, '');
-	$commentdate = otf_commentdate($option_key, $result, '');
-	$commenttime = otf_commenttime($option_key, $result, '');
+function srpp_otf_commentlink2($option_key, $result, $ext) {
+	$commenturl = srpp_otf_commenturl($option_key, $result, '');
+	$commentdate = srpp_otf_commentdate($option_key, $result, '');
+	$commenttime = srpp_otf_commenttime($option_key, $result, '');
 	$title = srpp_otf_title($option_key, $result, '');
-	$commenter = otf_commenter($option_key, $result, '');
+	$commenter = srpp_otf_commenter($option_key, $result, '');
 	$commentexcerpt = srpp_otf_commentexcerpt($option_key, $result, '10');
 	return "<a href=\"$commenturl\" rel=\"bookmark\" title=\"$commentdate at $commenttime on '$title'\">$commenter</a> - $commentexcerpt&hellip;";
 }
 
-function otf_commentpopupurl($option_key, $result, $ext) {
+function srpp_otf_commentpopupurl($option_key, $result, $ext) {
 	global $wpcommentspopupfile, $wpcommentsjavascript;
 	$output = '';
 	if ( $wpcommentsjavascript ) {
@@ -408,11 +408,11 @@ function otf_commentpopupurl($option_key, $result, $ext) {
 	return $output;
 }
 
-function otf_catlinks($option_key, $result, $ext) {
-	return otf_categorylinks($option_key, $result, $ext);
+function srpp_otf_catlinks($option_key, $result, $ext) {
+	return srpp_otf_categorylinks($option_key, $result, $ext);
 }
 
-function otf_categorylinks($option_key, $result, $ext) {
+function srpp_otf_categorylinks($option_key, $result, $ext) {
 	$cats = get_the_category($result->ID);
 	$value = '';
 	$n = 0;
@@ -425,11 +425,11 @@ function otf_categorylinks($option_key, $result, $ext) {
 	return $value;
 }
 
-function otf_catnames($option_key, $result, $ext) {
-	return otf_categorynames($option_key, $result, $ext);
+function srpp_otf_catnames($option_key, $result, $ext) {
+	return srpp_otf_categorynames($option_key, $result, $ext);
 }
 
-function otf_categorynames($option_key, $result, $ext) {
+function srpp_otf_categorynames($option_key, $result, $ext) {
 	$cats = get_the_category($result->ID);
 	$value = '';
 	$n = 0;
@@ -441,12 +441,12 @@ function otf_categorynames($option_key, $result, $ext) {
 	return $value;
 }
 
-function otf_custom($option_key, $result, $ext) {
+function srpp_otf_custom($option_key, $result, $ext) {
 	$custom = get_post_custom($result->ID);
 	return $custom[$ext][0];
 }
 
-function otf_tags($option_key, $result, $ext) {
+function srpp_otf_tags($option_key, $result, $ext) {
 	$tags = (array) get_the_tags($result->ID);
 	$tag_list = array();
 	foreach ( $tags as $tag ) {
@@ -459,7 +459,7 @@ function otf_tags($option_key, $result, $ext) {
 	return $tag_list;
 }
 
-function otf_taglinks($option_key, $result, $ext) {
+function srpp_otf_taglinks($option_key, $result, $ext) {
 	$tags = (array) get_the_tags($result->ID);
 	$tag_list = '';
 	$tag_links = array();
@@ -476,7 +476,7 @@ function otf_taglinks($option_key, $result, $ext) {
 	return $tag_list;
 }
 
-function otf_totalposts($option_key, $result, $ext) {
+function srpp_otf_totalposts($option_key, $result, $ext) {
 	global $wpdb;
 	$value = '';
 	if (function_exists('get_post_type')) {
@@ -487,7 +487,7 @@ function otf_totalposts($option_key, $result, $ext) {
 	return $value;
 }
 
-function otf_totalpages($option_key, $result, $ext) {
+function srpp_otf_totalpages($option_key, $result, $ext) {
 	global $wpdb;
 	$value = '';
 	if (function_exists('get_post_type')) {
@@ -498,14 +498,14 @@ function otf_totalpages($option_key, $result, $ext) {
 	return $value;
 }
 
-/*function otf_link($option_key, $result, $ext) {
+/*function srpp_otf_link($option_key, $result, $ext) {
 	$ttl = srpp_otf_title($option_key, $result, $ext);
 	$pml = srpp_otf_url($option_key, $result, null);
 	$pdt = srpp_otf_date($option_key, $result, null);
 	return "<a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\">$ttl</a>";
 }*/
 
-function otf_link($option_key, $result, $ext) {
+function srpp_otf_link($option_key, $result, $ext) {
 	$ttl = srpp_otf_title($option_key, $result, $ext);
 	$pml = srpp_otf_url($option_key, $result, null);
 	$queryArg['utm_source']   = 'click';
@@ -515,19 +515,19 @@ function otf_link($option_key, $result, $ext) {
 	$pml = add_query_arg( 'utm_medium',$queryArg['utm_medium'] , $pml );
 	$pml = add_query_arg( 'utm_campaign',$queryArg['utm_campaign'] , $pml );
 	$pdt = srpp_otf_date($option_key, $result, null);
-	$img = otf_imagesrc_shareaholic($option_key, $result, null);
+	$img = srpp_otf_imagesrc_shareaholic($option_key, $result, null);
 	if(empty($img)){
 		$img = SRPP_PLUGIN_URI.'/images/default-image.png';
 	}
 	return "<div class=\"sprp-wrpr\"><div class=\"sprp-txt\"><a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\">$ttl</a></div><div class=\"sprp-img\"><a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\"><img src=\"$img\" width=\"250\" height=\"175\"></a></div></div>";
 }
 
-function otf_score($option_key, $result, $ext) {
+function srpp_otf_score($option_key, $result, $ext) {
 	return sprintf("%.0f", $result->score);
 }
 
 // tries to get the number of post views from a few popular plugins if the are installed
-function otf_postviews($option_key, $result, $ext) {
+function srpp_otf_postviews($option_key, $result, $ext) {
 	global $wpdb;
 	$count	= 0;
 	// alex king's popularity contest
@@ -547,7 +547,7 @@ function otf_postviews($option_key, $result, $ext) {
 	return $count;
 }
 
-function oth_get_actual_size($imgtag) {
+function srpp_oth_get_actual_size($imgtag) {
 	// first try extracting the width and height attributes
 	if (preg_match('/\s+width\s*=\s*[\'|\"](.*?)[\'|\"]/is', $imgtag, $matches)) {
 		$current_width = $matches[1];
@@ -572,13 +572,13 @@ function oth_get_actual_size($imgtag) {
 	return array($current_width, $current_height);
 }
 
-function oth_image_size_full($w, $h, $imgtag){
+function srpp_oth_image_size_full($w, $h, $imgtag){
 	return array(1, 1);
 }
 
-function oth_image_size_scale($w, $h, $imgtag){
+function srpp_oth_image_size_scale($w, $h, $imgtag){
 	$maxsize = max($w, $h);
-	list($current_width, $current_height) = oth_get_actual_size($imgtag);
+	list($current_width, $current_height) = srpp_oth_get_actual_size($imgtag);
 	$width_ratio = $height_ratio = 1.0;
 	if ($current_width > $maxsize)
 		$width_ratio = $maxsize / $current_width;
@@ -591,40 +591,40 @@ function oth_image_size_scale($w, $h, $imgtag){
 	return array($w, $h);
 }
 
-function oth_image_size_blank($w, $h, $imgtag){
+function srpp_oth_image_size_blank($w, $h, $imgtag){
 	return array(0, 0);
 }
 
-function oth_image_size_exact($w, $h, $imgtag){
+function srpp_oth_image_size_exact($w, $h, $imgtag){
 	return array($w, $h);
 }
 
-function oth_image_size_fixedw($w, $h, $imgtag){
-	list($current_width, $current_height) = oth_get_actual_size($imgtag);
+function srpp_oth_image_size_fixedw($w, $h, $imgtag){
+	list($current_width, $current_height) = srpp_oth_get_actual_size($imgtag);
 	$h = intval($w * ($current_height / $current_width));
 	return array($w, $h);
 }
 
-function oth_image_size_fixedh($w, $h, $imgtag){
-	list($current_width, $current_height) = oth_get_actual_size($imgtag);
+function srpp_oth_image_size_fixedh($w, $h, $imgtag){
+	list($current_width, $current_height) = srpp_oth_get_actual_size($imgtag);
 	$w = intval($h * ($current_width / $current_height));
 	return array($w, $h);
 }
 
-function oth_test($x) {
+function srpp_oth_test($x) {
 	if (empty($x)) return 'a';
 	if (is_numeric($x)) return 'b';
 	return 'c';
 }
 
-function oth_process($w, $h) {
+function srpp_oth_process($w, $h) {
 	static $table = array(	'a' => array('a' => 'full', 'b' => 'scale', 'c' => 'blank'),
 							'b' => array('a' => 'scale', 'b' => 'exact', 'c' => 'fixedw'),
 							'c' => array('a' => 'blank', 'b' => 'fixedh', 'c' => 'blank'));
-	return 'oth_image_size_' . $table[oth_test($w)][oth_test($h)];
+	return 'srpp_oth_image_size_' . $table[srpp_oth_test($w)][srpp_oth_test($h)];
 }
 
-function otf_image($option_key, $result, $ext) {
+function srpp_otf_image($option_key, $result, $ext) {
 	// extract any image tags
 	$content = $result->post_content;
 	$i = 0;
@@ -668,7 +668,7 @@ function otf_image($option_key, $result, $ext) {
 		$s[2] = null;
 	}
 
-	$process = oth_process($s[1],$s[2]);
+	$process = srpp_oth_process($s[1],$s[2]);
 	list($w, $h) = $process(intval($s[1]), intval($s[2]), $imgtag);
 	if ($w === 0) return '';
 	if ($w === 1) return $imgtag;
@@ -679,7 +679,7 @@ function otf_image($option_key, $result, $ext) {
 	return $imgtag;
 }
 
-function otf_imagesrc($option_key, $result, $ext) {
+function srpp_otf_imagesrc($option_key, $result, $ext) {
 	// extract any image tags
 	$content = $result->post_content;
 	$i = 0;
@@ -712,7 +712,7 @@ function otf_imagesrc($option_key, $result, $ext) {
 	return $imgsrc;
 }
 
-function otf_imagesrc_shareaholic($option_key, $result, $ext) {
+function srpp_otf_imagesrc_shareaholic($option_key, $result, $ext) {
 
   $thumbnail_src = '';
 
@@ -720,10 +720,10 @@ function otf_imagesrc_shareaholic($option_key, $result, $ext) {
     $thumbnail_src = wp_get_attachment_thumb_url($result->ID);
   }
 
-  $thumbnail_src = oth_post_featured_image($result->ID);
+  $thumbnail_src = srpp_oth_post_featured_image($result->ID);
 
   if ($thumbnail_src == NULL) {
-    $thumbnail_src = oth_post_first_image($result->ID);
+    $thumbnail_src = srpp_oth_post_first_image($result->ID);
   }
 
 	if ($thumbnail_src != NULL) {
@@ -733,7 +733,7 @@ function otf_imagesrc_shareaholic($option_key, $result, $ext) {
 	}
 }
 
-function otf_imagealt($option_key, $result, $ext) {
+function srpp_otf_imagealt($option_key, $result, $ext) {
 	// extract any image tags
 	$content = $result->post_content;
 	$i = 0;
@@ -754,7 +754,7 @@ function otf_imagealt($option_key, $result, $ext) {
 	}
 }
 
-function otf_gravatar($option_key, $result, $ext) {
+function srpp_otf_gravatar($option_key, $result, $ext) {
 	$size = 96;
 	$rating = '';
 	$default = "http://www.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=$size"; // ad516503a11cd5ca435acc9bb6523536 == md5('unknown@gravatar.com')
@@ -790,7 +790,7 @@ function otf_gravatar($option_key, $result, $ext) {
 }
 
 // returns the principal category id of a post -- if a cats are hierarchical chooses the most specific -- if multiple cats chooses the first (numerically smallest)
-function otf_categoryid($option_key, $result, $ext) {
+function srpp_otf_categoryid($option_key, $result, $ext) {
 	$cats = get_the_category($result->ID);
 	foreach ($cats as $cat) {
 		$parents[] = $cat->category_parent;
@@ -802,7 +802,7 @@ function otf_categoryid($option_key, $result, $ext) {
 }
 
 // fails if parentheses are out of order or nested
-function oth_splitapart($subject) {
+function srpp_oth_splitapart($subject) {
 	$bits = explode(':', $subject);
 	$inside = false;
 	$newbits = array();
@@ -840,7 +840,7 @@ function oth_splitapart($subject) {
 
 // ****************************** Helper Functions *********************************************
 
-function oth_post_first_image($id) {
+function srpp_oth_post_first_image($id) {
   $first_img = '';
   if ($id == NULL)
     return false;
@@ -864,7 +864,7 @@ function oth_post_first_image($id) {
  *
  * @return returns `false` or a string of the image src
  */
-function oth_post_featured_image($id, $size = "thumbnail") {
+function srpp_oth_post_featured_image($id, $size = "thumbnail") {
   $featured_img = '';
   if ($id == NULL)
     return false;
@@ -891,7 +891,7 @@ function oth_post_featured_image($id, $size = "thumbnail") {
   return $featured_img;
 }
 
-function oth_truncate_text($text, $ext) {
+function srpp_oth_truncate_text($text, $ext) {
 	if (!$ext) {
 		return $text;
 	}
@@ -981,7 +981,7 @@ function oth_truncate_text($text, $ext) {
 	}
 }
 
-function oth_trim_extract($text, $len, $more, $numsent) {
+function srpp_oth_trim_extract($text, $len, $more, $numsent) {
 	$text = str_replace(']]>', ']]&gt;', $text);
 	if(strpos($text, '<!--more-->')) {
 		$parts = explode('<!--more-->', $text, 2);
@@ -1033,10 +1033,10 @@ function oth_trim_extract($text, $len, $more, $numsent) {
 	return $text;
 }
 
-function oth_format_snippet($content, $option_key, $trim, $len, $more) {
+function srpp_oth_format_snippet($content, $option_key, $trim, $len, $more) {
 	$content = strip_tags($content);
 	$p = get_option($option_key);
-	if ($p['stripcodes']) $content = oth_strip_special_tags($content, $p['stripcodes']);
+	if ($p['stripcodes']) $content = srpp_oth_strip_special_tags($content, $p['stripcodes']);
 	// strip extra whitespace
 	$content = preg_replace('/\s+/u', ' ', $content);
 	$content = stripslashes($content);
@@ -1079,17 +1079,17 @@ function oth_format_snippet($content, $option_key, $trim, $len, $more) {
 	return $snippet;
 }
 
-function oth_strip_special_tags($text, $stripcodes) {
+function srpp_oth_strip_special_tags($text, $stripcodes) {
 		$numtags = count($stripcodes);
 		for ($i = 0; $i < $numtags; $i++) {
 			if (!$stripcodes[$i]['start'] || !$stripcodes[$i]['end']) return $text;
-			$pattern = '/('. oth_regescape($stripcodes[$i]['start']) . '(.*?)' . oth_regescape($stripcodes[$i]['end']) . ')/i';
+			$pattern = '/('. srpp_oth_regescape($stripcodes[$i]['start']) . '(.*?)' . srpp_oth_regescape($stripcodes[$i]['end']) . ')/i';
 			$text = preg_replace($pattern, '', $text);
 		}
 		return $text;
 }
 
-function oth_trim_excerpt($content, $len) {
+function srpp_oth_trim_excerpt($content, $len) {
 	// taken from the wp_trim_excerpt filter
 	remove_filter( 'the_content', 'srpp_content_filter', 5 );
 	remove_filter( 'the_content', 'srp_post_filter', 5 );
@@ -1126,21 +1126,21 @@ function srpp_oth_trim_comment_excerpt($content, $len) {
 	return $text;
 }
 
-function oth_format_date($date, $fmt) {
+function srpp_oth_format_date($date, $fmt) {
 	if (!$fmt) $fmt = get_option('date_format');
 	$d = mysql2date($fmt, $date);
 	$d = apply_filters('get_the_time', $d, $fmt);
 	return apply_filters('the_time', $d, $fmt);
 }
 
-function oth_format_time($time, $fmt) {
+function srpp_oth_format_time($time, $fmt) {
 	if (!$fmt) $fmt = get_option('time_format');
 	$d = mysql2date($fmt, $time);
 	$d = apply_filters('get_the_time', $d, $fmt);
 	return apply_filters('the_time', $d, $fmt);
 }
 
-function oth_regescape($s) {
+function srpp_oth_regescape($s) {
 	$s = str_replace('\\', '\\\\', $s);
 	$s = str_replace('/', '\\/', $s);
 	$s = str_replace('[', '\\[', $s);
