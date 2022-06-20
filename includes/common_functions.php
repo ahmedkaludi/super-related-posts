@@ -7,7 +7,7 @@
 
 define('SRPP_LIBRARY', true);
 
-function srp_cache_flush(){
+function srpp_cache_flush(){
 	global $wpdb;	
 	$table = $wpdb->prefix.'super_related_cached';
 	$wpdb->query( "TRUNCATE TABLE {$table}" );
@@ -297,11 +297,8 @@ function srpp_current_post_id ($manual_current_ID = -1) {
 	return $the_ID;
 }
 
-
 /*
-
 	Functions to fill in the WHERE part of the workhorse SQL
-
 */
 
 function srpp_where_match_category() {
@@ -330,43 +327,6 @@ function srpp_where_match_tags() {
 	$tag_ids  = wp_get_object_terms(srpp_current_post_id(), 'post_tag', $args);
 
 	return $tag_ids;			
-}
-
-function where_show_status($status, $include_inherit='false') {
-	$set = array();
-	$status = (array) $status;
-	// a quick way of allowing for attachments having status=inherit
-	if ($include_inherit === 'true') $status['inherit'] = 'true';
-	foreach ($status as $name => $state) {
-		if ($state === 'true') $set[] = "'$name'";
-	}
-	if ($set) {
-		$result = implode(',', $set);
-		return "post_status IN ($result)";
-	} else {
-		return "1 = 2";
-	}
-}
-
-// a replacement, for WP < 2.3, ONLY category children
-if (!function_exists('get_term_children')) {
-	function get_term_children($term, $taxonomy) {
-		if ($taxonomies !== 'category') return array();
-		return get_categories('child_of='.$term);
-	}
-}
-
-
-// a replacement, for WP < 2.3, ONLY to get posts with given category IDs
-if (!function_exists('get_objects_in_term')) {
-	function get_objects_in_term($terms, $taxonomies) {
-		global $wpdb;
-		if ($taxonomies !== 'category') return array();
-		$terms = "'" . implode("', '", $terms) . "'";
-		$object_ids = $wpdb->get_col("SELECT post_id FROM $wpdb->post2cat WHERE category_id IN ($terms)");
-		if (!$object_ids) return array();
-		return $object_ids;
-	}
 }
 
 function where_included_cats($included_cats) {
@@ -849,22 +809,22 @@ function srp_do_replace($matches) {
 	return call_user_func(array($matches[1], 'execute'), $matches[2]);
 }
 
-function srp_content_filter($content) {
+function srpp_content_filter($content) {
 	global $srp_filter_tags;
 	// replaces every instance of "<!--RecentPosts-->", for example, with the output of the plugin
 	// the filter tag can be followed by text which will be used as a parameter string to change the behaviour of the plugin
 	return preg_replace_callback("/<!--($srp_filter_tags)\s*(.*)-->/", "srp_do_replace", $content);
 }
 
-function srp_content_filter_init() {
+function srpp_content_filter_init() {
 	global $srp_filter_tags;
 	if (!$srp_filter_tags) return;
-	add_filter( 'the_content',     'srp_content_filter', 5 );
-	add_filter( 'the_content_rss', 'srp_content_filter', 5 );
-	add_filter( 'the_excerpt',     'srp_content_filter', 5 );
-	add_filter( 'the_excerpt_rss', 'srp_content_filter', 5 );
-	add_filter( 'widget_text',     'srp_content_filter', 5 );
+	add_filter( 'the_content',     'srpp_content_filter', 5 );
+	add_filter( 'the_content_rss', 'srpp_content_filter', 5 );
+	add_filter( 'the_excerpt',     'srpp_content_filter', 5 );
+	add_filter( 'the_excerpt_rss', 'srpp_content_filter', 5 );
+	add_filter( 'widget_text',     'srpp_content_filter', 5 );
 }
 
 // watch out that the registration functions are called earlier
-add_action ('init', 'srp_content_filter_init');
+add_action ('init', 'srpp_content_filter_init');

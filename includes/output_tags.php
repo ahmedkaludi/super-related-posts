@@ -135,18 +135,18 @@ function otf_excerpt($option_key, $result, $ext) {
 			$value = convert_smilies($value);
 			$value = oth_trim_extract($value, $len, $more, $numsent);
 			$value = apply_filters('get_the_content', $value);
-			remove_filter('the_content', 'srp_content_filter', 5);
+			remove_filter('the_content', 'srpp_content_filter', 5);
 			remove_filter('the_content', 'srp_post_filter', 5);
 			$value = apply_filters('the_content', $value);
-			add_filter('the_content', 'srp_content_filter', 5);
+			add_filter('the_content', 'srpp_content_filter', 5);
 			add_filter('the_content', 'srp_post_filter', 5);
 
 		} else {
 			$value = convert_smilies($value);
 			$value = apply_filters('get_the_excerpt', $value);
-			remove_filter('the_excerpt', 'srp_content_filter', 5);
+			remove_filter('the_excerpt', 'srpp_content_filter', 5);
 			$value = apply_filters('the_excerpt', $value);
-			add_filter('the_excerpt', 'srp_content_filter', 5);
+			add_filter('the_excerpt', 'srpp_content_filter', 5);
 		}
 		break;
 	default:
@@ -195,10 +195,10 @@ function otf_snippetword($option_key, $result, $ext) {
 }
 
 function otf_fullpost($option_key, $result, $ext) {
-	remove_filter( 'the_content', 'srp_content_filter', 5 );
+	remove_filter( 'the_content', 'srpp_content_filter', 5 );
 	remove_filter( 'the_content', 'srp_post_filter', 5 );
 	$value = apply_filters('the_content', $result->post_content);
-	add_filter( 'the_content', 'srp_content_filter', 5 );
+	add_filter( 'the_content', 'srpp_content_filter', 5 );
 	add_filter( 'the_content', 'srp_post_filter', 5 );
 	return str_replace(']]>', ']]&gt;', $value);
 }
@@ -1091,10 +1091,10 @@ function oth_strip_special_tags($text, $stripcodes) {
 
 function oth_trim_excerpt($content, $len) {
 	// taken from the wp_trim_excerpt filter
-	remove_filter( 'the_content', 'srp_content_filter', 5 );
+	remove_filter( 'the_content', 'srpp_content_filter', 5 );
 	remove_filter( 'the_content', 'srp_post_filter', 5 );
 	$text = apply_filters('the_content', $content);
-	add_filter( 'the_content', 'srp_content_filter', 5 );
+	add_filter( 'the_content', 'srpp_content_filter', 5 );
 	add_filter( 'the_content', 'srp_post_filter', 5 );
 	$text = str_replace(']]>', ']]&gt;', $text);
 	$text = strip_tags($text);
