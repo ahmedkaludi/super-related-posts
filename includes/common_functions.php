@@ -36,8 +36,7 @@ function srpp_cache_store($postid, $cache_key, $output){
 		return false;
 	}
 	
-	$output = maybe_serialize( $output );
-	
+	$output = maybe_serialize( $output );	
 	$table = $wpdb->prefix.'super_related_cached';	
 	$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $table (`cpID`, `ckey`, `cvalue`) VALUES (%d, %s, %s) ON DUPLICATE KEY UPDATE `cpID` = VALUES(`cpID`), `ckey` = VALUES(`ckey`), `cvalue` = VALUES(`cvalue`)", $postid, $cache_key, $output ) );
 	if ( ! $result ) {
