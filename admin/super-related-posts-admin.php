@@ -197,9 +197,9 @@ function srpp_pi_options_subpage(){
 		<th scope="row"><label for=""><?php echo esc_html__('Cache Posts:', 'super-related-posts') ?></label></th>
 		<td>
 		<?php if($caching_status != 'finished'){ ?>	
-			<button type="button" id="start-caching-btn" class="button button-primary"><?php esc_html_( 'Start Caching', 'super-related-posts' )?></button>
+			<button type="button" id="start-caching-btn" class="button button-primary"><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
 		<?php }else{ ?>	
-			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php esc_html_( 'Start Caching', 'super-related-posts' )?></button>
+			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
 		<?php } ?>	
 			
 		</td>
