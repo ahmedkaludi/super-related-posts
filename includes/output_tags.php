@@ -114,7 +114,7 @@ function srpp_otf_excerpt($option_key, $result, $ext) {
 			if (count($s) > 3) {
 				if ($s[3] === 'link') {
 					$url = srpp_otf_url($option_key, $result, '');
-					$more = '<a href="'.$url.'">'.$more.'</a>';
+					$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
 				}
 			}
 			if (count($s) > 4) {
@@ -172,7 +172,7 @@ function srpp_otf_snippet($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_url($option_key, $result, '');
-		$more = '<a href="'.$url.'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
 	}
 	return srpp_oth_format_snippet($result->post_content, $option_key, $type, $len, $more);
 }
@@ -189,7 +189,7 @@ function srpp_otf_snippetword($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_url($option_key, $result, '');
-		$more = '<a href="'.$url.'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
 	}
 	return srpp_oth_format_snippet($result->post_content, $option_key, 'word', $len, $more);
 }
@@ -236,7 +236,7 @@ function srpp_otf_commentexcerpt($option_key, $result, $ext) {
 			if (count($s) > 3) {
 				if ($s[3] === 'link') {
 					$url = srpp_otf_commenturl($option_key, $result, '');
-					$more = '<a href="'.$url.'">'.$more.'</a>';
+					$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
 				}
 			}
 		}
@@ -300,7 +300,7 @@ function srpp_otf_commentsnippet($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_commenturl($option_key, $result, '');
-		$more = '<a href="'.$url.'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
 	}
 	return srpp_oth_format_snippet($result->comment_content, $option_key, $type, $len, $more);
 }
@@ -317,7 +317,7 @@ function srp_srpp_otf_commentsnippetword($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_commenturl($option_key, $result, '');
-		$more = '<a href="'.$url.'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
 	}
 	return srpp_oth_format_snippet($result->comment_content, $option_key, 'word', $len, $more);
 }
@@ -846,16 +846,16 @@ function srpp_oth_post_first_image($id) {
     return false;
   else {
 		$post = get_post($id);
-    $output = preg_match_all('/<img.*?src=[\'"](.*?)[\'"].*?>/i', $post->post_content, $matches);
+    	$output = preg_match_all('/<img.*?src=[\'"](.*?)[\'"].*?>/i', $post->post_content, $matches);
     if (isset($matches[1][0])) {
       // Exclude base64 images; meta tags require full URLs
       if (strpos($matches[1][0], 'data:') === false) {
           $first_img = $matches[1][0];
       }
     } else {
-      return false;
+      	return false;
     }
-    return $first_img;
+    	return $first_img;
   }
 }
 
