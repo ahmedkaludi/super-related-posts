@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
 
-    function srp_start_caching_ajax(current){
+    function srpp_start_caching_ajax(current){
         current.addClass('updating-message');
         $.get( ajaxurl,{                    
             action:"srpp_start_posts_caching", 
@@ -12,7 +12,7 @@ jQuery(document).ready(function($){
                     $(".srpp_progress_bar").removeClass('srpp_dnone');
                     $(".srpp_progress_bar_body").css("width", response.percentage);
                     $(".srpp_progress_bar_body").text(response.percentage);
-                    srp_start_caching_ajax(current);
+                    srpp_start_caching_ajax(current);
                 }
                 if(response.status === 'finished'){                                           
                     $(".srpp_progress_bar_body").css("width", response.percentage);
@@ -37,7 +37,7 @@ jQuery(document).ready(function($){
 
     $("#start-caching-btn").click(function(){
             var current = $(this);
-            srp_start_caching_ajax(current);
+            srpp_start_caching_ajax(current);
     });
             
 });
