@@ -292,12 +292,12 @@ function srpp_admin_footer() {
 		<div class="notification-dialog">
 			<div class="file-editor-warning-content">
 				<div class="file-editor-warning-message">
-					<h1><?php esc_html_( 'Heads up!', 'super-related-posts' )?></h1>
-					<p><?php esc_html_( 'Editing this field can introduce issues that could break your site. Please proceed with great care.', 'super-related-posts' )?></p>
+					<h1><?php echo esc_html__( 'Heads up!', 'super-related-posts' )?></h1>
+					<p><?php echo esc_html__( 'Editing this field can introduce issues that could break your site. Please proceed with great care.', 'super-related-posts' )?></p>
 				</div>
 				<p>
-					<a id="file-editor-warning-go-back" class="button file-editor-warning-go-back" href="#"><?php esc_html_( 'Go back', 'super-related-posts' )?></a>
-					<button type="button" id="rrm-file-editor-warning-dismiss" class="file-editor-warning-dismiss button button-primary"><?php esc_html_( 'I understand', 'super-related-posts' )?></button>
+					<a id="file-editor-warning-go-back" class="button file-editor-warning-go-back" href="#"><?php echo esc_html__( 'Go back', 'super-related-posts' )?></a>
+					<button type="button" id="rrm-file-editor-warning-dismiss" class="file-editor-warning-dismiss button button-primary"><?php echo esc_html__( 'I understand', 'super-related-posts' )?></button>
 				</p>
 			</div>
 		</div>

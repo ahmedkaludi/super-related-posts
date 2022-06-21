@@ -7,6 +7,109 @@
 
 define('SRPP_LIBRARY', true);
 
+//Function to expand html tags form allowed html tags in wordpress    
+function srpp_expanded_allowed_tags() {
+        
+	$my_allowed = wp_kses_allowed_html( 'post' );
+	// form fields - input
+	$my_allowed['input']  = array(
+			'class'        => array(),
+			'id'           => array(),
+			'name'         => array(),
+			'data-type'    => array(),
+			'value'        => array(),
+			'type'         => array(),
+			'style'        => array(),
+			'placeholder'  => array(),
+			'maxlength'    => array(),
+			'checked'      => array(),
+			'readonly'     => array(),
+			'disabled'     => array(),
+			'width'        => array(),  
+			'data-id'      => array(),
+			'checked'      => array(),
+			'step'         => array(),
+			'min'          => array(),
+			'max'          => array()
+	);
+	$my_allowed['hidden']  = array(                    
+			'id'           => array(),
+			'name'         => array(),
+			'value'        => array(),
+			'type'         => array(), 
+			'data-id'         => array(), 
+	);
+	//number
+	$my_allowed['number'] = array(
+			'class'        => array(),
+			'id'           => array(),
+			'name'         => array(),
+			'value'        => array(),
+			'type'         => array(),
+			'style'        => array(),                    
+			'width'        => array(),
+			'min'          => array(),
+			'max'          => array(),                    
+	);
+	$my_allowed['script'] = array(
+			'class'        => array(),
+			'type'         => array(),
+	);
+	//textarea
+	 $my_allowed['textarea'] = array(
+			'class' => array(),
+			'id'    => array(),
+			'name'  => array(),
+			'value' => array(),
+			'type'  => array(),
+			'style'  => array(),
+			'rows'  => array(),                                                            
+	);              
+	// select
+	$my_allowed['select'] = array(
+			'class'    => array(),
+			'multiple' => array(),
+			'id'       => array(),
+			'name'     => array(),
+			'value'    => array(),
+			'type'     => array(), 
+			'data-type'=> array(),                    
+	);
+	// checkbox
+	$my_allowed['checkbox'] = array(
+			'class'  => array(),
+			'id'     => array(),
+			'name'   => array(),
+			'value'  => array(),
+			'type'   => array(),  
+			'disabled'=> array(),  
+	);
+	//  options
+	$my_allowed['option'] = array(
+			'selected' => array(),
+			'value'    => array(),
+			'disabled' => array(),
+			'id'       => array(),
+	);                       
+	// style
+	$my_allowed['style'] = array(
+			'types' => array(),
+	);
+	$my_allowed['a'] = array(
+			'href'           => array(),
+			'target'         => array(),
+			'add-on'         => array(),
+			'license-status' => array(),
+			'class'          => array(),
+			'data-id'        => array()
+	);
+	$my_allowed['p'] = array(                        
+			'add-on' => array(),                        
+			'class'  => array(),
+	);
+	return $my_allowed;
+} 
+
 function srpp_cache_flush(){
 	global $wpdb;	
 	$table = $wpdb->prefix.'super_related_cached';
@@ -35,7 +138,7 @@ function srpp_cache_store($postid, $cache_key, $output){
 	if ( empty( $cache_key ) ) {
 		return false;
 	}
-	
+	//Output is already sanitize, whereever this method has been called.
 	$output = maybe_serialize( $output );	
 	$table = $wpdb->prefix.'super_related_cached';	
 	$result = $wpdb->query( $wpdb->prepare( "INSERT INTO $table (`cpID`, `ckey`, `cvalue`) VALUES (%d, %s, %s) ON DUPLICATE KEY UPDATE `cpID` = VALUES(`cpID`), `ckey` = VALUES(`ckey`), `cvalue` = VALUES(`cvalue`)", $postid, $cache_key, $output ) );

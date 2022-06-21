@@ -168,6 +168,8 @@ class SuperRelatedPosts {
 		}
 		
 		if($output){
+			$allowed_html = srpp_expanded_allowed_tags();
+			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid, $cache_key, $output);
 		}
 		
@@ -276,7 +278,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
-			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h2>'.esc_html__( 'Related Content' , 'super-related-posts').'</h2><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -288,6 +290,8 @@ class SuperRelatedPosts {
 			}
 		}
 		if($output){
+			$allowed_html = srpp_expanded_allowed_tags();
+			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid, $cache_key, $output);
 		}		
 		return ($output) ? $output . sprintf("<!-- Super Related Posts took %.3f ms -->", 1000 * (srpp_microtime() - $start_time)) : '';
@@ -394,7 +398,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
-			$output = '<div class="sprp '.$des.'"><h2>Related Content</h2><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h2>'.esc_html__( 'Related Content' , 'super-related-posts').'</h2><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -406,6 +410,8 @@ class SuperRelatedPosts {
 			}
 		}
 		if($output){
+			$allowed_html = srpp_expanded_allowed_tags();
+			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid,$cache_key, $output);
 		}
 				
