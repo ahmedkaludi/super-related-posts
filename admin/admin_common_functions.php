@@ -541,7 +541,11 @@ function srpp_display_cats($excluded_cats, $included_cats) {
 							}
 							$cats_added[] = $cat_parent;
 						}
-						$pad = str_repeat('&nbsp;', 3*$level);
+						$pad = '';
+						if($level >= 0){
+							$pad = str_repeat('&nbsp;', 3*$level);
+						}
+						
 						echo "\n\t<tr valign=\"top\"><td>".esc_html($pad).esc_html($category->cat_name)."</td><td><input type=\"checkbox\" name=\"excluded_cats[]\" value=".esc_attr($category->cat_ID)." ".esc_attr($ex_ischecked)." /></td><td><input type=\"checkbox\" name=\"included_cats[]\" value=".esc_attr($category->cat_ID)." ".esc_attr($in_ischecked)." /></td></tr>";
 					}
 				}
