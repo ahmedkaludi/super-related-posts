@@ -103,7 +103,7 @@ function srpp_rp2_options_subpage(){
 	?>
 		<div class="wrap srpp-tab-content">
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
-				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
+				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 		<?php } ?>
 		<form method="post" action="">
 
@@ -186,7 +186,7 @@ function srpp_pi_options_subpage(){
 	<div class="wrap srpp-tab-content">	
 	<?php 
 		if($caching_status != 'finished'){
-			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).'% is completed. Please start again to finish</p></div>';	
+			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).esc_html__( '% is completed. Please start again to finish' , 'super-related-posts').'</p></div>';	
 		}
 	?>			
 	<div class="srpp_progress_bar srpp_dnone">
@@ -197,9 +197,9 @@ function srpp_pi_options_subpage(){
 		<th scope="row"><label for=""><?php echo esc_html__('Cache Posts:', 'super-related-posts') ?></label></th>
 		<td>
 		<?php if($caching_status != 'finished'){ ?>	
-			<button type="button" id="start-caching-btn" class="button button-primary"><?php esc_html_e( 'Start Caching', 'super-related-posts' )?></button>
+			<button type="button" id="start-caching-btn" class="button button-primary"><?php esc_html_( 'Start Caching', 'super-related-posts' )?></button>
 		<?php }else{ ?>	
-			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php esc_html_e( 'Start Caching', 'super-related-posts' )?></button>
+			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php esc_html_( 'Start Caching', 'super-related-posts' )?></button>
 		<?php } ?>	
 			
 		</td>
@@ -227,7 +227,7 @@ function srpp_rp3_options_subpage(){
 	?>
 		<div class="wrap srpp-tab-content">
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
-				<div><strong>To work this plugin faster you need to cache the posts</strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>">Start Caching</a></div>	
+				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 		<?php } ?>
 		<form method="post" action="">
 
@@ -292,12 +292,12 @@ function srpp_admin_footer() {
 		<div class="notification-dialog">
 			<div class="file-editor-warning-content">
 				<div class="file-editor-warning-message">
-					<h1><?php esc_html_e( 'Heads up!', 'super-related-posts' )?></h1>
-					<p><?php esc_html_e( 'Editing this field can introduce issues that could break your site. Please proceed with great care.', 'super-related-posts' )?></p>
+					<h1><?php esc_html_( 'Heads up!', 'super-related-posts' )?></h1>
+					<p><?php esc_html_( 'Editing this field can introduce issues that could break your site. Please proceed with great care.', 'super-related-posts' )?></p>
 				</div>
 				<p>
-					<a id="file-editor-warning-go-back" class="button file-editor-warning-go-back" href="#"><?php esc_html_e( 'Go back', 'super-related-posts' )?></a>
-					<button type="button" id="rrm-file-editor-warning-dismiss" class="file-editor-warning-dismiss button button-primary"><?php esc_html_e( 'I understand', 'super-related-posts' )?></button>
+					<a id="file-editor-warning-go-back" class="button file-editor-warning-go-back" href="#"><?php esc_html_( 'Go back', 'super-related-posts' )?></a>
+					<button type="button" id="rrm-file-editor-warning-dismiss" class="file-editor-warning-dismiss button button-primary"><?php esc_html_( 'I understand', 'super-related-posts' )?></button>
 				</p>
 			</div>
 		</div>
@@ -692,7 +692,7 @@ function srpp_enqueue_style_js( $hook ) {
 
 		$data = array(     			
 			'ajax_url'                     => admin_url( 'admin-ajax.php' ),            
-			'srp_security_nonce'         => wp_create_nonce('srp_ajax_check_nonce'),  		
+			'srp_security_nonce'           => wp_create_nonce('srp_ajax_check_nonce'),  		
 		);
 						
 		$data = apply_filters('srp_localize_filter',$data,'srp_localize_data');					   
@@ -707,22 +707,16 @@ function srpp_enqueue_style_js( $hook ) {
 
 add_action( 'admin_notices', 'srpp_admin_notice' );
 
-function srpp_admin_notice(){
-	
+function srpp_admin_notice(){	
 	if(get_option('srp_posts_caching_status') != 'finished'){
 	?>
 					<div class="notice notice-warning">
-                    	<p>
-                    		<strong><?php echo esc_html__( 'Welcome to Super Related Posts' , 'super-related-posts') ?></strong> <?php echo esc_html__( '- To work this plugin faster you need to cache the posts' , 'super-related-posts') ?>
-						</p>
-						<p>
-						<a class="button button-primary" href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )); ?>">
-						<?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a>
-						</p>
-						</div>
-                    
-	<?php
-	    
+							<p><strong><?php echo esc_html__( 'Welcome to Super Related Posts' , 'super-related-posts') ?></strong> <?php echo esc_html__( '- To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></p>
+							<p>
+								<a class="button button-primary" href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )); ?>">
+								<?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a>
+							</p>
+					</div>                    
+	<?php	    
 	}	
-
 }
