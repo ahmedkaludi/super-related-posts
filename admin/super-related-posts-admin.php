@@ -655,7 +655,7 @@ function srpp_super_related_posts_install() {
 	update_option('super-related-posts', $options);
 
  	// clear legacy custom fields
-	$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'srpterms'");
+	$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'srppterms'");
 
 	// clear legacy index
 	$indices = $wpdb->get_results("SHOW INDEX FROM $wpdb->posts", ARRAY_A);

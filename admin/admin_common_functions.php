@@ -190,7 +190,7 @@ function srpp_display_available_comment_tags() {
 */
 
 function srpp_confirm_eradicate() {
- return (isset($_POST['eradicate-check']) && 'yes'===$_POST['eradicate-check']);
+ return (isset($_POST['eradicate-check']) && 'yes'=== sanitize_text_field($_POST['eradicate-check']));
 }
 
 function srpp_deactivate_plugin($plugin_file) {
