@@ -114,7 +114,7 @@ function srpp_otf_excerpt($option_key, $result, $ext) {
 			if (count($s) > 3) {
 				if ($s[3] === 'link') {
 					$url = srpp_otf_url($option_key, $result, '');
-					$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
+					$more = '<a href="'.esc_url($url).'">'.esc_html($more).'</a>';
 				}
 			}
 			if (count($s) > 4) {
@@ -172,7 +172,7 @@ function srpp_otf_snippet($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_url($option_key, $result, '');
-		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.esc_html($more).'</a>';
 	}
 	return srpp_oth_format_snippet($result->post_content, $option_key, $type, $len, $more);
 }
@@ -189,7 +189,7 @@ function srpp_otf_snippetword($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_url($option_key, $result, '');
-		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.esc_html($more).'</a>';
 	}
 	return srpp_oth_format_snippet($result->post_content, $option_key, 'word', $len, $more);
 }
@@ -236,7 +236,7 @@ function srpp_otf_commentexcerpt($option_key, $result, $ext) {
 			if (count($s) > 3) {
 				if ($s[3] === 'link') {
 					$url = srpp_otf_commenturl($option_key, $result, '');
-					$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
+					$more = '<a href="'.esc_url($url).'">'.esc_html($more).'</a>';
 				}
 			}
 		}
@@ -300,7 +300,7 @@ function srpp_otf_commentsnippet($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_commenturl($option_key, $result, '');
-		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.esc_html($more).'</a>';
 	}
 	return srpp_oth_format_snippet($result->comment_content, $option_key, $type, $len, $more);
 }
@@ -317,7 +317,7 @@ function srp_srpp_otf_commentsnippetword($option_key, $result, $ext) {
 	}
 	if ($link === 'link') {
 		$url = srpp_otf_commenturl($option_key, $result, '');
-		$more = '<a href="'.esc_url($url).'">'.$more.'</a>';
+		$more = '<a href="'.esc_url($url).'">'.esc_html($more).'</a>';
 	}
 	return srpp_oth_format_snippet($result->comment_content, $option_key, 'word', $len, $more);
 }
@@ -353,13 +353,6 @@ function srpp_otf_commenterurl($option_key, $result, $ext) {
 	return srpp_oth_truncate_text($value, $ext);
 }
 
-function srpp_otf_commenterlink($option_key, $result, $ext) {
-	$url = srpp_otf_commenterurl($option_key, $result, '');
-	$author = srpp_otf_commenter($option_key, $result, $ext);
-	if (empty($url) || $url == 'http://') $value = $author;
-	else $value = "<a href='$url' rel='external nofollow'>$author</a>";
-	return $value;
-}
 
 function srpp_otf_commenterip($option_key, $result, $ext) {
 	return $result->comment_author_IP;
@@ -368,61 +361,6 @@ function srpp_otf_commenterip($option_key, $result, $ext) {
 function srpp_otf_commenturl($option_key, $result, $ext) {
 	$value = apply_filters('the_permalink', get_permalink($result->ID)) . '#comment-' . $result->comment_ID;
 	return srpp_oth_truncate_text($value, $ext);
-}
-
-function srpp_otf_commentlink($option_key, $result, $ext) {
-	$ttl = srpp_otf_commenter($option_key, $result, '');
-	$ttl = '<span class="rc-commenter">' . $ttl . '</span>';
-	if (!$ext) $ext = ' commented on ';
-	$ttl .= $ext;
-	$ttl .= '<span class="rc-title">'.srpp_otf_title($option_key, $result, '').'</span>';
-	$pml = srpp_otf_commenturl($option_key, $result, '');
-	$pdt = srpp_oth_format_date($result->comment_date_gmt, '');
-	$pdt .= __(' at ', 'super-related-posts');
-	$pdt .= srpp_oth_format_time($result->comment_date_gmt, '');
-	return "<a href=\"$pml\" rel=\"bookmark\" title=\"$pdt\">$ttl</a>";
-}
-
-function srpp_otf_commentlink2($option_key, $result, $ext) {
-	$commenturl = srpp_otf_commenturl($option_key, $result, '');
-	$commentdate = srpp_otf_commentdate($option_key, $result, '');
-	$commenttime = srpp_otf_commenttime($option_key, $result, '');
-	$title = srpp_otf_title($option_key, $result, '');
-	$commenter = srpp_otf_commenter($option_key, $result, '');
-	$commentexcerpt = srpp_otf_commentexcerpt($option_key, $result, '10');
-	return "<a href=\"$commenturl\" rel=\"bookmark\" title=\"$commentdate at $commenttime on '$title'\">$commenter</a> - $commentexcerpt&hellip;";
-}
-
-function srpp_otf_commentpopupurl($option_key, $result, $ext) {
-	global $wpcommentspopupfile, $wpcommentsjavascript;
-	$output = '';
-	if ( $wpcommentsjavascript ) {
-		if ( empty( $wpcommentspopupfile ) )
-			$home = get_option('home');
-		else
-			$home = get_option('siteurl');
-		$output .= $home . '/' . $wpcommentspopupfile . '?comments_popup=' . $result->ID;
-		$output .= '#comment-' . $result->comment_ID;
-		$output .= '" onclick="wpopen(this.href); return false';
-	}
-	return $output;
-}
-
-function srpp_otf_catlinks($option_key, $result, $ext) {
-	return srpp_otf_categorylinks($option_key, $result, $ext);
-}
-
-function srpp_otf_categorylinks($option_key, $result, $ext) {
-	$cats = get_the_category($result->ID);
-	$value = '';
-	$n = 0;
-	foreach ($cats as $cat) {
-		if ($n > 0) $value .= $ext;
-		$catname = apply_filters('single_cat_title', $cat->cat_name);
-		$value .= '<a href="' . get_category_link($cat->cat_ID) . '" title="' . sprintf(__("View all posts in %s", 'super-related-posts'), $catname) . '" rel="category tag">'.$catname.'</a> ';
-		++$n;
-	}
-	return $value;
 }
 
 function srpp_otf_catnames($option_key, $result, $ext) {
