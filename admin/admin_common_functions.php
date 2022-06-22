@@ -411,7 +411,7 @@ function srpp_display_tag_str($tag_str) {
 	?>
 	<tr valign="top">
 		<th scope="row"><label for="tag_str"><?php echo esc_html__('Match posts with tags:<br />(a,b matches posts with either tag, a+b only matches posts with both tags)', 'super-related-posts') ?></label></th>
-		<td><input name="tag_str" type="text" id="tag_str" value="<?php echo $tag_str; ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> size="40" /></td>
+		<td><input name="tag_str" type="text" id="tag_str" value="<?php echo esc_attr($tag_str); ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> size="40" /></td>
 	</tr>
 	<?php
 }
