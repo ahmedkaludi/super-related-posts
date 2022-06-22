@@ -119,12 +119,13 @@ class SuperRelatedPosts {
 			}
 			
 			if($sort_by == 'recent'){
-				$sql .= " ORDER BY id DESC LIMIT $limit";	
+				$sql .= " and p.post_status = 'publish' ORDER BY id DESC LIMIT $limit";	
 			}else{
 				if ($check_age) {				
 					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
 				}
-				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
+				$sql .= " and p.post_status = 'publish' ORDER BY sp.views DESC LIMIT $limit";	
+				
 			}					
 							
 			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
@@ -155,7 +156,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
-			$output = '<div class="sprp '.esc_attr($des).'"><h2>'.esc_html__( 'Related Content' , 'super-related-posts').'</h2><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -240,12 +241,12 @@ class SuperRelatedPosts {
 			}
 			
 			if($sort_by == 'recent'){
-				$sql .= " ORDER BY id DESC LIMIT $limit";	
+				$sql .= " and p.post_status = 'publish' ORDER BY id DESC LIMIT $limit";	
 			}else{
 				if ($check_age) {				
 					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
 				}
-				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
+				$sql .= " and p.post_status = 'publish' ORDER BY sp.views DESC LIMIT $limit";	
 			}					
 							
 			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
@@ -278,7 +279,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
-			$output = '<div class="sprp '.esc_attr($des).'"><h2>'.esc_html__( 'Related Content' , 'super-related-posts').'</h2><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -359,12 +360,12 @@ class SuperRelatedPosts {
 			}
 			
 			if($sort_by == 'recent'){
-				$sql .= " ORDER BY id DESC LIMIT $limit";	
+				$sql .= " and p.post_status = 'publish' ORDER BY id DESC LIMIT $limit";	
 			}else{
 				if ($check_age) {				
 					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
 				}
-				$sql .= " ORDER BY sp.views DESC LIMIT $limit";	
+				$sql .= " and p.post_status = 'publish' ORDER BY sp.views DESC LIMIT $limit";	
 			}					
 							
 			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
@@ -398,7 +399,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
-			$output = '<div class="sprp '.esc_attr($des).'"><h2>'.esc_html__( 'Related Content' , 'super-related-posts').'</h2><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
