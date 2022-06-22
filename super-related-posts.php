@@ -434,10 +434,25 @@ class SuperRelatedPosts {
 
 
 function srpp_save_index_entry($postID) {
+
+	if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+	
 	global $wpdb, $table_prefix;
 	$table_name = $table_prefix . 'super_related_posts';
-	$post = $wpdb->get_row("SELECT post_content, post_date, post_title, post_type FROM $wpdb->posts WHERE ID = $postID", ARRAY_A);
-	if ($post['post_type'] === 'revision') return $postID;
+	
+	$post = $wpdb->get_row("SELECT post_content, post_date, post_title, post_type, post_status FROM $wpdb->posts WHERE ID = $postID", ARRAY_A);
+	if ($post['post_type'] === 'revision'
+		|| $post['post_type'] === 'wp_global_styles'
+		|| $post['post_type'] === 'attachment'
+		|| $post['post_type'] === 'elementor_library'
+		|| $post['post_type'] === 'mgmlp_media_folder'
+		|| $post['post_type'] === 'custom_css'
+		|| $post['post_type'] === 'nav_menu_item'
+		|| $post['post_type'] === 'oembed_cache'
+		){
+	
+		return $postID;
+	} 
 	//extract its terms
 	$options = get_option('super-related-posts');
 	$utf8 = (isset($options['utf8']) && $options['utf8'] === 'true');
@@ -452,11 +467,16 @@ function srpp_save_index_entry($postID) {
 	//check to see if the field is set
 	$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
 	//then insert if empty
-	if (is_null($pid)) {
-		$wpdb->query("INSERT INTO $table_name (pID, title, tags, spost_date) VALUES ($postID, \"$title\", \"$tags\", \"$sdate\")");
-	} else {
-		$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\", spost_date=\"$sdate\" WHERE pID=$postID" );
+	if($post['post_status'] == 'publish'){
+		if (is_null($pid)) {
+			$wpdb->query("INSERT INTO $table_name (pID, title, tags, spost_date) VALUES ($postID, \"$title\", \"$tags\", \"$sdate\")");
+		} else {
+			$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\", spost_date=\"$sdate\" WHERE pID=$postID" );
+		}
+	}else{		
+		$wpdb->query("DELETE FROM $table_name WHERE pID = $postID ");
 	}
+	
 	return $postID;
 }
 
@@ -628,12 +648,7 @@ function srpp_init_start () {
 
 	//install the actions to keep the index up to date
 	add_action('save_post', 'srpp_save_index_entry', 1);
-	add_action('delete_post', 'srpp_delete_index_entry', 1);
-	
-	if ($wp_db_version < 3308 ) {
-		add_action('edit_post', 'srpp_save_index_entry', 1);
-		add_action('publish_post', 'srpp_save_index_entry', 1);
-	}
+	add_action('delete_post', 'srpp_delete_index_entry', 1);		
 	add_action( 'admin_enqueue_scripts', 'srpp_wp_admin_style' );
 
   // aditional links in plugin description
