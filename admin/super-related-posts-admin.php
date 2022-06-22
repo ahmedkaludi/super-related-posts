@@ -666,8 +666,6 @@ function srpp_super_related_posts_install() {
 		}
 	}
 
-	$wpdb->show_errors($suppress);
-	error_reporting($errorlevel);
 }
 
 if (!function_exists('srpp_plugin_basename')) {

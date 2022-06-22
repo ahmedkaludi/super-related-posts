@@ -559,7 +559,7 @@ function srpp_oth_get_actual_size($imgtag) {
 	if (!(($current_width) && ($current_height))) {
 		// extract the image src url
 		preg_match('/\s+src\s*=\s*[\'|\"](.*?)[\'|\"]/is', $imgtag, $matches);
-		$error_level = error_reporting(0);
+		
 		if (function_exists('getimagesize') && $imagesize = getimagesize($matches[1])) {
 			$current_width = $imagesize['0'];
 			$current_height = $imagesize['1'];
@@ -567,7 +567,7 @@ function srpp_oth_get_actual_size($imgtag) {
 			// if all else fails...
 			$current_width = $current_height = 0;
 		}
-		error_reporting($error_level);
+		
 	}
 	return array($current_width, $current_height);
 }

@@ -14,7 +14,7 @@ class srp_admin_subpages {
 
 	function __construct($parent_page='') {
 		if ($parent_page === '') {
-			$parent_page = $_SERVER['QUERY_STRING'];
+			$parent_page = sanitize_text_field($_SERVER['QUERY_STRING']);
 			$p1 = strpos($parent_page, 'page=');
 			$p2 = strpos($parent_page, '&');
 			if ($p2 === false) {
@@ -51,14 +51,14 @@ class srp_admin_subpages {
 	function display_menu() {
 		echo "\n<ul id=\"submenu\" class=\"srpp-tabs-menu\" style=\"display: block\">\n";
 		// for compatibility with WP mu
-		$base = (isset($_SERVER['REDIRECT_URL'])) ? $_SERVER['REDIRECT_URL'] : $_SERVER['PHP_SELF'];
+		$base = (isset($_SERVER['REDIRECT_URL'])) ? sanitize_text_field($_SERVER['REDIRECT_URL']) : sanitize_text_field($_SERVER['PHP_SELF']);
 		$base .= '?page=' . $this->parent_page . '&subpage=';
-		$this->current_page = (isset($_GET['subpage']))?$this->page_from_slug($_GET['subpage']):$this->page_from_slug(false);		
+		$this->current_page = (isset($_GET['subpage']))? $this->page_from_slug(sanitize_text_field($_GET['subpage'])): $this->page_from_slug(false);		
 		foreach($this->pages as $page) {
-			if($page === $this->current_page) {
-				echo "<li style=\"display: inline\"><a href=\"$base{$page['slug']}\" class=\"current\" style=\"display: inline\">{$page['title']}</a>";				
+			if($page === $this->current_page) {				
+				echo '<li style="display: inline"><a href="'.esc_url($base.$page['slug']).'" class="current" style="display: inline">'.esc_html($page['title']).'</a>';
 			} else {
-				echo "<li style=\"display: inline\"><a href=\"$base{$page['slug']}\" style=\"display: inline\">{$page['title']}</a>";				
+				echo '<li style="display: inline"><a href="'.esc_url($base.$page['slug']).'" style="display: inline">'.esc_html($page['title']).'</a>';				
 			}
 			if($page['slug'] == 'posts_caching'){
 				if(get_option('srp_posts_caching_status') != 'finished'){
