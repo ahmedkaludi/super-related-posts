@@ -242,8 +242,8 @@ function srpp_display_unique($unique) {
 		<th scope="row"><label for="unique"><?php echo esc_html__('Show just one comment per post?', 'super-related-posts') ?></label></th>
 		<td>
 		<select name="unique" id="unique" >
-		<option <?php if($unique == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
-		<option <?php if($unique == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+			<option <?php if($unique == 'false') { echo 'selected="selected"'; } ?> value="false"><?php echo esc_html__( 'No' , 'super-related-posts') ?></option>
+			<option <?php if($unique == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
 		</select>
 		</td>
 	</tr>
@@ -298,8 +298,8 @@ function srpp_display_match_cat_i($match_cat, $num) {
 		<th scope="row"><label for="match_cat_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat_<?php echo esc_attr($num); ?>" id="match_cat_<?php echo esc_attr($num); ?>">			
-			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
-			<option <?php if($match_cat == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+				<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
+				<option <?php if($match_cat == 'false') { echo 'selected="selected"'; } ?> value="false"><?php echo esc_html__( 'No' , 'super-related-posts') ?></option>
 			</select>
 		</td>
 	</tr>
@@ -313,9 +313,9 @@ function srpp_display_match_tags($match_tags) {
 		<th scope="row"><label for="match_tags"><?php echo esc_html__('Match the current post\'s tags?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_tags" id="match_tags" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
-			<option <?php if($match_tags == 'false') { echo 'selected="selected"'; } ?> value="false"><?php echo esc_html__( 'No' , 'super-related-posts') ?></option>
-			<option <?php if($match_tags == 'any') { echo 'selected="selected"'; } ?> value="any"><?php echo esc_html__( 'Any tag' , 'super-related-posts') ?></option>
-			<option <?php if($match_tags == 'all') { echo 'selected="selected"'; } ?> value="all"><?php echo esc_html__( 'Every tag' , 'super-related-posts') ?></option>
+				<option <?php if($match_tags == 'false') { echo 'selected="selected"'; } ?> value="false"><?php echo esc_html__( 'No' , 'super-related-posts') ?></option>
+				<option <?php if($match_tags == 'any') { echo 'selected="selected"'; } ?> value="any"><?php echo esc_html__( 'Any tag' , 'super-related-posts') ?></option>
+				<option <?php if($match_tags == 'all') { echo 'selected="selected"'; } ?> value="all"><?php echo esc_html__( 'Every tag' , 'super-related-posts') ?></option>
 			</select>
 		</td>
 	</tr>
@@ -361,9 +361,9 @@ function srpp_design_related_i($design, $num) {
 		<th scope="row"><label for="re_design_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Design:', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="re_design_<?php echo esc_attr($num); ?>" id="re_design_<?php echo esc_attr($num); ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
-			<option <?php if($design == 'd1') { echo 'selected="selected"'; } ?> value="d1"><?php echo esc_html__( 'Design 1' , 'super-related-posts') ?></option>
-			<option <?php if($design == 'd2') { echo 'selected="selected"'; } ?> value="d2"><?php echo esc_html__( 'Design 2' , 'super-related-posts') ?></option>
-			<option <?php if($design == 'd3') { echo 'selected="selected"'; } ?> value="d3"><?php echo esc_html__( 'Design 3' , 'super-related-posts') ?></option>
+				<option <?php if($design == 'd1') { echo 'selected="selected"'; } ?> value="d1"><?php echo esc_html__( 'Design 1' , 'super-related-posts') ?></option>
+				<option <?php if($design == 'd2') { echo 'selected="selected"'; } ?> value="d2"><?php echo esc_html__( 'Design 2' , 'super-related-posts') ?></option>
+				<option <?php if($design == 'd3') { echo 'selected="selected"'; } ?> value="d3"><?php echo esc_html__( 'Design 3' , 'super-related-posts') ?></option>
 			</select>
 		</td>
 	</tr>
