@@ -301,7 +301,6 @@ function srpp_prepare_template($template) {
 	// A tag is of the form, {tag:ext}, where the tag part will be evaluated and replaced
 	// and the optional ext part provides extra data pertinent to that tag
 
-
 	preg_match_all('/{((?:[^{}]|{[^{}]*})*)}/', $template, $matches);
 	$translations = array();
 	if(is_array($matches)){
@@ -366,19 +365,7 @@ function srpp_sort_items($sort, $results, $option_key, $items) {
 	} else {
 		array_multisort($keys1, intval($sort['order1']), $results, $items);
 	}
-	// merge the group titles into the items
-	if ($group_template) {
-		$group_translations = srpp_prepare_template($group_template);
-		$prev_key = '';
-		$insertions = 0;
-		foreach ($keys1 as $n => $key) {
-			if ($prev_key !== $key) {
-				array_splice($items, $n+$insertions, 0, srpp_expand_template($results[$n], $group_template, $group_translations, $option_key));
-				$insertions++;
-			}
-			$prev_key = $key;
-		}
-	}
+	
 	return $items;
 }
 

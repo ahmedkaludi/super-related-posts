@@ -10,7 +10,7 @@ function srpp_option_menu() {
 
 function srpp_options_page(){
 	echo '<div class="wrap"><h2>';
-	esc_html__('Super Related Posts ', 'super_related_posts');
+		esc_html__('Super Related Posts ', 'super-related-posts');
 	echo '</h2></div>';
 	$m = new srp_admin_subpages();
 	$m->add_subpage('Related Post1',  'related_post1', 'srpp_rp1_options_subpage');
@@ -159,7 +159,6 @@ function srpp_rp2_options_subpage(){
 }
 
 function srpp_pi_options_subpage(){
-
 	
 	global $wpdb, $table_prefix;
 	$srp_table = $table_prefix . 'super_related_posts';
@@ -442,7 +441,7 @@ function srpp_save_index_entries ($start, $utf8=false, $use_stemmer='false', $ba
 		}
 		
 		$start += $batch;
-		update_option('srp_posts_offset', $start);
+		update_option('srp_posts_offset', intval($start));
 		update_option('srp_posts_caching_status', 'continue');
 		if (!ini_get('safe_mode')) set_time_limit(30);
 	}else{
@@ -705,16 +704,16 @@ function srpp_enqueue_style_js( $hook ) {
 
 add_action( 'admin_notices', 'srpp_admin_notice' );
 
-function srpp_admin_notice(){	
+function srpp_admin_notice(){
 	if(get_option('srp_posts_caching_status') != 'finished'){
 	?>
-					<div class="notice notice-warning">
-							<p><strong><?php echo esc_html__( 'Welcome to Super Related Posts' , 'super-related-posts') ?></strong> <?php echo esc_html__( '- To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></p>
-							<p>
-								<a class="button button-primary" href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )); ?>">
-								<?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a>
-							</p>
-					</div>                    
+		<div class="notice notice-warning">
+				<p><strong><?php echo esc_html__( 'Welcome to Super Related Posts' , 'super-related-posts') ?></strong> <?php echo esc_html__( '- To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></p>
+				<p>
+					<a class="button button-primary" href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )); ?>">
+					<?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a>
+				</p>
+		</div>                    
 	<?php	    
 	}	
 }
