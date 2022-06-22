@@ -398,6 +398,7 @@ function srpp_otf_tags($option_key, $result, $ext) {
 }
 
 function srpp_otf_taglinks($option_key, $result, $ext) {
+	
 	$tags = (array) get_the_tags($result->ID);
 	$tag_list = '';
 	$tag_links = array();
@@ -405,7 +406,7 @@ function srpp_otf_taglinks($option_key, $result, $ext) {
 		$link = get_tag_link($tag->term_id);
 		if ( is_wp_error( $link ) )
 			return $link;
-		$tag_links[] = '<a href="' . $link . '" rel="tag">' . $tag->name . '</a>';
+		$tag_links[] = '<a href="' . esc_url($link) . '" rel="tag">' . esc_html($tag->name) . '</a>';
 	}
 	if (!$ext) $ext = ' ';
 	$tag_links = join( $ext, $tag_links );
@@ -436,13 +437,6 @@ function srpp_otf_totalpages($option_key, $result, $ext) {
 	return $value;
 }
 
-/*function srpp_otf_link($option_key, $result, $ext) {
-	$ttl = srpp_otf_title($option_key, $result, $ext);
-	$pml = srpp_otf_url($option_key, $result, null);
-	$pdt = srpp_otf_date($option_key, $result, null);
-	return "<a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\">$ttl</a>";
-}*/
-
 function srpp_otf_link($option_key, $result, $ext) {
 	$ttl = srpp_otf_title($option_key, $result, $ext);
 	$pml = srpp_otf_url($option_key, $result, null);
@@ -457,7 +451,7 @@ function srpp_otf_link($option_key, $result, $ext) {
 	if(empty($img)){
 		$img = SRPP_PLUGIN_URI.'/images/default-image.png';
 	}
-	return "<div class=\"sprp-wrpr\"><div class=\"sprp-txt\"><a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\">$ttl</a></div><div class=\"sprp-img\"><a href=\"$pml\" rel=\"bookmark\" title=\"$ttl\"><img src=\"$img\" width=\"250\" height=\"175\"></a></div></div>";
+	return '<div class="sprp-wrpr"><div class="sprp-txt"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_attr($ttl).'">'.esc_attr($ttl).'</a></div><div class="sprp-img"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_url($ttl).'"><img src="'.esc_url($img).'" width="250" height="175"></a></div></div>';
 }
 
 function srpp_otf_score($option_key, $result, $ext) {
@@ -720,9 +714,9 @@ function srpp_otf_gravatar($option_key, $result, $ext) {
 		$out .= '&amp;d=' . urlencode( $default );
 		if ('' !== $rating)
 			$out .= "&amp;r={$rating}";
-		$avatar = "<img alt='' src='{$out}' class='avatar avatar-{$size}' height='{$size}' width='{$size}' />";
+		$avatar = '<img alt="" src="'.esc_url($out).'" class="avatar avatar-'.esc_attr($size).'" height="'.esc_attr($size).'" width="'.esc_attr($size).'" />';
 	} else {
-		$avatar = "<img alt='' src='{$default}' class='avatar avatar-{$size} avatar-default' height='{$size}' width='{$size}' />";
+		$avatar = '<img alt="" src="'.esc_url($default).'" class="avatar avatar-'.esc_attr($size).' avatar-default" height="'.esc_attr($size).'" width="'.esc_attr($size).'" />';
 	}
 	return apply_filters('get_avatar', $avatar, $email, $size, $default);
 }
