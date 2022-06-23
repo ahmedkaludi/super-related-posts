@@ -174,10 +174,19 @@ function srpp_pi_options_subpage(){
 		'mgmlp_media_folder',
 		'custom_css',
 		'nav_menu_item',
-		'oembed_cache'
+		'oembed_cache',
+		'post'
 	);
-	$sql = "SELECT COUNT(*) FROM `$wpp_table` WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".")";
-	$posts_count = $wpdb->get_var($sql);	
+	
+	$posts_count = $wpdb->get_var(
+		stripslashes ($wpdb->prepare(
+			"SELECT COUNT(*) FROM `$wpp_table` 
+			WHERE post_status='publish' 
+			AND post_type 
+			NOT IN(%s)",
+			implode("', '",$not_in)
+		))
+	);		
 	$percentage = round( (($cache_count / $posts_count) * 100), 2);	
 	$caching_status = get_option('srp_posts_caching_status');
 	
@@ -407,7 +416,12 @@ function srpp_save_index_entries ($start, $utf8=false, $use_stemmer='false', $ba
 			$postID = $post['ID'];
 			$tags   = srpp_get_tag_terms($postID, $utf8);
 			$sdate  = date("Ymd",strtotime($post['post_date']));							
-			$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
+			$pid = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT pID FROM $table_name WHERE pID=%d limit 1", 
+					$postID
+				)				
+			);
 			
 			if (is_null($pid)) {				
 				$to_be_inserted[] = array(
@@ -486,9 +500,16 @@ function srpp_start_posts_caching(){
 				'nav_menu_item',
 				'oembed_cache'
 			);
-
-			$sql = "SELECT COUNT(*) FROM `$wpp_table` WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".")";
-			$posts_count = $wpdb->get_var($sql);
+			
+			$posts_count = $wpdb->get_var(
+				stripslashes ($wpdb->prepare(
+					"SELECT COUNT(*) FROM `$wpp_table` 
+					WHERE post_status='publish' 
+					AND post_type 
+					NOT IN(%s)",
+					implode("', '",$not_in)
+				))
+			);
 		}
 
 		$start = 0;

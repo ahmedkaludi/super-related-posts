@@ -466,7 +466,13 @@ function srpp_save_index_entry($postID) {
 	$tags = srpp_get_tag_terms($postID, $utf8);
 	$sdate  = date("Ymd",strtotime($post['post_date']));	
 	//check to see if the field is set
-	$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
+	$pid = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT pID FROM $table_name WHERE pID=%d limit 1", 
+			$postID
+		)		
+	);
+	print_r($pid);die;
 	//then insert if empty
 	if($post['post_status'] == 'publish'){
 		if (is_null($pid)) {
