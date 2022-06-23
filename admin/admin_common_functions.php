@@ -610,61 +610,6 @@ function srpp_display_custom($custom) {
 	<?php
 }
 
-function srpp_display_orderby($options) {
-	global $wpdb;
-	$limit = 30;
-	$keys = $wpdb->get_col( "
-		SELECT meta_key
-		FROM $wpdb->postmeta
-		WHERE meta_key NOT LIKE '\_%'
-		GROUP BY meta_key
-		ORDER BY meta_id DESC
-		LIMIT $limit" );
-	$metaselect = "<select id='orderby' name='orderby'>\n\t<option value=''></option>";
-	if ( $keys ) {
-		natcasesort($keys);
-		foreach ( $keys as $key ) {
-			$key = esc_attr( $key );
-			if ($options['orderby'] == $key) {
-				$metaselect .= "\n\t<option selected='selected' value='".esc_attr($key)."'>".esc_attr($key)."</option>";
-			} else {
-				$metaselect .= "\n\t<option value='".esc_attr($key)."'>".esc_attr($key)."</option>";
-			}
-		}
-		$metaselect .= "</select>";
-	}
-
-	?>
-	<tr valign="top">
-		<th scope="row"><?php echo esc_html__('Select output by custom field:', 'super-related-posts') ?></th>
-		<td>
-			<table>
-			<tr><td style="border-bottom-width: 0"><?php echo esc_html__( 'Field' , 'super-related-posts') ?></td><td style="border-bottom-width: 0"><?php echo esc_html__( 'Order' , 'super-related-posts') ?></td><td style="border-bottom-width: 0"><?php echo esc_html__( 'Case' , 'super-related-posts') ?></td></tr>
-			<tr>
-			<td style="border-bottom-width: 0">
-			<!-- html already escapped above -->
-			<?php echo $metaselect;	?>
-			</td>
-			<td style="border-bottom-width: 0">
-				<select name="orderby_order" id="orderby_order">
-					<option <?php if($options['orderby_order'] == 'ASC') { echo 'selected="selected"'; } ?> value="ASC"><?php echo esc_html__( 'ascending' , 'super-related-posts') ?></option>
-					<option <?php if($options['orderby_order'] == 'DESC') { echo 'selected="selected"'; } ?> value="DESC"><?php echo esc_html__( 'descending' , 'super-related-posts') ?></option>
-				</select>
-			</td>
-			<td style="border-bottom-width: 0">
-				<select name="orderby_case" id="orderby_case">
-					<option <?php if($options['orderby_case'] == 'false') { echo 'selected="selected"'; } ?> value="false"><?php echo esc_html__( 'case-sensitive' , 'super-related-posts') ?></option>
-					<option <?php if($options['orderby_case'] == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'case-insensitive' , 'super-related-posts') ?></option>
-					<option <?php if($options['orderby_case'] == 'num') { echo 'selected="selected"'; } ?> value="num"><?php echo esc_html__( 'numeric' , 'super-related-posts') ?></option>
-				</select>
-			</td>
-			</tr>
-			</table>
-		</td>
-	</tr>
-	<?php
-}
-
 // now for recent_comments
 
 function srpp_display_show_type($show_type) {
