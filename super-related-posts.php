@@ -50,7 +50,7 @@ class SuperRelatedPosts {
 
   // add settings link to plugins page
   static function plugin_action_links($links) {
-    $settings_link = '<a href="' . esc_url(admin_url('options-general.php?page=super-related-posts')) . '" title="Settings for Super Related Posts">Settings</a>';
+    $settings_link = '<a href="' . esc_url(admin_url('options-general.php?page=super-related-posts')) . '" title="Settings for Super Related Posts">'.esc_html__( 'Settings' , 'super-related-posts').'</a>';
 
     array_unshift($links, $settings_link);
 
