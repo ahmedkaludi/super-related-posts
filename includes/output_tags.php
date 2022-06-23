@@ -415,28 +415,6 @@ function srpp_otf_taglinks($option_key, $result, $ext) {
 	return $tag_list;
 }
 
-function srpp_otf_totalposts($option_key, $result, $ext) {
-	global $wpdb;
-	$value = '';
-	if (function_exists('get_post_type')) {
-		$value = (int) $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'post' AND post_status = 'publish'");
-	} else {
-		$value = (int) $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_status = 'publish'");
-	}
-	return $value;
-}
-
-function srpp_otf_totalpages($option_key, $result, $ext) {
-	global $wpdb;
-	$value = '';
-	if (function_exists('get_post_type')) {
-		$value = (int) $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish'");
-	} else {
-		$value = (int) $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_status = 'static'");
-	}
-	return $value;
-}
-
 function srpp_otf_link($option_key, $result, $ext) {
 	$ttl = srpp_otf_title($option_key, $result, $ext);
 	$pml = srpp_otf_url($option_key, $result, null);
@@ -456,27 +434,6 @@ function srpp_otf_link($option_key, $result, $ext) {
 
 function srpp_otf_score($option_key, $result, $ext) {
 	return sprintf("%.0f", $result->score);
-}
-
-// tries to get the number of post views from a few popular plugins if the are installed
-function srpp_otf_postviews($option_key, $result, $ext) {
-	global $wpdb;
-	$count	= 0;
-	// alex king's popularity contest
-	if (class_exists('ak_popularity_contest')) $count = $akpc->get_post_total($result->ID);
-	// my own post view count
-	else if (function_exists('popular_posts_views')) $count = popular_posts_views($result->ID);
-	// lester chan's postviews
-	else if (function_exists('the_views')) {
-		$count = get_post_custom($result->ID);
-		$count = intval($count['views'][0]);
-	}
-	// mark ghosh's top10
-	else if (function_exists('show_post_count')) {$id = $result->ID; $count = $wpdb->get_var("select cntaccess from mostAccessed WHERE postnumber = $id");}
-	// Ivan Djurdjevac's CountPosts
-	else if (function_exists('HitThisPost')) {$id = $result->ID; $count = $wpdb->get_var("SELECT post_hits FROM $wpdb->posts WHERE ID=$id");}
-
-	return $count;
 }
 
 function srpp_oth_get_actual_size($imgtag) {
