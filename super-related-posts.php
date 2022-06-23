@@ -126,7 +126,7 @@ class SuperRelatedPosts {
 			if($sort_by == 'recent'){
 				$orderby = $wpdb->prepare(" ORDER BY id DESC LIMIT 0, %d", $options['limit']);								
 			}else{
-				if ($check_age) {		
+				if ($check_age) {
 					$today = date_create(date('Y-m-d'));
 					$age = date_sub($today,date_interval_create_from_date_string($options['age1']['length']." ".$options['age1']['duration']));
 					$age = $age->format('Ymd');			
@@ -168,6 +168,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
+			//Output escaping is done below before rendering html
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
@@ -308,6 +309,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
+			//Output escaping is done below before rendering html
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
@@ -444,6 +446,7 @@ class SuperRelatedPosts {
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
+			//Output escaping is done below before rendering html
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
@@ -486,7 +489,10 @@ function srpp_save_index_entry($postID) {
 	global $wpdb, $table_prefix;
 	$table_name = $table_prefix . 'super_related_posts';
 	
-	$post = $wpdb->get_row("SELECT post_content, post_date, post_title, post_type, post_status FROM $wpdb->posts WHERE ID = $postID", ARRAY_A);
+	$post = $wpdb->get_row(
+		$wpdb->prepare("SELECT post_content, post_date, post_title, post_type, post_status 
+						FROM $wpdb->posts WHERE ID = %d", $postID), ARRAY_A);
+
 	if ($post['post_type'] === 'revision'
 		|| $post['post_type'] === 'wp_global_styles'
 		|| $post['post_type'] === 'attachment'
@@ -519,13 +525,29 @@ function srpp_save_index_entry($postID) {
 	);	
 	//then insert if empty
 	if($post['post_status'] == 'publish'){
+
 		if (is_null($pid)) {
-			$wpdb->query("INSERT INTO $table_name (pID, title, tags, spost_date) VALUES ($postID, \"$title\", \"$tags\", \"$sdate\")");
+
+			$wpdb->insert( 
+				$table_name, 
+				array(
+					'pID'          => $postID,  
+					'title'        => $title,  
+					'tags'         => $tags, 
+					'spost_date'   => $sdate, 					
+				), 
+				array('%d','%s', '%s', '%s') 
+			);
+			
 		} else {
-			$wpdb->query("UPDATE $table_name SET title=\"$title\", tags=\"$tags\", spost_date=\"$sdate\" WHERE pID=$postID" );
+			$wpdb->query(
+				$wpdb->prepare("UPDATE $table_name SET title=%s, tags=%s, spost_date=%s WHERE pID=%d",
+				$title, $tags, $sdate, $postID
+				)				
+			);
 		}
 	}else{		
-		$wpdb->query("DELETE FROM $table_name WHERE pID = $postID ");
+		$wpdb->query($wpdb->prepare("DELETE FROM $table_name WHERE pID = %d", $postID));
 	}
 	
 	return $postID;
@@ -534,7 +556,7 @@ function srpp_save_index_entry($postID) {
 function srpp_delete_index_entry($postID) {
 	global $wpdb, $table_prefix;
 	$table_name = $table_prefix . 'super_related_posts';
-	$wpdb->query("DELETE FROM $table_name WHERE pID = $postID ");
+	$wpdb->query($wpdb->prepare("DELETE FROM $table_name WHERE pID = %d", $postID));	
 	return $postID;
 }
 
@@ -642,8 +664,15 @@ function srpp_get_tag_terms($ID, $utf8) {
 	global $wpdb;
 	if (!function_exists('get_object_term_cache')) return '';
 	$tags = array();
-	$query = "SELECT t.name FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON tt.term_id = t.term_id INNER JOIN $wpdb->term_relationships AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id WHERE tt.taxonomy = 'post_tag' AND tr.object_id = '$ID'";
-	$tags = $wpdb->get_col($query);
+	
+	$tags = $wpdb->get_col($wpdb->prepare(
+			"SELECT t.name FROM $wpdb->terms AS t INNER JOIN 
+			$wpdb->term_taxonomy AS tt ON tt.term_id = t.term_id 
+			INNER JOIN $wpdb->term_relationships AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id 
+			WHERE tt.taxonomy = 'post_tag' AND tr.object_id = %d"
+		),
+		$ID
+	);
 	if (!empty ($tags)) {
 		if ($utf8) {
 			mb_internal_encoding('UTF-8');
@@ -754,7 +783,8 @@ function srp_update_post_views_via_ajax(){
 		$count = $wpdb->get_var($wpdb->prepare( "SELECT views FROM {$wpdb->prefix}super_related_posts WHERE pID = %d ", $post_id) );
 		$count++;	
 		$wpdb->query($wpdb->prepare(
-			"UPDATE {$wpdb->prefix}super_related_posts SET `views` = '{$count}' WHERE (`pID` = %d)",
+			"UPDATE {$wpdb->prefix}super_related_posts SET `views` = %d WHERE (`pID` = %d)",
+			$count,
 			$post_id			
 		));				
 		if($wpdb->last_error){            
