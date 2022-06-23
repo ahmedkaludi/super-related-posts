@@ -403,8 +403,15 @@ function srpp_save_index_entries ($start, $utf8=false, $use_stemmer='false', $ba
 		'oembed_cache'
 	);
 	
-	$sql = "SELECT `ID`, `post_title`, `post_date`, `post_content`, `post_type` FROM $wpdb->posts WHERE post_status='publish' AND post_type NOT IN("."'".implode("', '",$not_in)."'".") LIMIT $start, $batch";	
-	$posts = $wpdb->get_results($sql, ARRAY_A);
+	$posts = $wpdb->get_results(
+		stripslashes($wpdb->prepare(
+			"SELECT `ID`, `post_title`, `post_date`, `post_content`, `post_type` 
+			FROM $wpdb->posts WHERE post_status='publish' 
+			AND post_type NOT IN(%s) 
+			LIMIT %d, %d",
+			implode("', '",$not_in), $start, $batch
+		))
+		, ARRAY_A);
 	
 	if($posts){
 		
@@ -673,9 +680,6 @@ function srpp_super_related_posts_install() {
 	if (!isset($options['batch'])) $options['batch'] = '100';
 
 	update_option('super-related-posts', $options);
-
- 	// clear legacy custom fields
-	$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'srppterms'");
 
 	// clear legacy index
 	$indices = $wpdb->get_results("SHOW INDEX FROM $wpdb->posts", ARRAY_A);
