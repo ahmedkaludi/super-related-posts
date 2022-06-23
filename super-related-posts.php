@@ -79,12 +79,11 @@ class SuperRelatedPosts {
 			$match_tags = ($options['match_tags'] !== 'false' && $wp_version >= 2.3);			
 			$match_category = ($options['match_cat'] === 'true');
 			$sort_by       = $options['sort_by_1'];			
-			$check_age = ('none' !== $options['age1']['direction']);			
-			$limit = '0'.', '.$options['limit'];
+			$check_age = ('none' !== $options['age1']['direction']);						
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
 												
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p ";
-			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
+			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
+				
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
@@ -93,17 +92,19 @@ class SuperRelatedPosts {
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
-			
+						
 			if($cat_ids){				
 				$wp_term_re   = $table_prefix.'term_relationships';
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
-
-				$sql .="inner join `$wp_term_re` tt on tt.object_id = p.ID
+				$join   .= $wpdb->prepare(
+					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
 						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id			
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
 						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = $cat_ids[0] "; 				
+						and tt.term_taxonomy_id = %d ",
+						$cat_ids[0]
+				);		
 			}
 
 			if($tag_ids){				
@@ -111,29 +112,41 @@ class SuperRelatedPosts {
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
 
-				$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
+				$join   .= $wpdb->prepare(
+					   "inner join `$wp_term_re` tr on tr.object_id = p.ID
 						inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
 						inner join `$wp_term_taxo` tts on tts.term_taxonomy_id = t.term_id			
 						and tts.taxonomy = 'post_tag'
-						and tr.term_taxonomy_id = $tag_ids[0]"; 				
+						and tr.term_taxonomy_id = %d",
+					 	$tag_ids[0]
+			 );		
+				
 			}
-			
+			$where = $wpdb->prepare("p.post_status = %s", 'publish');
 			if($sort_by == 'recent'){
-				$sql .= " and p.post_status = 'publish' ORDER BY id DESC LIMIT $limit";	
+				$orderby = $wpdb->prepare(" ORDER BY id DESC LIMIT 0, %d", $options['limit']);								
 			}else{
-				if ($check_age) {				
-					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+				if ($check_age) {		
+					$today = date_create(date('Y-m-d'));
+					$age = date_sub($today,date_interval_create_from_date_string($options['age1']['length']." ".$options['age1']['duration']));
+					$age = $age->format('Ymd');			
+					if($options['age1']['direction'] === 'before'){
+						$where .= $wpdb->prepare( " AND (sp.spost_date <= %d)",  $age );
+					}else{
+						$where .= $wpdb->prepare( " AND (sp.spost_date >= %d)",  $age );
+					}
 				}
-				$sql .= " and p.post_status = 'publish' ORDER BY sp.views DESC LIMIT $limit";	
+				$orderby = $wpdb->prepare(" ORDER BY sp.views DESC LIMIT 0, %d", $options['limit']);				
 				
 			}					
 							
-			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
-			
+			$cpost_id 		   = get_the_ID();			
+			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby";			
 			$srp_execute_sql_1 = $sql;			
 			$results = array();
-						
+			
 			$fetch_result = $wpdb->get_results($sql);
+			
 			if(!empty($fetch_result)){
 				foreach ($fetch_result as $value) {					
 					if($value->ID == $cpost_id) {
@@ -141,8 +154,7 @@ class SuperRelatedPosts {
 					}
 					$results[] = $value;
 				}
-			}			
-			
+			}						
 			$srp_execute_result = $results;			
 		} else {
 			$results = false;
@@ -205,8 +217,8 @@ class SuperRelatedPosts {
 			$des = isset($options['re_design_2']) ? $options['re_design_2'] : 'd1';
 
 			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p ";
-			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
+			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
+
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
@@ -220,12 +232,14 @@ class SuperRelatedPosts {
 				$wp_term_re   = $table_prefix.'term_relationships';
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
-
-				$sql .="inner join `$wp_term_re` tt on tt.object_id = p.ID
+				$join   .= $wpdb->prepare(
+					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
 						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id			
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
 						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = $cat_ids[0] "; 				
+						and tt.term_taxonomy_id = %d ",
+						$cat_ids[0]
+				);		
 			}
 
 			if($tag_ids){				
@@ -233,26 +247,41 @@ class SuperRelatedPosts {
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
 
-				$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
+				$join   .= $wpdb->prepare(
+					   "inner join `$wp_term_re` tr on tr.object_id = p.ID
 						inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
 						inner join `$wp_term_taxo` tts on tts.term_taxonomy_id = t.term_id			
 						and tts.taxonomy = 'post_tag'
-						and tr.term_taxonomy_id = $tag_ids[0]"; 				
+						and tr.term_taxonomy_id = %d",
+					 	$tag_ids[0]
+					);				
 			}
-			
+
+			$where = $wpdb->prepare("p.post_status = %s", 'publish');
+			$limit = " LIMIT 0, 5";
+
 			if($sort_by == 'recent'){
-				$sql .= " and p.post_status = 'publish' ORDER BY id DESC LIMIT $limit";	
+				$orderby = $wpdb->prepare(" ORDER BY id DESC ");								
 			}else{
-				if ($check_age) {				
-					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
+				if ($check_age) {		
+					$today = date_create(date('Y-m-d'));
+					$age = date_sub($today,date_interval_create_from_date_string($options['age1']['length']." ".$options['age1']['duration']));
+					$age = $age->format('Ymd');			
+					if($options['age1']['direction'] === 'before'){
+						$where .= $wpdb->prepare( " AND (sp.spost_date <= %d)",  $age );
+					}else{
+						$where .= $wpdb->prepare( " AND (sp.spost_date >= %d)",  $age );
+					}
 				}
-				$sql .= " and p.post_status = 'publish' ORDER BY sp.views DESC LIMIT $limit";	
+				$orderby = $wpdb->prepare(" ORDER BY sp.views DESC");				
+				
 			}					
 							
-			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
+			$cpost_id 		   = get_the_ID();			
+			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";		
 			if($srp_execute_sql_1 === $sql){				
 				$sql =  strstr($sql, 'LIMIT', true);
-				$sql.= "LIMIT ".($options['limit']+1).",".$options['limit_2']; 
+				$sql.= $wpdb->prepare("LIMIT %d, %d", ($options['limit']+1), $options['limit_2']);
 			}
 			
 			$srp_execute_sql_2 = $sql;					
@@ -324,8 +353,8 @@ class SuperRelatedPosts {
 			$des = isset($options['re_design_3']) ? $options['re_design_3'] : 'd1';
 
 			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p ";
-			$sql .= " inner join `$table_name` sp on p.ID=sp.pID ";	
+			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
+			
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
@@ -339,12 +368,14 @@ class SuperRelatedPosts {
 				$wp_term_re   = $table_prefix.'term_relationships';
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
-
-				$sql .="inner join `$wp_term_re` tt on tt.object_id = p.ID
+				$join   .= $wpdb->prepare(
+					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
 						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id			
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
 						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = $cat_ids[0] "; 				
+						and tt.term_taxonomy_id = %d ",
+						$cat_ids[0]
+				);		
 			}
 
 			if($tag_ids){				
@@ -352,27 +383,41 @@ class SuperRelatedPosts {
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
 
-				$sql .="inner join `$wp_term_re` tr on tr.object_id = p.ID
+				$join   .= $wpdb->prepare(
+					   "inner join `$wp_term_re` tr on tr.object_id = p.ID
 						inner join `$wp_terms` t on tr.term_taxonomy_id = t.term_id
 						inner join `$wp_term_taxo` tts on tts.term_taxonomy_id = t.term_id			
 						and tts.taxonomy = 'post_tag'
-						and tr.term_taxonomy_id = $tag_ids[0]"; 				
+						and tr.term_taxonomy_id = %d",
+					 	$tag_ids[0]
+			 );	
 			}
 			
-			if($sort_by == 'recent'){
-				$sql .= " and p.post_status = 'publish' ORDER BY id DESC LIMIT $limit";	
-			}else{
-				if ($check_age) {				
-					$sql .= ' AND '.srpp_where_check_age($options['age1']['direction'], $options['age1']['length'], $options['age1']['duration']);				
-				}
-				$sql .= " and p.post_status = 'publish' ORDER BY sp.views DESC LIMIT $limit";	
-			}					
-							
-			$cpost_id 		   = srpp_where_omit_post($sprp_current_ID);			
+			$where = $wpdb->prepare("p.post_status = %s", 'publish');
+			$limit = " LIMIT 0, 5";
 
+			if($sort_by == 'recent'){
+				$orderby = $wpdb->prepare(" ORDER BY id DESC ");								
+			}else{
+				if ($check_age) {		
+					$today = date_create(date('Y-m-d'));
+					$age = date_sub($today,date_interval_create_from_date_string($options['age1']['length']." ".$options['age1']['duration']));
+					$age = $age->format('Ymd');			
+					if($options['age1']['direction'] === 'before'){
+						$where .= $wpdb->prepare( " AND (sp.spost_date <= %d)",  $age );
+					}else{
+						$where .= $wpdb->prepare( " AND (sp.spost_date >= %d)",  $age );
+					}
+				}
+				$orderby = $wpdb->prepare(" ORDER BY sp.views DESC");				
+				
+			}				
+							
+			$cpost_id 		   = get_the_ID();			
+			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";		
 			if($sql === $srp_execute_sql_1 || $sql === $srp_execute_sql_2){							
 				$sql =  strstr($sql, 'LIMIT', true);
-				$sql.= "LIMIT ".($options['limit'] + $options['limit_2'] + 1).",".$options['limit_3']; 
+				$sql.= $wpdb->prepare("LIMIT %d, %d", ($options['limit'] + $options['limit_2'] + 1), $options['limit_3'] );				
 			}
 			$srp_execute_sql_3 = $sql;			
 			$results = array();
@@ -471,8 +516,7 @@ function srpp_save_index_entry($postID) {
 			"SELECT pID FROM $table_name WHERE pID=%d limit 1", 
 			$postID
 		)		
-	);
-	print_r($pid);die;
+	);	
 	//then insert if empty
 	if($post['post_status'] == 'publish'){
 		if (is_null($pid)) {

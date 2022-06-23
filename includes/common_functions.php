@@ -515,13 +515,6 @@ function srpp_where_tag_str($tag_str) {
 	return $sql;
 }
 
-// note the addition of a 'manual overide' allowing the current posts to me marked by super_related_posts_mark_current for example
-function srpp_where_omit_post($manual_current_ID = -1) {
-	$postid = srpp_current_post_id($manual_current_ID);
-	if ($postid <= 1) $postid = -1;
-	return $postid;
-}
-
 function srpp_where_just_post() {
 	$postid = srpp_current_post_id();
 	if ($postid <= 1) $postid = -1;
