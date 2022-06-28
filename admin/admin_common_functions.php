@@ -18,10 +18,9 @@ function srpp_options_from_post($options, $args) {
 		case 'included_cats':			
 			if (!empty($_POST[$arg])) {
 				
-				if (function_exists('get_term_children')) {
-					$catarray = $_POST[$arg];
-					// Sanitize $_POST;
-					$catarray = array_map( 'intval', $catarray );
+				if (function_exists('get_term_children')) {	
+					//$_POST contains array of integer so we have used array_map to iterate over it and sanitize the it.									
+					$catarray = array_map( 'intval', wp_unslash($_POST[$arg]) );
 					foreach ($catarray as $cat) {
 						$catarray = array_merge($catarray, get_term_children($cat, 'category'));
 					}
@@ -35,7 +34,8 @@ function srpp_options_from_post($options, $args) {
 		case 'excluded_authors':
 		case 'included_authors':						
 			if (!empty($_POST[$arg])) {
-				$authorIds = array_map( 'intval', $_POST[$arg]);
+				//$_POST contains array of integer so we have used array_map to iterate over it and sanitize the it.									
+				$authorIds = array_map( 'intval', wp_unslash($_POST[$arg]));
 				$options[$arg] = implode(',', $authorIds);
 			} else {
 				$options[$arg] = '';
