@@ -26,8 +26,6 @@ function srpp_output_tag_action($tag) {
 //		$ext			some extra data which a tag may use
 //	the return value is the value of the tag as a string
 
-
-
 function srpp_otf_title ($option_key, $result, $ext) {
 	$value = srpp_oth_truncate_text($result->post_title, $ext);
 	return apply_filters('the_title', $value);

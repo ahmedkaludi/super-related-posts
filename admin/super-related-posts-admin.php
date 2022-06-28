@@ -309,78 +309,7 @@ function srpp_admin_footer() {
 				</p>
 			</div>
 		</div>
-	</div>
-	<script>
-		jQuery(document).ready(function($){
-			$("#adv_filter_check_1").click(function(){
-			if($(this).is(':checked')){
-				$("#filter_options").show();
-			}else{
-				$("#filter_options").hide();
-			}
-			});
-			$("#adv_filter_check_2").click(function(){
-			if($(this).is(':checked')){
-				$("#filter_options").show();
-			}else{
-				$("#filter_options").hide();
-			}
-			});
-			$("#adv_filter_check_3").click(function(){
-			if($(this).is(':checked')){
-				$("#filter_options").show();
-			}else{
-				$("#filter_options").hide();
-			}
-			});
-			$("#pstn_rel_1").change(function(){
-			if($('#pstn_rel_1').val() == 'ibc'){
-		       $("#para_rel_1").parents('tr').show();
-		    }else{
-		       $("#para_rel_1").parents('tr').hide();
-		    }
-			});
-			$("#pstn_rel_2").change(function(){
-			if($('#pstn_rel_2').val() == 'ibc'){
-		       $("#para_rel_2").parents('tr').show();
-		    }else{
-		       $("#para_rel_2").parents('tr').hide();
-		    }
-			});
-			$("#pstn_rel_3").change(function(){
-			if($('#pstn_rel_3').val() == 'ibc'){
-		       $("#para_rel_3").parents('tr').show();
-		    }else{
-		       $("#para_rel_3").parents('tr').hide();
-		    }
-			});
-
-			$("#sort_by_1").change(function(){
-			if($('#sort_by_1').val() == 'popular'){
-		       $("#age1-direction").parents('tr').show();
-		    }else{
-			   $("#age1-direction").parents('tr').hide();
-		    }
-			});
-
-			$("#sort_by_2").change(function(){
-			if($('#sort_by_2').val() == 'popular'){
-		       $("#age2-direction").parents('tr').show();
-		    }else{
-			   $("#age2-direction").parents('tr').hide();
-		    }
-			});
-
-			$("#sort_by_3").change(function(){
-			if($('#sort_by_3').val() == 'popular'){
-		       $("#age3-direction").parents('tr').show();
-		    }else{
-			   $("#age3-direction").parents('tr').hide();
-		    }
-			});
-
-		});
-		</script>
+	</div>	
 	<?php
 }
 
