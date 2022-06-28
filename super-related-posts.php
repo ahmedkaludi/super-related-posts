@@ -159,6 +159,7 @@ class SuperRelatedPosts {
 		} else {
 			$results = false;
 		}
+		$allowed_html = srpp_expanded_allowed_tags();
 	    if ($results) {
 			
 			$translations = srpp_prepare_template($options['output_template']);
@@ -169,7 +170,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -181,8 +182,7 @@ class SuperRelatedPosts {
 			}
 		}
 		
-		if($output){
-			$allowed_html = srpp_expanded_allowed_tags();
+		if($output){			
 			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid, $cache_key, $output);
 		}
@@ -301,6 +301,7 @@ class SuperRelatedPosts {
 		} else {
 			$results = false;
 		}
+		$allowed_html = srpp_expanded_allowed_tags();
 	    if ($results) {
 			$translations = srpp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
@@ -310,7 +311,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -321,8 +322,7 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		if($output){
-			$allowed_html = srpp_expanded_allowed_tags();
+		if($output){			
 			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid, $cache_key, $output);
 		}		
@@ -438,6 +438,7 @@ class SuperRelatedPosts {
 		} else {
 			$results = false;
 		}
+		$allowed_html = srpp_expanded_allowed_tags();
 	    if ($results) {
 			$translations = srpp_prepare_template($options['output_template']);
 			foreach ($results as $result) {
@@ -447,7 +448,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . $output . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -458,8 +459,7 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		if($output){
-			$allowed_html = srpp_expanded_allowed_tags();
+		if($output){			
 			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid,$cache_key, $output);
 		}
