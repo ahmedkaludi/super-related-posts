@@ -54,6 +54,6 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 == Changelog ==
 
-= 1.0 (6 June 2022) =
+= 1.0 (29 June 2022) =
 
 * Version 1.0 Released
