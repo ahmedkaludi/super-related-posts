@@ -106,5 +106,18 @@ jQuery(document).ready(function($){
            $("#age3-direction").parents('tr').hide();
         }
         });
+
+        //newsletter js
+
+        $("#subscribe-newsletter-form").on('submit',function(e){
+        e.preventDefault();
+        var $form = $("#subscribe-newsletter-form");
+        var name = $form.find('input[name="name"]').val();
+        var email = $form.find('input[name="email"]').val();
+        var website = $form.find('input[name="company"]').val();
+        $.post(ajaxurl, {action:'suprp_subscribe_newsletter',name:name, email:email,website:website},
+          function(data) {}
+        );
+    });
             
 });

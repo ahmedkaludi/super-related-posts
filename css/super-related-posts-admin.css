@@ -85,3 +85,11 @@ input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transfor
     display: none;
 }
 /* progress bar css ends here */
+
+div#wp-pointer-0{
+    position: absolute;
+    width: 320px;
+    top: 525px!important;
+    left: 146px!important;
+    z-index: 9999;
+ }
