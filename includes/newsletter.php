@@ -41,7 +41,7 @@ class suprp_pointers {
 
 			$id = '.settings_page_super-related-posts';  // Define ID used on page html element where we want to display pointer
 
-			$content = '<h3>' . sprintf (esc_html__('Thank You for using Super Related Posts plugin!', 'easy-table-of-contents'), self::DISPLAY_VERSION) . '</h3>';
+			$content = '<h3>' . sprintf (esc_html__('Thank You for using Super Related Posts plugin!', 'super_related_posts'), self::DISPLAY_VERSION) . '</h3>';
 			$content .= '<p>' . esc_html__('Do you want the latest update on', 'super_related_posts') . '<b>' . esc_html__(' Super related posts ', 'super_related_posts') . '</b>' . esc_html__('before others and some best resources on Super Related posts in a single email? - Free just for users of this plugin', 'super_related_posts').'</p>';
             $content .= '
            
