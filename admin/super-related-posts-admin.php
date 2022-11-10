@@ -17,6 +17,7 @@ function srpp_options_page(){
 	$m->add_subpage('Related Post2',  'related_post2', 'srpp_rp2_options_subpage');
 	$m->add_subpage('Related Post3',  'related_post3', 'srpp_rp3_options_subpage');
 	$m->add_subpage('Posts Caching', 'posts_caching', 'srpp_pi_options_subpage');
+	$m->add_subpage('Support', 'srpp_support', 'srpp_pi_support_options_subpage');
 	$m->display();
 }
 
@@ -671,3 +672,83 @@ function srpp_admin_notice(){
 	<?php	    
 	}	
 }
+
+if(!function_exists('srpp_pi_support_options_subpage')){
+	function srpp_pi_support_options_subpage()
+	{
+	?>
+		<div class="saswp_support_div">
+			   <strong><?php echo 'If you have any query, please write the query in below box or email us at' ?> <a href="mailto:team@magazine3.in">team@magazine3.in</a>. <?php echo 'We will reply to your email address shortly' ?></strong>
+		  
+			   <ul>
+				   <li>
+					  <input type="text" id="srpp_query_email" name="srpp_query_email" placeholder="email">
+				   </li>
+				   <li>                    
+					   <div><textarea rows="5" cols="60" id="srpp_query_message" name="srpp_query_message" placeholder="Write your query"></textarea></div>
+					   <span class="srpp-query-success" style="display: none; color: #006600;"><?php echo 'Message sent successfully, Please wait we will get back to you shortly'; ?></span>
+					   <span class="srpp-query-error" style="display: none; color: #bf3322;"><?php echo 'Message not sent. please check your network connection'; ?></span>
+				   </li>
+				   <li><button class="button srpp-send-query"><?php echo 'Send Message'; ?></button></li>
+			   </ul>            
+					  
+		   </div>
+	   <?php
+	}
+}
+
+   /**
+     * This is a ajax handler function for sending email from user admin panel to us. 
+     * @return type json string
+     */
+	function srpp_send_query_message(){   
+    
+        if ( ! isset( $_POST['srp_security_nonce'] ) ){
+           return; 
+        }
+        if ( !wp_verify_nonce( $_POST['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
+           return;  
+        } 
+        $message        = sanitize_textarea_field($_POST['message']); 
+        $email          = sanitize_email($_POST['email']);   
+                                
+        if(function_exists('wp_get_current_user')){
+
+            $user           = wp_get_current_user();
+         
+            $message = '<p>'.$message.'</p><br><br>'
+
+                 . '<br><br>'.'Query from plugin support tab';
+            
+            $user_data  = $user->data;        
+            $user_email = $user_data->user_email;     
+            
+            if($email){
+                $user_email = $email;
+            }            
+            //php mailer variables        
+            $sendto    = 'team@magazine3.in';
+            $subject   = "Super Related Posts Customer Query";
+            
+            $headers[] = 'Content-Type: text/html; charset=UTF-8';
+            $headers[] = 'From: '. esc_attr($user_email);            
+            $headers[] = 'Reply-To: ' . esc_attr($user_email);
+            // Load WP components, no themes.                      
+            $sent = wp_mail($sendto, $subject, $message, $headers); 
+
+            if($sent){
+
+                 echo json_encode(array('status'=>'t'));  
+
+            }else{
+
+                echo json_encode(array('status'=>'f'));            
+
+            }
+            
+        }
+                        
+        wp_die();           
+}
+
+add_action('wp_ajax_srpp_send_query_message', 'srpp_send_query_message');

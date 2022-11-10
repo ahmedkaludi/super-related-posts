@@ -120,4 +120,55 @@ jQuery(document).ready(function($){
         );
     });
             
+    // Code for support tab
+    $(".srpp-send-query").on("click", function(e){
+        e.preventDefault();   
+        var message     = $("#srpp_query_message").val();  
+        var email       = $("#srpp_query_email").val();
+        
+        if($.trim(message) !='' && $.trim(email) !='' && srppIsEmail(email) == true){
+         $.ajax({
+                        type: "POST",    
+                        url:ajaxurl,                    
+                        dataType: "json",
+                        data:{action:"srpp_send_query_message", message:message,email:email,srp_security_nonce:srp_localize_data.srp_security_nonce},
+                        success:function(response){                       
+                          if(response['status'] =='t'){
+                            $(".srpp-query-success").show();
+                            $(".srpp-query-error").hide();
+                          }else{                                  
+                            $(".srpp-query-success").hide();  
+                            $(".srpp-query-error").show();
+                          }
+                        },
+                        error: function(response){                    
+                        console.log(response);
+                        }
+                        });   
+        }else{
+            
+            if($.trim(message) =='' &&  $.trim(email) ==''){
+                alert('Please enter the message and email');
+            }else{
+            if($.trim(message) == ''){
+                alert('Please enter the message');
+            }
+            if($.trim(email) == ''){
+                alert('Please enter the email');
+            }
+            if(srppIsEmail(email) == false){
+                alert('Please enter a valid email');
+            }
+                
+            }
+            
+        }                        
+
+    });
+
 });
+
+function srppIsEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
+}
