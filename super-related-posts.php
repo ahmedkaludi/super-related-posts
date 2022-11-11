@@ -695,7 +695,8 @@ function srpp_get_tag_terms($ID, $utf8) {
 if ( is_admin() ) {
 	require(SRPP_DIR_NAME.'/admin/super-related-posts-admin.php');
 	require(SRPP_DIR_NAME.'/includes/helper-function.php');
-	require_once( SRPP_DIR_NAME . '/includes/newsletter.php' );
+	// require_once( SRPP_DIR_NAME . '/includes/newsletter.php' );
+	require_once( SRPP_DIR_NAME . '/admin/newsletter.php' );
 
 }
 
