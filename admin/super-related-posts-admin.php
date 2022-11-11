@@ -677,7 +677,8 @@ if(!function_exists('srpp_pi_support_options_subpage')){
 	function srpp_pi_support_options_subpage()
 	{
 	?>
-		<div class="srppwp_support_div">
+		<div class="wrap srpp-tab-content">
+			<div class="srppwp_support_div">
 			   <strong><?php echo 'If you have any query, please write the query in below box or email us at' ?> <a href="mailto:team@magazine3.in">team@magazine3.in</a>. <?php echo 'We will reply to your email address shortly' ?></strong>
 		  
 			   <ul>
@@ -690,9 +691,9 @@ if(!function_exists('srpp_pi_support_options_subpage')){
 					   <span class="srpp-query-error" style="display: none; color: #bf3322;"><?php echo 'Message not sent. please check your network connection'; ?></span>
 				   </li>
 				   <li><button class="button srpp-send-query"><?php echo 'Send Message'; ?></button></li>
-			   </ul>            
-					  
-		   </div>
+			   </ul>            		  
+			</div>
+		</div>
 	   <?php
 	}
 }
