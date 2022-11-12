@@ -97,9 +97,9 @@ function suprp_enqueue_makebetter_email_js(){
         return;
     }
 
-    wp_enqueue_script( 'suprp-make-better-js', SRPP_DIR_NAME . 'includes/feedback.js', array( 'jquery' ));
+    wp_enqueue_script( 'suprp-make-better-js', SRPP_PLUGIN_URI . 'includes/feedback.js', array( 'jquery' ));
 
-    wp_enqueue_style( 'suprp-make-better-css', SRPP_DIR_NAME . 'css/feedback.css', false  );
+    wp_enqueue_style( 'suprp-make-better-css', SRPP_PLUGIN_URI . 'css/feedback.css', false  );
 }
 add_action( 'admin_enqueue_scripts', 'suprp_enqueue_makebetter_email_js' );
 
