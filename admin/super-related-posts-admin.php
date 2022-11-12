@@ -680,7 +680,7 @@ if(!function_exists('srpp_pi_support_options_subpage')){
 	?>
 		<div class="wrap srpp-tab-content">
 			<div class="srppwp_support_div">
-			   <strong><?php echo 'If you have any query, please write the query in below box or email us at' ?> <a href="mailto:team@magazine3.in">team@magazine3.in</a>. <?php echo 'We will reply to your email address shortly' ?></strong>
+			   <strong><?php echo esc_html__('If you have any query, please write the query in below box or email us at', 'super_related_posts'); ?> <a href="mailto:team@magazine3.in"><?php echo esc_html__('team@magazine3.in', 'super_related_posts') ?></a>. <?php echo esc_html__('We will reply to your email address shortly', 'super_related_posts') ?></strong>
 		  
 			   <ul>
 				   <li>
@@ -688,10 +688,10 @@ if(!function_exists('srpp_pi_support_options_subpage')){
 				   </li>
 				   <li>                    
 					   <div><textarea rows="5" cols="60" id="srpp_query_message" name="srpp_query_message" placeholder="Write your query"></textarea></div>
-					   <span class="srpp-query-success" style="display: none; color: #006600;"><?php echo 'Message sent successfully, Please wait we will get back to you shortly'; ?></span>
-					   <span class="srpp-query-error" style="display: none; color: #bf3322;"><?php echo 'Message not sent. please check your network connection'; ?></span>
+					   <span class="srpp-query-success" style="display: none; color: #006600;"><?php echo esc_html__('Message sent successfully, Please wait we will get back to you shortly', 'super_related_posts'); ?></span>
+					   <span class="srpp-query-error" style="display: none; color: #bf3322;"><?php echo esc_html__('Message not sent. please check your network connection', 'super_related_posts'); ?></span>
 				   </li>
-				   <li><button class="button srpp-send-query"><?php echo 'Send Message'; ?></button></li>
+				   <li><button class="button srpp-send-query"><?php echo esc_html__('Send Message', 'super_related_posts'); ?></button></li>
 			   </ul>            		  
 			</div>
 		</div>
@@ -772,16 +772,29 @@ if(!function_exists('srpp_pi_translation_options_subpage')){
 			if(isset($_POST['srp_translation']) && !empty($_POST['srp_translation'])){
 				check_admin_referer('super-related-posts-update-options');
 				srpp_cache_flush();
-				$data_to_be_updated = $_POST['srp_translation'];
-				update_option('srp_translation', $data_to_be_updated);
-				echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
+				if(is_array($_POST['srp_translation'])){
+					$data_to_be_updated = [];
+					foreach ($_POST['srp_translation'] as $post_key => $post_value) {
+						if(!empty(trim($post_value))){
+							$data_to_be_updated[$post_key] = trim($post_value);
+						}else{
+							foreach ($translation_panel_options as $trans_key => $trans_value) {
+								if($post_key == $trans_key){
+									$data_to_be_updated[$post_key] = $trans_value;			
+								}
+							}
+						}
+					}
+					update_option('srp_translation', $data_to_be_updated);
+					echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
+				}
 			}
 		}
 	?>
 	    <div class="wrap srpp-tab-content">
 			<form method="post" action="">
 				<div class="srppwp_support_div">
-					<h3>Translation Panel</h3>
+					<h3><?php echo esc_html__('Translation Panel', 'super_related_posts') ?></h3>
 					<ul>
 					<?php 
 						if(isset($translation_panel_options) && !empty($translation_panel_options)){
