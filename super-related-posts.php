@@ -170,7 +170,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -311,7 +311,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -448,7 +448,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -699,6 +699,11 @@ if ( is_admin() ) {
 	require_once( SRPP_DIR_NAME . '/admin/newsletter.php' );
 
 }
+
+global $translation_panel_options;
+$translation_panel_options = array(
+	'translation-related-content' => 'Related Content'
+);
 
 global $overusedwords;
 if(is_array($overusedwords)) {

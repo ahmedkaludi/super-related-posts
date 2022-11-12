@@ -751,3 +751,16 @@ function srpp_content_filter_init() {
 
 // watch out that the registration functions are called earlier
 add_action ('init', 'srpp_content_filter_init');
+
+function srpwp_label_text($label_key){
+	
+	global $translation_panel_options;
+	$srp_translation = get_option('srp_translation');
+	
+	if(isset($srp_translation[$label_key]) && $srp_translation[$label_key] !=''){
+		return $srp_translation[$label_key];
+	}else{
+		return $translation_panel_options[$label_key];
+	}
+							
+}

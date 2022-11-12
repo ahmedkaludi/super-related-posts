@@ -18,6 +18,7 @@ function srpp_options_page(){
 	$m->add_subpage('Related Post3',  'related_post3', 'srpp_rp3_options_subpage');
 	$m->add_subpage('Posts Caching', 'posts_caching', 'srpp_pi_options_subpage');
 	$m->add_subpage('Support', 'srpp_support', 'srpp_pi_support_options_subpage');
+	$m->add_subpage('Translaton Panel', 'srpp_translation', 'srpp_pi_translation_options_subpage');
 	$m->display();
 }
 
@@ -753,3 +754,56 @@ if(!function_exists('srpp_pi_support_options_subpage')){
 }
 
 add_action('wp_ajax_srpp_send_query_message', 'srpp_send_query_message');
+
+
+if(!function_exists('srpp_pi_translation_options_subpage')){
+	function srpp_pi_translation_options_subpage()
+	{
+		global $translation_panel_options;
+		$translation = get_option('srp_translation');
+		if(empty($translation)){
+			$translation_panel = $translation_panel_options;
+			add_option('srp_translation', $translation_panel_options);
+		}else{
+			$translation_panel = $translation;
+		}
+
+		if (isset($_POST['update_options'])) {
+			if(isset($_POST['srp_translation']) && !empty($_POST['srp_translation'])){
+				check_admin_referer('super-related-posts-update-options');
+				srpp_cache_flush();
+				$data_to_be_updated = $_POST['srp_translation'];
+				update_option('srp_translation', $data_to_be_updated);
+				echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
+			}
+		}
+	?>
+	    <div class="wrap srpp-tab-content">
+			<form method="post" action="">
+				<div class="srppwp_support_div">
+					<h3>Translation Panel</h3>
+					<ul>
+					<?php 
+						if(isset($translation_panel_options) && !empty($translation_panel_options)){
+							foreach ($translation_panel_options as $trans_key => $trans_value) {
+								if(isset($translation_panel[$trans_key]) && !empty($translation_panel[$trans_key])){
+									$trans_val = 	$translation_panel[$trans_key];
+								}else{
+									$trans_val = 	$trans_value;
+								}
+								echo  '<li>'
+								. '<div class="srpwp-tools-field-title"><div style="position: relative; display: inline-block;"><strong style="padding-right: 130px;">'.esc_attr($trans_value).'</strong></div>'
+								. '<input class="regular-text" type="text" name="srp_translation['.esc_attr($trans_key).']" value="'. esc_attr($trans_val).'">'
+								. '</div></li>';
+							}	
+						}
+					?>
+					</ul>
+				</div>
+				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+			</form>
+	    </div>
+	<?php	
+	}
+}
