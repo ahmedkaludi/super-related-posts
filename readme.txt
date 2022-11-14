@@ -3,9 +3,9 @@ Contributors: magazine3
 Tags: Related Posts, Contextual Related Posts, Similar Posts, Related, Related Content
 Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 4.0
-Tested up to: 6.0
+Tested up to: 6.1
 Requires PHP: 5.2
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,13 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 
 == Changelog ==
+
+= 1.1 (14 Nov 2022) =
+
+* Added: Label translation option #5
+* Added: Support tab #6
+* Added: Newsletter subscription popup #7
+* Added: Option to delete data on uninstall #8
 
 = 1.0 (29 June 2022) =
 
