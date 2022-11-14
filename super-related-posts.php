@@ -747,6 +747,8 @@ function srpp_init_start () {
 add_action ('init', 'srpp_init_start', 1);
 register_activation_hook(__FILE__, array('SuperRelatedPosts', 'activate'));
 
+register_uninstall_hook( __FILE__, 'srpwp_on_uninstall' );
+
 add_action('wp_enqueue_scripts', 'sprp_front_css_and_js');
 
 function sprp_front_css_and_js(){

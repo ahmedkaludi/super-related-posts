@@ -19,6 +19,7 @@ function srpp_options_page(){
 	$m->add_subpage('Posts Caching', 'posts_caching', 'srpp_pi_options_subpage');
 	$m->add_subpage('Support', 'srpp_support', 'srpp_pi_support_options_subpage');
 	$m->add_subpage('Translaton Panel', 'srpp_translation', 'srpp_pi_translation_options_subpage');
+	$m->add_subpage('Advanced', 'srpp_advanced', 'srpp_pi_advanced_options_subpage');
 	$m->display();
 }
 
@@ -760,21 +761,21 @@ if(!function_exists('srpp_pi_translation_options_subpage')){
 	function srpp_pi_translation_options_subpage()
 	{
 		global $translation_panel_options;
-		$translation = get_option('srp_translation');
+		$translation = get_option('srp_data');
 		if(empty($translation)){
 			$translation_panel = $translation_panel_options;
-			add_option('srp_translation', $translation_panel_options);
+			add_option('srp_data', $translation_panel_options);
 		}else{
 			$translation_panel = $translation;
 		}
 
 		if (isset($_POST['update_options'])) {
-			if(isset($_POST['srp_translation']) && !empty($_POST['srp_translation'])){
+			if(isset($_POST['srp_data']) && !empty($_POST['srp_data'])){
 				check_admin_referer('super-related-posts-update-options');
 				srpp_cache_flush();
-				if(is_array($_POST['srp_translation'])){
+				if(is_array($_POST['srp_data'])){
 					$data_to_be_updated = [];
-					foreach ($_POST['srp_translation'] as $post_key => $post_value) {
+					foreach ($_POST['srp_data'] as $post_key => $post_value) {
 						if(!empty(trim($post_value))){
 							$data_to_be_updated[$post_key] = trim($post_value);
 						}else{
@@ -785,7 +786,7 @@ if(!function_exists('srpp_pi_translation_options_subpage')){
 							}
 						}
 					}
-					update_option('srp_translation', $data_to_be_updated);
+					update_option('srp_data', $data_to_be_updated);
 					echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
 				}
 			}
@@ -806,7 +807,7 @@ if(!function_exists('srpp_pi_translation_options_subpage')){
 								}
 								echo  '<li>'
 								. '<div class="srpwp-tools-field-title"><div style="position: relative; display: inline-block;"><strong style="padding-right: 130px;">'.esc_attr($trans_value).'</strong></div>'
-								. '<input class="regular-text" type="text" name="srp_translation['.esc_attr($trans_key).']" value="'. esc_attr($trans_val).'">'
+								. '<input class="regular-text" type="text" name="srp_data['.esc_attr($trans_key).']" value="'. esc_attr($trans_val).'">'
 								. '</div></li>';
 							}	
 						}
@@ -818,5 +819,44 @@ if(!function_exists('srpp_pi_translation_options_subpage')){
 			</form>
 	    </div>
 	<?php	
+	}
+}
+
+if(!function_exists('srpp_pi_advanced_options_subpage')){
+	function srpp_pi_advanced_options_subpage()
+	{
+		$srp_option_data = get_option('srp_data');
+		if (isset($_POST['update_options'])) {
+			check_admin_referer('super-related-posts-update-options');
+			srpp_cache_flush();
+			if(isset($_POST['srp_data']['srpwp_rmv_data_on_uninstall'])){
+				$srp_option_data['srpwp_rmv_data_on_uninstall'] = sanitize_text_field(trim($_POST['srp_data']['srpwp_rmv_data_on_uninstall']));
+			}else{
+				unset($srp_option_data['srpwp_rmv_data_on_uninstall']);
+			}
+			update_option('srp_data', $srp_option_data);
+			echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
+		}
+	?>
+		<div class="wrap srpp-tab-content">
+			<form method="post" action="">
+				<div class="srppwp_support_div">
+					<h3><?php echo esc_html__('Advanced Settings', 'super_related_posts') ?></h3>
+					<ul>
+						<li>
+							<div>
+		                        <div class="srpwp-tooltip"><strong><?php echo esc_html__('Remove Data On Uninstall', 'super_related_posts') ?></strong></div>
+		                        <input type="checkbox" name="srp_data[srpwp_rmv_data_on_uninstall]" 
+		                        <?php echo isset($srp_option_data['srpwp_rmv_data_on_uninstall'])?'checked' : ''; ?> >                        
+		                        <p><?php echo esc_html__('This will remove all of its data when the plugin is deleted') ?></p>
+		                    </div>
+						</li>
+					</ul>
+				</div>
+				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+			</form>
+		</div>	
+	<?php
 	}
 }
