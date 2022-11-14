@@ -17,9 +17,9 @@ function srpp_options_page(){
 	$m->add_subpage('Related Post2',  'related_post2', 'srpp_rp2_options_subpage');
 	$m->add_subpage('Related Post3',  'related_post3', 'srpp_rp3_options_subpage');
 	$m->add_subpage('Posts Caching', 'posts_caching', 'srpp_pi_options_subpage');
-	$m->add_subpage('Support', 'srpp_support', 'srpp_pi_support_options_subpage');
-	$m->add_subpage('Translaton Panel', 'srpp_translation', 'srpp_pi_translation_options_subpage');
+	$m->add_subpage('Translation Panel', 'srpp_translation', 'srpp_pi_translation_options_subpage');
 	$m->add_subpage('Advanced', 'srpp_advanced', 'srpp_pi_advanced_options_subpage');
+	$m->add_subpage('Support', 'srpp_support', 'srpp_pi_support_options_subpage');
 	$m->display();
 }
 
