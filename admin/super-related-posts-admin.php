@@ -17,6 +17,9 @@ function srpp_options_page(){
 	$m->add_subpage('Related Post2',  'related_post2', 'srpp_rp2_options_subpage');
 	$m->add_subpage('Related Post3',  'related_post3', 'srpp_rp3_options_subpage');
 	$m->add_subpage('Posts Caching', 'posts_caching', 'srpp_pi_options_subpage');
+	$m->add_subpage('Translation Panel', 'srpp_translation', 'srpp_pi_translation_options_subpage');
+	$m->add_subpage('Advanced', 'srpp_advanced', 'srpp_pi_advanced_options_subpage');
+	$m->add_subpage('Support', 'srpp_support', 'srpp_pi_support_options_subpage');
 	$m->display();
 }
 
@@ -670,4 +673,190 @@ function srpp_admin_notice(){
 		</div>                    
 	<?php	    
 	}	
+}
+
+if(!function_exists('srpp_pi_support_options_subpage')){
+	function srpp_pi_support_options_subpage()
+	{
+	?>
+		<div class="wrap srpp-tab-content">
+			<div class="srppwp_support_div">
+			   <strong><?php echo esc_html__('If you have any query, please write the query in below box or email us at', 'super_related_posts'); ?> <a href="mailto:team@magazine3.in"><?php echo esc_html__('team@magazine3.in', 'super_related_posts') ?></a>. <?php echo esc_html__('We will reply to your email address shortly', 'super_related_posts') ?></strong>
+		  
+			   <ul>
+				   <li>
+					  <input type="text" id="srpp_query_email" name="srpp_query_email" placeholder="email">
+				   </li>
+				   <li>                    
+					   <div><textarea rows="5" cols="60" id="srpp_query_message" name="srpp_query_message" placeholder="Write your query"></textarea></div>
+					   <span class="srpp-query-success" style="display: none; color: #006600;"><?php echo esc_html__('Message sent successfully, Please wait we will get back to you shortly', 'super_related_posts'); ?></span>
+					   <span class="srpp-query-error" style="display: none; color: #bf3322;"><?php echo esc_html__('Message not sent. please check your network connection', 'super_related_posts'); ?></span>
+				   </li>
+				   <li><button class="button srpp-send-query"><?php echo esc_html__('Send Message', 'super_related_posts'); ?></button></li>
+			   </ul>            		  
+			</div>
+		</div>
+	   <?php
+	}
+}
+
+   /**
+     * This is a ajax handler function for sending email from user admin panel to us. 
+     * @return type json string
+     */
+	function srpp_send_query_message(){   
+    
+        if ( ! isset( $_POST['srp_security_nonce'] ) ){
+           return; 
+        }
+        if ( !wp_verify_nonce( $_POST['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
+           return;  
+        } 
+        $message        = sanitize_textarea_field($_POST['message']); 
+        $email          = sanitize_email($_POST['email']);   
+                                
+        if(function_exists('wp_get_current_user')){
+
+            $user           = wp_get_current_user();
+         
+            $message = '<p>'.$message.'</p><br><br>'
+
+                 . '<br><br>'.'Query from plugin support tab';
+            
+            $user_data  = $user->data;        
+            $user_email = $user_data->user_email;     
+            
+            if($email){
+                $user_email = $email;
+            }            
+            //php mailer variables        
+            $sendto    = 'team@magazine3.in';
+            $subject   = "Super Related Posts Customer Query";
+            
+            $headers[] = 'Content-Type: text/html; charset=UTF-8';
+            $headers[] = 'From: '. esc_attr($user_email);            
+            $headers[] = 'Reply-To: ' . esc_attr($user_email);
+            // Load WP components, no themes.                      
+            $sent = wp_mail($sendto, $subject, $message, $headers); 
+
+            if($sent){
+
+                 echo json_encode(array('status'=>'t'));  
+
+            }else{
+
+                echo json_encode(array('status'=>'f'));            
+
+            }
+            
+        }
+                        
+        wp_die();           
+}
+
+add_action('wp_ajax_srpp_send_query_message', 'srpp_send_query_message');
+
+
+if(!function_exists('srpp_pi_translation_options_subpage')){
+	function srpp_pi_translation_options_subpage()
+	{
+		global $translation_panel_options;
+		$translation = get_option('srp_data');
+		if(empty($translation)){
+			$translation_panel = $translation_panel_options;
+			add_option('srp_data', $translation_panel_options);
+		}else{
+			$translation_panel = $translation;
+		}
+
+		if (isset($_POST['update_options'])) {
+			if(isset($_POST['srp_data']) && !empty($_POST['srp_data'])){
+				check_admin_referer('super-related-posts-update-options');
+				srpp_cache_flush();
+				if(is_array($_POST['srp_data'])){
+					$data_to_be_updated = [];
+					foreach ($_POST['srp_data'] as $post_key => $post_value) {
+						if(!empty(trim($post_value))){
+							$data_to_be_updated[$post_key] = trim($post_value);
+						}else{
+							foreach ($translation_panel_options as $trans_key => $trans_value) {
+								if($post_key == $trans_key){
+									$data_to_be_updated[$post_key] = $trans_value;			
+								}
+							}
+						}
+					}
+					update_option('srp_data', $data_to_be_updated);
+					echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
+				}
+			}
+		}
+	?>
+	    <div class="wrap srpp-tab-content">
+			<form method="post" action="">
+				<div class="srppwp_support_div">
+					<h3><?php echo esc_html__('Translation Panel', 'super_related_posts') ?></h3>
+					<ul>
+					<?php 
+						if(isset($translation_panel_options) && !empty($translation_panel_options)){
+							foreach ($translation_panel_options as $trans_key => $trans_value) {
+								if(isset($translation_panel[$trans_key]) && !empty($translation_panel[$trans_key])){
+									$trans_val = 	$translation_panel[$trans_key];
+								}else{
+									$trans_val = 	$trans_value;
+								}
+								echo  '<li>'
+								. '<div class="srpwp-tools-field-title"><div style="position: relative; display: inline-block;"><strong style="padding-right: 130px;">'.esc_attr($trans_value).'</strong></div>'
+								. '<input class="regular-text" type="text" name="srp_data['.esc_attr($trans_key).']" value="'. esc_attr($trans_val).'">'
+								. '</div></li>';
+							}	
+						}
+					?>
+					</ul>
+				</div>
+				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+			</form>
+	    </div>
+	<?php	
+	}
+}
+
+if(!function_exists('srpp_pi_advanced_options_subpage')){
+	function srpp_pi_advanced_options_subpage()
+	{
+		$srp_option_data = get_option('srp_data');
+		if (isset($_POST['update_options'])) {
+			check_admin_referer('super-related-posts-update-options');
+			srpp_cache_flush();
+			if(isset($_POST['srp_data']['srpwp_rmv_data_on_uninstall'])){
+				$srp_option_data['srpwp_rmv_data_on_uninstall'] = sanitize_text_field(trim($_POST['srp_data']['srpwp_rmv_data_on_uninstall']));
+			}else{
+				unset($srp_option_data['srpwp_rmv_data_on_uninstall']);
+			}
+			update_option('srp_data', $srp_option_data);
+			echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
+		}
+	?>
+		<div class="wrap srpp-tab-content">
+			<form method="post" action="">
+				<div class="srppwp_support_div">
+					<h3><?php echo esc_html__('Advanced Settings', 'super_related_posts') ?></h3>
+					<ul>
+						<li>
+							<div>
+		                        <div class="srpwp-tooltip"><strong><?php echo esc_html__('Remove Data On Uninstall', 'super_related_posts') ?></strong></div>
+		                        <input type="checkbox" name="srp_data[srpwp_rmv_data_on_uninstall]" 
+		                        <?php echo isset($srp_option_data['srpwp_rmv_data_on_uninstall'])?'checked' : ''; ?> >                        
+		                        <p><?php echo esc_html__('This will remove all of its data when the plugin is deleted') ?></p>
+		                    </div>
+						</li>
+					</ul>
+				</div>
+				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+			</form>
+		</div>	
+	<?php
+	}
 }

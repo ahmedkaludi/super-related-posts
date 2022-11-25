@@ -85,3 +85,24 @@ input:checked + .slider:before {-webkit-transform: translateX(26px);-ms-transfor
     display: none;
 }
 /* progress bar css ends here */
+
+div#wp-pointer-0{
+    position: absolute;
+    width: 320px;
+    top: 525px!important;
+    left: 146px!important;
+    z-index: 9999;
+ }
+
+.srppwp_support_div{
+    margin-bottom: 9px;
+    padding: 15px 10px;
+    line-height: 1.3;
+    vertical-align: middle; 
+}
+
+.srpwp-tooltip{
+    width: 230px;
+    position: relative;
+    display: inline-block;
+}

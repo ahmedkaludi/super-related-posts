@@ -2,7 +2,7 @@
 /*
 Plugin Name: Super Related Posts
 Description: Add a highly configurable list of related posts to any posts. Related posts can be based on any combination of word usage in the content, title, or tags.
-Version: 1.0
+Version: 1.1
 Text Domain: super-related-posts
 Author: Magazine3
 Author URI: https://magazine3.company/
@@ -14,7 +14,7 @@ License: GPL2
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'SRPP_VERSION' ) ) {
-    define( 'SRPP_VERSION', '1.0' );
+    define( 'SRPP_VERSION', '1.1' );
 }
 
 define('SRPP_DIR_NAME', dirname( __FILE__ ));
@@ -170,7 +170,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -311,7 +311,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -448,7 +448,7 @@ class SuperRelatedPosts {
 			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
 			//Output
 			//Output escaping is done below before rendering html
-			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__( 'Related Content' , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
+			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
 			if ($options['no_text'] !== 'false') {
@@ -694,7 +694,15 @@ function srpp_get_tag_terms($ID, $utf8) {
 
 if ( is_admin() ) {
 	require(SRPP_DIR_NAME.'/admin/super-related-posts-admin.php');
+	require(SRPP_DIR_NAME.'/includes/helper-function.php');
+	require_once( SRPP_DIR_NAME . '/admin/newsletter.php' );
+
 }
+
+global $translation_panel_options;
+$translation_panel_options = array(
+	'translation-related-content' => 'Related Content'
+);
 
 global $overusedwords;
 if(is_array($overusedwords)) {
@@ -738,6 +746,8 @@ function srpp_init_start () {
 
 add_action ('init', 'srpp_init_start', 1);
 register_activation_hook(__FILE__, array('SuperRelatedPosts', 'activate'));
+
+register_uninstall_hook( __FILE__, 'srpwp_on_uninstall' );
 
 add_action('wp_enqueue_scripts', 'sprp_front_css_and_js');
 

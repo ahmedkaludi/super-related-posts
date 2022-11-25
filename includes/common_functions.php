@@ -751,3 +751,38 @@ function srpp_content_filter_init() {
 
 // watch out that the registration functions are called earlier
 add_action ('init', 'srpp_content_filter_init');
+
+function srpwp_label_text($label_key){
+	
+	global $translation_panel_options;
+	$srp_translation = get_option('srp_data');
+	
+	if(isset($srp_translation[$label_key]) && $srp_translation[$label_key] !=''){
+		return $srp_translation[$label_key];
+	}else{
+		return $translation_panel_options[$label_key];
+	}
+							
+}
+
+function srpwp_on_uninstall()
+{
+	global $wpdb, $table_prefix;
+    
+   $options = get_option('srp_data'); 
+   if(isset($options['srpwp_rmv_data_on_uninstall'])){
+   		delete_option('super-related-posts');
+		delete_option('super-related-posts-feed');
+		delete_option('widget_rrm_super_related_posts');
+		delete_option('srp_posts_offset');
+		delete_option('srp_posts_caching_status');
+		delete_option('srp_data');
+		delete_option('super_related_posts_meta');
+
+		$table_name = $table_prefix . 'super_related_posts';
+		$wpdb->query("DROP TABLE `$table_name`");
+
+		$cached_table = $table_prefix . 'super_related_cached';
+		$wpdb->query("DROP TABLE `$cached_table`");
+   }
+}

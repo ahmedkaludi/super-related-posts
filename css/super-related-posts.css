@@ -184,3 +184,11 @@ li {
     margin: 0 5px;
     padding: 0;
 }
+
+div#wp-pointer-0{
+    position: absolute;
+    width: 320px;
+    top: 515px!important;
+    left: 146px!important;
+    z-index: 9999;
+ }
