@@ -292,18 +292,18 @@ jQuery(document).ready(function($){
          });
          setup = function () {
                  $('.settings_page_super-related-posts').pointer(wp_pointers_tour_opts).pointer('open');
-                  if (srp_localize_data.button2) {
+                  // if (srp_localize_data.button2) {
                          jQuery ('#pointer-close').after ('<a id="pointer-primary" class="button-primary">' + srp_localize_data.button2+ '</a>');
                          jQuery ('#pointer-primary').click (function () {
                                  srp_localize_data.function_name;
                          });
-                         jQuery ('#pointer-close').click (function () {
+                         jQuery(document).on('click', '#pointer-close', function(e){
                                  $.post (srp_localize_data.ajax_url, {
                                          pointer: 'srpwp_subscribe_pointer',
                                          action: 'dismiss-wp-pointer'
                                  });
                          });
-                  }
+                  // }
          };
          if (wp_pointers_tour_opts.position && wp_pointers_tour_opts.position.defer_loading) {
                  $(window).bind('load.wp-pointers', setup);
