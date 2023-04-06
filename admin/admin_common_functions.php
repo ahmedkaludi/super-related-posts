@@ -364,7 +364,7 @@ function srpp_design_related_i($design, $num) {
 
 function srpp_demo_design_related_i($design, $num) {
 	global $wp_version;
-	$upload_dir = wp_upload_dir();
+	$img_dir = SRPP_PLUGIN_URI.'images/related_designs/';
 	if($design == 'd1'){
 		$design_number = "design1.jpg";
 	}elseif($design == 'd2'){
@@ -372,8 +372,8 @@ function srpp_demo_design_related_i($design, $num) {
 	}else{
 		$design_number = "design3.jpg";
 	} ?>
-	   <input type="hidden" class="image_path" value="<?php echo $upload_dir['baseurl'] . '/related_designs/'; ?>" />
-	   <img src="<?php echo $upload_dir['baseurl'] . '/related_designs/'.$design_number; ?>" class="design_related" id="design<?php echo esc_attr($num."_".$design); ?>" alt="design<?php echo esc_attr($num."_".$design); ?>"  />	
+	   <input type="hidden" class="image_path" value="<?php echo $img_dir; ?>" />
+	   <img src="<?php echo $img_dir.$design_number; ?>" class="design_related" id="design<?php echo esc_attr($num."_".$design); ?>" alt="design<?php echo esc_attr($num."_".$design); ?>"  />	
 	<?php
 }
 
