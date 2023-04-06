@@ -48,10 +48,7 @@ function srpp_rp1_options_subpage(){
 				
 					<form method="post" action="">
 						<table class="optiontable form-table">
-							<?php		
-							// echo "<pre>";
-							// print_r($options);
-							// die();
+							<?php	
 							srpp_display_status($options['display_status_1'], $num);		
 							srpp_display_limit($options['limit']);			
 							srpp_sort_post_by_recent_popular_i($options['sort_by_1'], $num);
