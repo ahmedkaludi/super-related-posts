@@ -218,14 +218,6 @@ function srpp_display_limit($limit) {
 	<?php
 }
 
-function srpp_display_shortcode($num) {
-	?>
-	<tr valign="top">
-		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
-		<td><strong>[super-related-posts]</strong></td>
-	</tr>
-	<?php
-}
 
 function srpp_display_limit_i($limit, $num) {
 	?>
@@ -281,7 +273,7 @@ function srpp_sort_post_by_recent_popular_i($sort_by, $num) {
 function srpp_display_match_cat($match_cat) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_cat"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_cat"><?php echo esc_html__('1Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat" id="match_cat">			
 			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
@@ -295,7 +287,7 @@ function srpp_display_match_cat($match_cat) {
 function srpp_display_match_cat_i($match_cat, $num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_cat_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_cat_<?php echo esc_attr($num); ?>"><?php echo esc_html__('2Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat_<?php echo esc_attr($num); ?>" id="match_cat_<?php echo esc_attr($num); ?>">			
 				<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
@@ -366,6 +358,39 @@ function srpp_design_related_i($design, $num) {
 				<option <?php if($design == 'd3') { echo 'selected="selected"'; } ?> value="d3"><?php echo esc_html__( 'Design 3' , 'super-related-posts') ?></option>
 			</select>
 		</td>
+	</tr>
+	<?php
+}
+
+function srpp_demo_design_related_i($design, $num) {
+	global $wp_version;
+	$upload_dir = wp_upload_dir();
+	if($design == 'd1'){
+		$design_number = "design1.jpg";
+	}elseif($design == 'd2'){
+		$design_number = "design2.jpg";
+	}else{
+		$design_number = "design3.jpg";
+	} ?>
+	   <input type="hidden" class="image_path" value="<?php echo $upload_dir['baseurl'] . '/related_designs/'; ?>" />
+	   <img src="<?php echo $upload_dir['baseurl'] . '/related_designs/'.$design_number; ?>" class="design_related" id="design<?php echo esc_attr($num."_".$design); ?>" alt="design<?php echo esc_attr($num."_".$design); ?>"  />	
+	<?php
+}
+
+function srpp_display_shortcode_i($para, $pos, $num) {
+	?>
+	<tr valign="top" <?php if($pos != 'sc') { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
+		<td><strong id="shortcode_<?php echo esc_attr($num); ?>">[super-related-posts related_post="<?php echo esc_attr($num); ?>"]</strong></td>
+	</tr>
+	<?php
+}
+
+function srpp_display_shortcode($para, $pos, $num) {
+	?>
+	<tr valign="top" <?php if($pos != 'sc') { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('2Shortcode:', 'super-related-posts') ?></label></th>
+		<td><strong id="shortcode_<?php echo esc_attr($num); ?>">[super-related-posts related_post="<?php echo esc_attr($num); ?>"]</strong></td>
 	</tr>
 	<?php
 }

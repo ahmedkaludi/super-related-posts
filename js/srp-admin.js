@@ -62,25 +62,87 @@ jQuery(document).ready(function($){
         }
         });
         $("#pstn_rel_1").change(function(){
-        if($('#pstn_rel_1').val() == 'ibc'){
-           $("#para_rel_1").parents('tr').show();
-        }else{
-           $("#para_rel_1").parents('tr').hide();
-        }
+            if($('#pstn_rel_1').val() == 'ibc'){
+             $("#para_rel_1").parents('tr').show();
+            }else{
+             $("#para_rel_1").parents('tr').hide();
+            }
+
+            if($('#pstn_rel_1').val() == 'sc'){
+            $("#shortcode_1").parents('tr').show();
+            }else{
+            $("#shortcode_1").parents('tr').hide();
+            }
         });
         $("#pstn_rel_2").change(function(){
-        if($('#pstn_rel_2').val() == 'ibc'){
-           $("#para_rel_2").parents('tr').show();
-        }else{
-           $("#para_rel_2").parents('tr').hide();
-        }
+            if($('#pstn_rel_2').val() == 'ibc'){
+            $("#para_rel_2").parents('tr').show();
+            }else{
+            $("#para_rel_2").parents('tr').hide();
+            }
+
+            if($('#pstn_rel_2').val() == 'sc'){
+              $("#shortcode_2").parents('tr').show();
+            }else{
+             $("#shortcode_2").parents('tr').hide();
+            }
         });
         $("#pstn_rel_3").change(function(){
-        if($('#pstn_rel_3').val() == 'ibc'){
-           $("#para_rel_3").parents('tr').show();
-        }else{
-           $("#para_rel_3").parents('tr').hide();
-        }
+            if($('#pstn_rel_3').val() == 'ibc'){
+            $("#para_rel_3").parents('tr').show();
+            }else{
+            $("#para_rel_3").parents('tr').hide();
+            }
+
+            if($('#pstn_rel_3').val() == 'sc'){
+            $("#shortcode_3").parents('tr').show();
+            }else{
+            $("#shortcode_3").parents('tr').hide();
+            }
+        });
+
+        $("#re_design_1").change(function(){
+            var img_src = $('.image_path').val();
+            $('.design_related').attr('src', '');
+
+            if($('#re_design_1').val() == 'd1'){
+             $('.design_related').attr('src', img_src+'design1.jpg');
+            }
+            if($('#re_design_1').val() == 'd2'){
+                $('.design_related').attr('src', img_src+'design2.jpg');
+            }
+            if($('#re_design_1').val() == 'd3'){
+                $('.design_related').attr('src', img_src+'design3.jpg');
+            }
+        });
+
+        $("#re_design_2").change(function(){
+            var img_src = $('.image_path').val();
+            $('.design_related').attr('src', '');
+            if($('#re_design_2').val() == 'd1'){
+             $('.design_related').attr('src', img_src+'design1.jpg');
+            }
+            if($('#re_design_2').val() == 'd2'){
+                $('.design_related').attr('src', img_src+'design2.jpg');
+            }
+            if($('#re_design_2').val() == 'd3'){
+                $('.design_related').attr('src', img_src+'design3.jpg');
+            }
+        });
+
+        $("#re_design_3").change(function(){
+            var img_src = $('.image_path').val();
+            $('.design_related').attr('src', '');
+
+            if($('#re_design_3').val() == 'd1'){
+             $('.design_related').attr('src', img_src+'design1.jpg');
+            }
+            if($('#re_design_3').val() == 'd2'){
+                $('.design_related').attr('src', img_src+'design2.jpg');
+            }
+            if($('#re_design_3').val() == 'd3'){
+                $('.design_related').attr('src', img_src+'design3.jpg');
+            }
         });
 
         $("#sort_by_1").change(function(){

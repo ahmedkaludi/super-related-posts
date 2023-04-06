@@ -677,7 +677,7 @@ function srpp_post_filter_init2() {
 			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_2', 5);
 			}else{
-				add_shortcode('super-related-posts', 'srpp_shortcode_content2');
+				add_shortcode('super-related-posts related_post="2"', 'srpp_shortcode_content2');
 			}
 		}
 	}		
@@ -696,7 +696,7 @@ function srpp_post_filter_init3() {
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_3', 5);
 			}else{
-				add_shortcode('super-related-posts', 'srpp_shortcode_content3');
+				add_shortcode('super-related-posts related_post="3"', 'srpp_shortcode_content3');
 			}
 		}	
 	}		

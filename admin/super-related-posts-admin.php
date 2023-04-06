@@ -43,48 +43,62 @@ function srpp_rp1_options_subpage(){
 			<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
 				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 			<?php } ?>
-		<form method="post" action="">
 
-		<table class="optiontable form-table">
-			<?php		
-			
-			srpp_display_status($options['display_status_1'], $num);		
-			srpp_display_limit($options['limit']);			
-			srpp_sort_post_by_recent_popular_i($options['sort_by_1'], $num);
-			srpp_display_age($options['age1'], $options['sort_by_1'], $num);
-			srpp_display_match_cat($options['match_cat']);
-			srpp_display_match_tags($options['match_tags']);
-			srpp_position_related_i($options['pstn_rel_1'], $num);						
-			srpp_paragraph_i($options['para_rel_1'], $options['pstn_rel_1'], $num);
-			srpp_design_related_i($options['re_design_1'], $num);			
+			<div class="super-section-part" style="display: inline-flex;"> 
 				
-			?>
-		</table>
-		<table class="optiontable form-table">
-			<?php 
-				if(isset($options['adv_filter_check_1'])){
-					srpp_adv_filter_switch($options['adv_filter_check_1'], $num);
-				}
-				
-			 ?>
-		</table>
-		<?php
-			$hide_filter = (isset($options['adv_filter_check_1']) && $options['adv_filter_check_1'] == 1) ? '' : 'style="display:none"';
-		?>
-		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
-			<?php
-				srpp_display_excluded_posts($options['excluded_posts']);
-				srpp_display_included_posts($options['included_posts']);
-				srpp_display_authors($options['excluded_authors'], $options['included_authors']);
-				srpp_display_cats($options['excluded_cats'], $options['included_cats']);
-				srpp_display_tag_str($options['tag_str']);
-				srpp_display_custom($options['custom']);
-			?>
-		</table>
+					<form method="post" action="">
+						<table class="optiontable form-table">
+							<?php		
+							// echo "<pre>";
+							// print_r($options);
+							// die();
+							srpp_display_status($options['display_status_1'], $num);		
+							srpp_display_limit($options['limit']);			
+							srpp_sort_post_by_recent_popular_i($options['sort_by_1'], $num);
+							srpp_display_age($options['age1'], $options['sort_by_1'], $num);
+							srpp_display_match_cat($options['match_cat']);
+							srpp_display_match_tags($options['match_tags']);
+							srpp_position_related_i($options['pstn_rel_1'], $num);						
+							srpp_paragraph_i($options['para_rel_1'], $options['pstn_rel_1'], $num);
+							srpp_design_related_i($options['re_design_1'], $num);	
+							srpp_display_shortcode_i($options['para_rel_1'], $options['pstn_rel_1'], $num);			
+								
+							?>
+						</table>
+						<table class="optiontable form-table">
+							<?php 
+								if(isset($options['adv_filter_check_1'])){
+									srpp_adv_filter_switch($options['adv_filter_check_1'], $num);
+								}
+								
+							?>
+						</table>
+						<?php
+							$hide_filter = (isset($options['adv_filter_check_1']) && $options['adv_filter_check_1'] == 1) ? '' : 'style="display:none"';
+						?>
+						<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
+							<?php
+								srpp_display_excluded_posts($options['excluded_posts']);
+								srpp_display_included_posts($options['included_posts']);
+								srpp_display_authors($options['excluded_authors'], $options['included_authors']);
+								srpp_display_cats($options['excluded_cats'], $options['included_cats']);
+								srpp_display_tag_str($options['tag_str']);
+								srpp_display_custom($options['custom']);
+							?>
+						</table>
 
-		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
-		<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
-		</form>
+						<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+						<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+					</form>
+				
+		
+
+				<div class="super-design-img row">
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+					<?php srpp_demo_design_related_i($options['re_design_1'], $num); ?>
+				</div>
+			</div>	
+						
 	</div>
 	<?php
 }
@@ -108,55 +122,63 @@ function srpp_rp2_options_subpage(){
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
 				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 		<?php } ?>
-		<form method="post" action="">
 
-		<table class="optiontable form-table">
-			<?php
-				srpp_display_status($options['display_status_2'], $num);	
-				srpp_display_limit_i($options['limit_2'], $num);				
-				srpp_sort_post_by_recent_popular_i($options['sort_by_2'], $num);
-				srpp_display_age($options['age2'], $options['sort_by_2'], $num);
-				srpp_display_match_cat_i($options['match_cat_2'], $num);
-				srpp_display_match_tags_i($options['match_tags_2'], $num);
-				srpp_position_related_i($options['pstn_rel_2'], $num);
-				srpp_paragraph_i($options['para_rel_2'], $options['pstn_rel_2'], $num);
-				srpp_design_related_i($options['re_design_2'], $num);
-				
-			?>
-		</table>
-		<table class="optiontable form-table">
-			<?php 
-				if(isset($options['adv_filter_check_2'])){
-					srpp_adv_filter_switch($options['adv_filter_check_2'], $num); 
-				}				
-			?>
-		</table>
-		<?php
-			$hide_filter = (isset($options['adv_filter_check_2']) && $options['adv_filter_check_2'] == 1) ? '' : 'style="display:none"';
-		?>
-		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
-			<?php
-				if(isset($options['excluded_posts_2'])){
-					srpp_display_excluded_posts_i($options['excluded_posts_2'], $num);
-				}
-				if(isset($options['included_posts_2'])){
-					srpp_display_included_posts_i($options['included_posts_2'], $num);
-				}
-				srpp_display_authors($options['excluded_authors'], $options['included_authors']);
-				srpp_display_cats($options['excluded_cats'], $options['included_cats']);
-				if(isset($options['tag_str_2'])){
-					srpp_display_tag_str_i($options['tag_str_2'], $num);
-				}
-				if(isset($options['custom'])){
-					srpp_display_custom($options['custom']);
-				}
-				
-			?>
-		</table>
+			<div class="super-section-part" style="display: inline-flex;">
+				<form method="post" action="">
+				<table class="optiontable form-table">
+					<?php
+						srpp_display_status($options['display_status_2'], $num);	
+						srpp_display_limit_i($options['limit_2'], $num);				
+						srpp_sort_post_by_recent_popular_i($options['sort_by_2'], $num);
+						srpp_display_age($options['age2'], $options['sort_by_2'], $num);
+						srpp_display_match_cat_i($options['match_cat_2'], $num);
+						srpp_display_match_tags_i($options['match_tags_2'], $num);
+						srpp_position_related_i($options['pstn_rel_2'], $num);
+						srpp_paragraph_i($options['para_rel_2'], $options['pstn_rel_2'], $num);
+						srpp_design_related_i($options['re_design_2'], $num);
+						srpp_display_shortcode($options['para_rel_2'], $options['pstn_rel_2'],$num);	
+						
+					?>
+				</table>
+				<table class="optiontable form-table">
+					<?php 
+						if(isset($options['adv_filter_check_2'])){
+							srpp_adv_filter_switch($options['adv_filter_check_2'], $num); 
+						}				
+					?>
+				</table>
+				<?php
+					$hide_filter = (isset($options['adv_filter_check_2']) && $options['adv_filter_check_2'] == 1) ? '' : 'style="display:none"';
+				?>
+				<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
+					<?php
+						if(isset($options['excluded_posts_2'])){
+							srpp_display_excluded_posts_i($options['excluded_posts_2'], $num);
+						}
+						if(isset($options['included_posts_2'])){
+							srpp_display_included_posts_i($options['included_posts_2'], $num);
+						}
+						srpp_display_authors($options['excluded_authors'], $options['included_authors']);
+						srpp_display_cats($options['excluded_cats'], $options['included_cats']);
+						if(isset($options['tag_str_2'])){
+							srpp_display_tag_str_i($options['tag_str_2'], $num);
+						}
+						if(isset($options['custom'])){
+							srpp_display_custom($options['custom']);
+						}
+						
+					?>
+				</table>
 
-		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
-		<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
-		</form>
+				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+				</form>
+
+				<div class="super-design-img row">
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+					<?php srpp_demo_design_related_i($options['re_design_2'], $num); ?>
+				</div>
+			</div>	
 	</div>
 	<?php
 }
@@ -240,53 +262,60 @@ function srpp_rp3_options_subpage(){
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
 				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 		<?php } ?>
-		<form method="post" action="">
+			<div class="super-section-part" style="display: inline-flex;">
 
-		<table class="optiontable form-table">
-			<?php
-				srpp_display_status($options['display_status_3'], $num);	
-				srpp_display_shortcode($num);
-				srpp_display_limit_i($options['limit_3'], $num);				
-				srpp_sort_post_by_recent_popular_i($options['sort_by_3'], $num);
-				srpp_display_age($options['age3'], $options['sort_by_3'], $num);
-				srpp_display_match_cat_i($options['match_cat_3'], $num);
-				srpp_display_match_tags_i($options['match_tags_3'], $num);
-				srpp_position_related_i($options['pstn_rel_3'], $num);
-				srpp_paragraph_i($options['para_rel_3'], $options['pstn_rel_3'], $num);
-				srpp_design_related_i($options['re_design_3'], $num);				
-				
-			?>
-		</table>
-		<table class="optiontable form-table">
-			<?php 
-				if(isset($options['adv_filter_check_3'])){
-					srpp_adv_filter_switch($options['adv_filter_check_3'], $num);
-				}				
-			 ?>
-		</table>
-		<?php
-			$hide_filter = (isset($options['adv_filter_check_3']) && $options['adv_filter_check_3'] == 1) ? '' : 'style="display:none"';
-		?>
-		<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
-			<?php
-				if(isset($options['excluded_posts_3'])){
-					srpp_display_excluded_posts_i($options['excluded_posts_3'], $num);
-				}
-				if(isset($options['included_posts_3'])){
-					srpp_display_included_posts_i($options['included_posts_3'], $num);
-				}								
-				srpp_display_authors($options['excluded_authors'], $options['included_authors']);
-				srpp_display_cats($options['excluded_cats'], $options['included_cats']);
-				if(isset($options['tag_str_3'])){
-					srpp_display_tag_str_i($options['tag_str_3'], $num);
-				}				
-				srpp_display_custom($options['custom']);
-			?>
-		</table>
+				<form method="post" action="">
+				<table class="optiontable form-table">
+					<?php
+						srpp_display_status($options['display_status_3'], $num);	
+						srpp_display_limit_i($options['limit_3'], $num);				
+						srpp_sort_post_by_recent_popular_i($options['sort_by_3'], $num);
+						srpp_display_age($options['age3'], $options['sort_by_3'], $num);
+						srpp_display_match_cat_i($options['match_cat_3'], $num);
+						srpp_display_match_tags_i($options['match_tags_3'], $num);
+						srpp_position_related_i($options['pstn_rel_3'], $num);
+						srpp_paragraph_i($options['para_rel_3'], $options['pstn_rel_3'], $num);
+						srpp_design_related_i($options['re_design_3'], $num);		
+						srpp_display_shortcode($options['para_rel_3'], $options['pstn_rel_3'], $num);		
+						
+					?>
+				</table>
+				<table class="optiontable form-table">
+					<?php 
+						if(isset($options['adv_filter_check_3'])){
+							srpp_adv_filter_switch($options['adv_filter_check_3'], $num);
+						}				
+					?>
+				</table>
+				<?php
+					$hide_filter = (isset($options['adv_filter_check_3']) && $options['adv_filter_check_3'] == 1) ? '' : 'style="display:none"';
+				?>
+				<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
+					<?php
+						if(isset($options['excluded_posts_3'])){
+							srpp_display_excluded_posts_i($options['excluded_posts_3'], $num);
+						}
+						if(isset($options['included_posts_3'])){
+							srpp_display_included_posts_i($options['included_posts_3'], $num);
+						}								
+						srpp_display_authors($options['excluded_authors'], $options['included_authors']);
+						srpp_display_cats($options['excluded_cats'], $options['included_cats']);
+						if(isset($options['tag_str_3'])){
+							srpp_display_tag_str_i($options['tag_str_3'], $num);
+						}				
+						srpp_display_custom($options['custom']);
+					?>
+				</table>
 
-		<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
-		<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
-		</form>
+				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+				</form>
+
+			    <div class="super-design-img row">
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+					<?php srpp_demo_design_related_i($options['re_design_3'], $num); ?>
+				</div>
+		   </div>	
 	</div>
 	<?php
 }
