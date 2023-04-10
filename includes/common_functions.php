@@ -703,9 +703,9 @@ function srpp_post_filter_init3() {
 }
 
 // watch out that the registration functions are called earlier
-add_action ('init', 'srpp_post_filter_init1');
-add_action ('init', 'srpp_post_filter_init2');
-add_action ('init', 'srpp_post_filter_init3');
+add_action ('init', 'srpp_post_filter_init1', 10, 1 );
+add_action ('init', 'srpp_post_filter_init2', 10, 2 );
+add_action ('init', 'srpp_post_filter_init3', 10, 3 );
 
 /*
 	Now some routines to handle content filtering
