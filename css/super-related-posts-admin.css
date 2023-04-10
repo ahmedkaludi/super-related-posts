@@ -106,3 +106,7 @@ div#wp-pointer-0{
     position: relative;
     display: inline-block;
 }
+
+.super-section-part strong#shortcode_1, strong#shortcode_2, strong#shortcode_3{
+    font-weight: 700;
+ }
