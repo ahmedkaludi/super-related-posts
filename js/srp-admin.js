@@ -103,45 +103,45 @@ jQuery(document).ready(function($){
 
         $("#re_design_1").change(function(){
             var img_src = $('.suprp_image_path').val();
-            $('.super-design-related-img').attr('src', '');
+            $('.suprp-design-related-img').attr('src', '');
 
             if($('#re_design_1').val() == 'd1'){
-             $('.super-design-related-img').attr('src', img_src+'design1.jpg');
+             $('.suprp-design-related-img').attr('src', img_src+'design1.jpg');
             }
             if($('#re_design_1').val() == 'd2'){
-                $('.super-design-related-img').attr('src', img_src+'design2.jpg');
+                $('.suprp-design-related-img').attr('src', img_src+'design2.jpg');
             }
             if($('#re_design_1').val() == 'd3'){
-                $('.super-design-related-img').attr('src', img_src+'design3.jpg');
+                $('.suprp-design-related-img').attr('src', img_src+'design3.jpg');
             }
         });
 
         $("#re_design_2").change(function(){
             var img_src = $('.suprp_image_path').val();
-            $('.super-design-related-img').attr('src', '');
+            $('.suprp-design-related-img').attr('src', '');
             if($('#re_design_2').val() == 'd1'){
-             $('.super-design-related-img').attr('src', img_src+'design1.jpg');
+             $('.suprp-design-related-img').attr('src', img_src+'design1.jpg');
             }
             if($('#re_design_2').val() == 'd2'){
-                $('.super-design-related-img').attr('src', img_src+'design2.jpg');
+                $('.suprp-design-related-img').attr('src', img_src+'design2.jpg');
             }
             if($('#re_design_2').val() == 'd3'){
-                $('.super-design-related-img').attr('src', img_src+'design3.jpg');
+                $('.suprp-design-related-img').attr('src', img_src+'design3.jpg');
             }
         });
 
         $("#re_design_3").change(function(){
             var img_src = $('.suprp_image_path').val();
-            $('.super-design-related-img').attr('src', '');
+            $('.suprp-design-related-img').attr('src', '');
 
             if($('#re_design_3').val() == 'd1'){
-             $('.super-design-related-img').attr('src', img_src+'design1.jpg');
+             $('.suprp-design-related-img').attr('src', img_src+'design1.jpg');
             }
             if($('#re_design_3').val() == 'd2'){
-                $('.super-design-related-img').attr('src', img_src+'design2.jpg');
+                $('.suprp-design-related-img').attr('src', img_src+'design2.jpg');
             }
             if($('#re_design_3').val() == 'd3'){
-                $('.super-design-related-imgf').attr('src', img_src+'design3.jpg');
+                $('.suprp-design-related-img').attr('src', img_src+'design3.jpg');
             }
         });
 
