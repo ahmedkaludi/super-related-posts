@@ -102,7 +102,7 @@ jQuery(document).ready(function($){
         });
 
         $("#re_design_1").change(function(){
-            var img_src = $('.super_image_path').val();
+            var img_src = $('.suprp_image_path').val();
             $('.super-design-related-img').attr('src', '');
 
             if($('#re_design_1').val() == 'd1'){
@@ -117,7 +117,7 @@ jQuery(document).ready(function($){
         });
 
         $("#re_design_2").change(function(){
-            var img_src = $('.super_image_path').val();
+            var img_src = $('.suprp_image_path').val();
             $('.super-design-related-img').attr('src', '');
             if($('#re_design_2').val() == 'd1'){
              $('.super-design-related-img').attr('src', img_src+'design1.jpg');
@@ -131,7 +131,7 @@ jQuery(document).ready(function($){
         });
 
         $("#re_design_3").change(function(){
-            var img_src = $('.super_image_path').val();
+            var img_src = $('.suprp_image_path').val();
             $('.super-design-related-img').attr('src', '');
 
             if($('#re_design_3').val() == 'd1'){
