@@ -372,7 +372,7 @@ function srpp_demo_design_related_i($design, $num) {
 	}else{
 		$design_number = "design3.jpg";
 	} ?>
-	   <input type="hidden" class="image_path" value="<?php echo $img_dir; ?>" />
+	   <input type="hidden" class="super_image_path" value="<?php echo $img_dir; ?>" />
 	   <img src="<?php echo $img_dir.$design_number; ?>" class="super-design-related-img" id="design<?php echo esc_attr($num."_".$design); ?>" alt="design<?php echo esc_attr($num."_".$design); ?>"  />	
 	<?php
 }
