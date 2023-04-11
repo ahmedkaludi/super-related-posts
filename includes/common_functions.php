@@ -659,6 +659,7 @@ function srpp_post_filter_init1() {
 				add_filter('the_content', 'srpp_post_filter_1', 5);
 			}else{
 				add_shortcode('super-related-posts', 'srpp_shortcode_content1');
+				add_shortcode('super-related-posts related_post="1"', 'srpp_shortcode_content1');
 			}
 	
 		}
@@ -694,6 +695,7 @@ function srpp_post_filter_init3() {
 			global $srp_filter_data3;
 			if (!$srp_filter_data3) return;
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
+				
 				add_filter('the_content', 'srpp_post_filter_3', 5);
 			}else{
 				add_shortcode('super-related-posts related_post="3"', 'srpp_shortcode_content3');
@@ -703,9 +705,9 @@ function srpp_post_filter_init3() {
 }
 
 // watch out that the registration functions are called earlier
-add_action ('init', 'srpp_post_filter_init1', 10, 1 );
-add_action ('init', 'srpp_post_filter_init2', 10, 2 );
-add_action ('init', 'srpp_post_filter_init3', 10, 3 );
+add_action ('init', 'srpp_post_filter_init1');
+add_action ('init', 'srpp_post_filter_init2');
+add_action ('init', 'srpp_post_filter_init3');
 
 /*
 	Now some routines to handle content filtering
