@@ -107,11 +107,11 @@ div#wp-pointer-0{
     display: inline-block;
 }
 
-.super-section-part strong#shortcode_1, strong#shortcode_2, strong#shortcode_3{
+.suprp-section-part strong#shortcode_1, strong#shortcode_2, strong#shortcode_3{
     font-weight: 700;
  }
 
- .super-section-part .suprp-design-img{
+ .suprp-section-part .suprp-design-img{
     border: 1px solid;
     padding: 5px;
     margin-bottom: 0px;
@@ -119,11 +119,11 @@ div#wp-pointer-0{
     height: fit-content;
 }
 
-.super-section-part .suprp-design-label{
+.suprp-section-part .suprp-design-label{
     padding-left: 17px;
 }
 
-.super-section-part .suprp-design-related-img{
+.suprp-section-part .suprp-design-related-img{
     width: 550px;
     height: 360px;
 }
