@@ -273,7 +273,7 @@ function srpp_sort_post_by_recent_popular_i($sort_by, $num) {
 function srpp_display_match_cat($match_cat) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_cat"><?php echo esc_html__('1Match the current post\'s category?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_cat"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat" id="match_cat">			
 			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
@@ -287,7 +287,7 @@ function srpp_display_match_cat($match_cat) {
 function srpp_display_match_cat_i($match_cat, $num) {
 	?>
 	<tr valign="top">
-		<th scope="row"><label for="match_cat_<?php echo esc_attr($num); ?>"><?php echo esc_html__('2Match the current post\'s category?', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="match_cat_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat_<?php echo esc_attr($num); ?>" id="match_cat_<?php echo esc_attr($num); ?>">			
 				<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
@@ -389,7 +389,7 @@ function srpp_display_shortcode_i($para, $pos, $num) {
 function srpp_display_shortcode($para, $pos, $num) {
 	?>
 	<tr valign="top" <?php if($pos != 'sc') { echo 'style="display:none"'; } ?>>
-		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('2Shortcode:', 'super-related-posts') ?></label></th>
+		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
 		<td><strong id="shortcode_<?php echo esc_attr($num); ?>">[super-related-posts related_post="<?php echo esc_attr($num); ?>"]</strong></td>
 	</tr>
 	<?php

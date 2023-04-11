@@ -57,8 +57,9 @@ function srpp_rp1_options_subpage(){
 							srpp_display_match_tags($options['match_tags']);
 							srpp_position_related_i($options['pstn_rel_1'], $num);						
 							srpp_paragraph_i($options['para_rel_1'], $options['pstn_rel_1'], $num);
+							srpp_display_shortcode_i($options['para_rel_1'], $options['pstn_rel_1'], $num);	
 							srpp_design_related_i($options['re_design_1'], $num);	
-							srpp_display_shortcode_i($options['para_rel_1'], $options['pstn_rel_1'], $num);			
+									
 								
 							?>
 						</table>
@@ -91,7 +92,7 @@ function srpp_rp1_options_subpage(){
 		
 
 				<div class="super-design-img row">
-					<label for="re_design_demo_<?php echo esc_attr($num); ?>"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>" class="super-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
 					<?php srpp_demo_design_related_i($options['re_design_1'], $num); ?>
 				</div>
 			</div>	
@@ -132,8 +133,8 @@ function srpp_rp2_options_subpage(){
 						srpp_display_match_tags_i($options['match_tags_2'], $num);
 						srpp_position_related_i($options['pstn_rel_2'], $num);
 						srpp_paragraph_i($options['para_rel_2'], $options['pstn_rel_2'], $num);
+						srpp_display_shortcode($options['para_rel_2'], $options['pstn_rel_2'],$num);
 						srpp_design_related_i($options['re_design_2'], $num);
-						srpp_display_shortcode($options['para_rel_2'], $options['pstn_rel_2'],$num);	
 						
 					?>
 				</table>
@@ -172,7 +173,7 @@ function srpp_rp2_options_subpage(){
 				</form>
 
 				<div class="super-design-img row">
-					<label for="re_design_demo_<?php echo esc_attr($num); ?>"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="super-design-label"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
 					<?php srpp_demo_design_related_i($options['re_design_2'], $num); ?>
 				</div>
 			</div>	
@@ -272,8 +273,8 @@ function srpp_rp3_options_subpage(){
 						srpp_display_match_tags_i($options['match_tags_3'], $num);
 						srpp_position_related_i($options['pstn_rel_3'], $num);
 						srpp_paragraph_i($options['para_rel_3'], $options['pstn_rel_3'], $num);
+						srpp_display_shortcode($options['para_rel_3'], $options['pstn_rel_3'], $num);	
 						srpp_design_related_i($options['re_design_3'], $num);		
-						srpp_display_shortcode($options['para_rel_3'], $options['pstn_rel_3'], $num);		
 						
 					?>
 				</table>
@@ -309,7 +310,7 @@ function srpp_rp3_options_subpage(){
 				</form>
 
 			    <div class="super-design-img row">
-					<label for="re_design_demo_<?php echo esc_attr($num); ?>"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="super-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
 					<?php srpp_demo_design_related_i($options['re_design_3'], $num); ?>
 				</div>
 		   </div>	

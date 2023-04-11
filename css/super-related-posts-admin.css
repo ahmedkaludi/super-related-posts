@@ -110,3 +110,20 @@ div#wp-pointer-0{
 .super-section-part strong#shortcode_1, strong#shortcode_2, strong#shortcode_3{
     font-weight: 700;
  }
+
+ .super-section-part .super-design-img{
+    border: 1px solid;
+    padding: 5px;
+    margin-bottom: 0px;
+    padding-right: -1px;
+    height: fit-content;
+}
+
+.super-section-part .super-design-label{
+    padding-left: 17px;
+}
+
+.design_related{
+    width: 550px;
+    height: 360px;
+}
