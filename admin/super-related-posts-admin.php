@@ -91,8 +91,8 @@ function srpp_rp1_options_subpage(){
 				
 		
 
-				<div class="super-design-img row">
-					<label for="re_design_demo_<?php echo esc_attr($num); ?>" class="super-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+				<div class="suprp-design-img row">
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>" class="suprp-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
 					<?php srpp_demo_design_related_i($options['re_design_1'], $num); ?>
 				</div>
 			</div>	
@@ -172,8 +172,8 @@ function srpp_rp2_options_subpage(){
 				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
 				</form>
 
-				<div class="super-design-img row">
-					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="super-design-label"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+				<div class="suprp-design-img row">
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="suprp-design-label"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
 					<?php srpp_demo_design_related_i($options['re_design_2'], $num); ?>
 				</div>
 			</div>	
@@ -309,8 +309,8 @@ function srpp_rp3_options_subpage(){
 				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
 				</form>
 
-			    <div class="super-design-img row">
-					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="super-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
+			    <div class="suprp-design-img row">
+					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="suprp-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
 					<?php srpp_demo_design_related_i($options['re_design_3'], $num); ?>
 				</div>
 		   </div>	
