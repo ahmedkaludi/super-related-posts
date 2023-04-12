@@ -478,7 +478,7 @@ function srpp_register_post_filter($type, $key, $class, $condition='') {
 	if(isset($options['pstn_rel_1'])){
 		$srp_filter_arr['position'] = $options['pstn_rel_1'];
 	}
-	if( $options['re_position_type_1'] == 'number_of_paragraph'){
+	if( isset($options['re_position_type_1']) && $options['re_position_type_1'] == 'number_of_paragraph'){
 		if(isset($options['para_rel_1'])){
 			$srp_filter_arr['paragraph'] = $options['para_rel_1'];	
 		}
@@ -582,7 +582,7 @@ function srpp_register_post_filter_2($type, $key, $class, $condition='') {
 		$srp_filter_arr['position'] = $options['pstn_rel_2'];
 	}
 	
-	if( $options['re_position_type_2'] == 'number_of_paragraph'){
+	if( isset($options['re_position_type_2']) && $options['re_position_type_2'] == 'number_of_paragraph'){
 		if(isset($options['para_rel_2'])){
 			$srp_filter_arr['paragraph'] = $options['para_rel_2'];	
 		}
@@ -680,7 +680,7 @@ function srpp_register_post_filter_3($type, $key, $class, $condition='') {
 		$srp_filter_arr['position'] = $options['pstn_rel_3'];
 	}
 	
-	if( $options['re_position_type_3'] == 'number_of_paragraph'){
+	if( isset($options['re_position_type_3']) && $options['re_position_type_3'] == 'number_of_paragraph'){
 		if(isset($options['para_rel_3'])){
 			$srp_filter_arr['paragraph'] = $options['para_rel_3'];	
 		}
@@ -703,7 +703,7 @@ function srpp_post_filter_3($content) {
 		if($data['position'] == 'atc'){
 			$content .= call_user_func_array(array($data['class'], 'execute3'), array($data['parameters'], '<li>{link}</li>', $data['key']));
 		}elseif($data['position'] == 'ibc'){
-			
+
 			if(!empty($data['paragraph'])){
 				$closing_p = '</p>';
 				$paragraphs = explode( $closing_p, $content );
