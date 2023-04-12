@@ -62,42 +62,105 @@ jQuery(document).ready(function($){
         }
         });
         $("#pstn_rel_1").change(function(){
+            $('#re_position_type_1 option').removeAttr("selected");
             if($('#pstn_rel_1').val() == 'ibc'){
-             $("#para_rel_1").parents('tr').show();
+                $("#para_rel_1").parents('tr').show();
+                $("#re_position_type_1").parents('tr').show();
+                $("#para_percent_1").parents('tr').hide();
             }else{
-             $("#para_rel_1").parents('tr').hide();
+                $("#para_rel_1").parents('tr').hide();
+                $("#re_position_type_1").parents('tr').hide();
+                $("#para_percent_1").parents('tr').hide();
             }
 
             if($('#pstn_rel_1').val() == 'sc'){
-            $("#shortcode_1").parents('tr').show();
+                $("#shortcode_1").parents('tr').show();
+                $("#para_percent_1").parents('tr').hide();
             }else{
-            $("#shortcode_1").parents('tr').hide();
+                $("#shortcode_1").parents('tr').hide();
+                $("#para_percent_1").parents('tr').hide();
             }
         });
         $("#pstn_rel_2").change(function(){
+            $('#re_position_type_2 option').removeAttr("selected");
             if($('#pstn_rel_2').val() == 'ibc'){
-            $("#para_rel_2").parents('tr').show();
+                $("#para_rel_2").parents('tr').show();
+                $("#re_position_type_2").parents('tr').show();
+                $("#para_percent_2").parents('tr').hide();
             }else{
-            $("#para_rel_2").parents('tr').hide();
+                $("#para_rel_2").parents('tr').hide();
+                $("#re_position_type_2").parents('tr').hide();
+                $("#para_percent_2").parents('tr').hide();
             }
 
             if($('#pstn_rel_2').val() == 'sc'){
               $("#shortcode_2").parents('tr').show();
+              $("#para_percent_2").parents('tr').hide();
             }else{
              $("#shortcode_2").parents('tr').hide();
+             $("#para_percent_2").parents('tr').hide();
             }
         });
         $("#pstn_rel_3").change(function(){
+            $('#re_position_type_3 option').removeAttr("selected");
             if($('#pstn_rel_3').val() == 'ibc'){
-            $("#para_rel_3").parents('tr').show();
+                $("#para_rel_3").parents('tr').show();
+                $("#re_position_type_3").parents('tr').show();
+                $("#para_percent_3").parents('tr').hide();
             }else{
-            $("#para_rel_3").parents('tr').hide();
+                $("#para_rel_3").parents('tr').hide();
+                $("#re_position_type_3").parents('tr').hide();
+                $("#para_percent_3").parents('tr').hide();
             }
 
             if($('#pstn_rel_3').val() == 'sc'){
-            $("#shortcode_3").parents('tr').show();
+               $("#shortcode_3").parents('tr').show();
+               $("#para_percent_3").parents('tr').hide();
             }else{
-            $("#shortcode_3").parents('tr').hide();
+              $("#shortcode_3").parents('tr').hide();
+              $("#para_percent_3").parents('tr').hide();
+            }
+        });
+
+        $("#re_position_type_1").change(function(){
+            if($('#re_position_type_1').val() == 'number_of_paragraph'){
+                $("#para_rel_1").parents('tr').show();
+            }else{
+                $("#para_rel_1").parents('tr').hide();
+            }
+
+            if($('#re_position_type_1').val() == '50_of_the_content'){
+                $("#para_percent_1").parents('tr').show();
+            }else{
+                $("#para_percent_1").parents('tr').hide();
+            }
+        });
+
+        $("#re_position_type_2").change(function(){
+            if($('#re_position_type_2').val() == 'number_of_paragraph'){
+                $("#para_rel_2").parents('tr').show();
+            }else{
+                $("#para_rel_2").parents('tr').hide();
+            }
+
+            if($('#re_position_type_2').val() == '50_of_the_content'){
+                $("#para_percent_2").parents('tr').show();
+            }else{
+                $("#para_percent_2").parents('tr').hide();
+            }
+        });
+
+        $("#re_position_type_3").change(function(){
+            if($('#re_position_type_1').val() == 'number_of_paragraph'){
+                $("#para_rel_3").parents('tr').show();
+            }else{
+                $("#para_rel_3").parents('tr').hide();
+            }
+
+            if($('#re_position_type_3').val() == '50_of_the_content'){
+                $("#para_percent_3").parents('tr').show();
+            }else{
+                $("#para_percent_3").parents('tr').hide();
             }
         });
 

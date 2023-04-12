@@ -32,7 +32,7 @@ function srpp_rp1_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srpp_options_from_post($options, array('age1','sort_by_1','display_status_1', 'limit', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
+		$options = srpp_options_from_post($options, array('age1','sort_by_1','display_status_1', 'limit', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_percent_1', 're_position_type_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -49,14 +49,22 @@ function srpp_rp1_options_subpage(){
 					<form method="post" action="">
 						<table class="optiontable form-table">
 							<?php	
+							// echo "<pre>";
+							// print_r($options);
+							// die();
 							srpp_display_status($options['display_status_1'], $num);		
 							srpp_display_limit($options['limit']);			
 							srpp_sort_post_by_recent_popular_i($options['sort_by_1'], $num);
 							srpp_display_age($options['age1'], $options['sort_by_1'], $num);
 							srpp_display_match_cat($options['match_cat']);
 							srpp_display_match_tags($options['match_tags']);
-							srpp_position_related_i($options['pstn_rel_1'], $num);						
-							srpp_paragraph_i($options['para_rel_1'], $options['pstn_rel_1'], $num);
+							srpp_position_related_i($options['pstn_rel_1'], $num);	
+
+							srpp_position_type_i($options['re_position_type_1'],$options['pstn_rel_1'], $num);	
+							srpp_paragraph_i( $options['re_position_type_1'], $options['para_rel_1'], $options['pstn_rel_1'], $num);
+							srpp_percent_i( $options['re_position_type_1'], $options['para_percent_1'], $options['pstn_rel_1'], $num);
+
+
 							srpp_display_shortcode_i($options['para_rel_1'], $options['pstn_rel_1'], $num);	
 							srpp_design_related_i($options['re_design_1'], $num);	
 									
@@ -109,7 +117,7 @@ function srpp_rp2_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srpp_options_from_post($options, array('sort_by_2','display_status_2', 'limit_2', 'age2', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 'para_rel_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
+		$options = srpp_options_from_post($options, array('sort_by_2','display_status_2', 'limit_2', 'age2', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 're_position_type_2', 'para_rel_2', 'para_percent_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -132,7 +140,9 @@ function srpp_rp2_options_subpage(){
 						srpp_display_match_cat_i($options['match_cat_2'], $num);
 						srpp_display_match_tags_i($options['match_tags_2'], $num);
 						srpp_position_related_i($options['pstn_rel_2'], $num);
-						srpp_paragraph_i($options['para_rel_2'], $options['pstn_rel_2'], $num);
+						srpp_position_type_i($options['re_position_type_2'],$options['pstn_rel_2'], $num);
+						srpp_paragraph_i( $options['re_position_type_2'], $options['para_rel_2'], $options['pstn_rel_2'], $num);
+						srpp_percent_i($options['re_position_type_2'], $options['para_percent_2'], $options['pstn_rel_2'], $num);
 						srpp_display_shortcode($options['para_rel_2'], $options['pstn_rel_2'],$num);
 						srpp_design_related_i($options['re_design_2'], $num);
 						
@@ -249,7 +259,7 @@ function srpp_rp3_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srpp_options_from_post($options, array('sort_by_3', 'display_status_3', 'limit_3', 'age3', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 'para_rel_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
+		$options = srpp_options_from_post($options, array('sort_by_3', 'display_status_3', 'limit_3', 'age3', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 're_position_type_3', 'para_rel_3', 'para_percent_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -272,7 +282,9 @@ function srpp_rp3_options_subpage(){
 						srpp_display_match_cat_i($options['match_cat_3'], $num);
 						srpp_display_match_tags_i($options['match_tags_3'], $num);
 						srpp_position_related_i($options['pstn_rel_3'], $num);
-						srpp_paragraph_i($options['para_rel_3'], $options['pstn_rel_3'], $num);
+						srpp_position_type_i($options['re_position_type_3'],$options['pstn_rel_3'], $num);	
+						srpp_paragraph_i( $options['re_position_type_3'], $options['para_rel_3'], $options['pstn_rel_3'], $num);
+						srpp_percent_i( $options['re_position_type_3'], $options['para_percent_3'], $options['pstn_rel_3'], $num);
 						srpp_display_shortcode($options['para_rel_3'], $options['pstn_rel_3'], $num);	
 						srpp_design_related_i($options['re_design_3'], $num);		
 						
