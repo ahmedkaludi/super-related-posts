@@ -151,7 +151,7 @@ jQuery(document).ready(function($){
         });
 
         $("#re_position_type_3").change(function(){
-            if($('#re_position_type_1').val() == 'number_of_paragraph'){
+            if($('#re_position_type_3').val() == 'number_of_paragraph'){
                 $("#para_rel_3").parents('tr').show();
             }else{
                 $("#para_rel_3").parents('tr').hide();
