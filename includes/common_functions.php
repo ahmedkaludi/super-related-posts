@@ -504,6 +504,7 @@ function srpp_post_filter_1($content) {
 		}elseif($data['position'] == 'ibc'){
 		
 			if(!empty($data['paragraph'])){
+				
 				$closing_p = '</p>';
 				$paragraphs = explode( $closing_p, $content );
 				$paragraph_id = $data['paragraph'];
@@ -520,43 +521,30 @@ function srpp_post_filter_1($content) {
 			}else{
 				$percent_content = $data['percent'];
 				if(!empty($percent_content)){
-					$contentTemp = strip_tags( $content );
-					$total_counts = str_word_count($contentTemp);
+				
+					$closing_p        = '</p>';
+				    $paragraphs       = explode( $closing_p, $content );       
+					$total_paragraphs = count($paragraphs);
+					$paragraph_id = round($total_paragraphs*($percent_content/100));
 
-					$result_number = round($total_counts*($percent_content/100));
-					$contentTempArray = array_filter(explode(" ", $contentTemp));
-					$contentTempfirst = array_slice($contentTempArray, 0, $result_number);
-					$contentTempsecond = array_slice( $contentTempArray, $result_number );
-					$firstPreText = end( $contentTempfirst );
-					
-					$needleOccueance = substr_count( implode(" ", $contentTempfirst), $firstPreText);
-					$actualContent = '';
-					$i=1;
-					$lastPos = 0;
-					while (($lastPos = strpos($content, $firstPreText, $lastPos+1))!== false) {
-						if($i==$needleOccueance){
-							$part1 = substr( $content, 0, $lastPos);
-							$part2 = substr( $content, $lastPos, strlen($content));
-							$close_tag_pos_open = strpos($part2, '</');
-							$close_tag_pos_close = strpos($part2, '>', $close_tag_pos_open);
+					foreach ($paragraphs as $index => $paragraph) {
 
-							$part2_start_data = substr($part2,0,$close_tag_pos_close+1);
-							$part2_end_data = substr($part2,$close_tag_pos_close+1,strlen($part2));
-							
-							$actualContent = $part1.' '.$part2_start_data.' '.$ad_code.' '.$part2_end_data;
+						if ( trim( $paragraph ) ) {
+							$paragraphs[$index] .= $closing_p;
 						}
-						$i++;
+						
+						if ( $paragraph_id == $index + 1 ) {
+							$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+						}
+						
 					}
-					if(!empty($actualContent)){
-						$content = $actualContent;
-					}else{
-						$content = $content;
-					}
+					$content = implode( '', $paragraphs );
+				
 				}
 			}
 		}
 	}
-	
+
 	return $content;
 }
 
@@ -622,38 +610,23 @@ function srpp_post_filter_2($content) {
 			}else{
 				$percent_content = $data['percent'];
 				if(!empty($percent_content)){
-					$contentTemp = strip_tags( $content );
-					$total_counts = str_word_count($contentTemp);
+					$closing_p        = '</p>';
+				    $paragraphs       = explode( $closing_p, $content );       
+					$total_paragraphs = count($paragraphs);
+					$paragraph_id = round($total_paragraphs*($percent_content/100));
 
-					$result_number = round($total_counts*($percent_content/100));
-					$contentTempArray = array_filter(explode(" ", $contentTemp));
-					$contentTempfirst = array_slice($contentTempArray, 0, $result_number);
-					$contentTempsecond = array_slice( $contentTempArray, $result_number );
-					$firstPreText = end( $contentTempfirst );
-					
-					$needleOccueance = substr_count( implode(" ", $contentTempfirst), $firstPreText);
-					$actualContent = '';
-					$i=1;
-					$lastPos = 0;
-					while (($lastPos = strpos($content, $firstPreText, $lastPos+1))!== false) {
-						if($i==$needleOccueance){
-							$part1 = substr( $content, 0, $lastPos);
-							$part2 = substr( $content, $lastPos, strlen($content));
-							$close_tag_pos_open = strpos($part2, '</');
-							$close_tag_pos_close = strpos($part2, '>', $close_tag_pos_open);
+					foreach ($paragraphs as $index => $paragraph) {
 
-							$part2_start_data = substr($part2,0,$close_tag_pos_close+1);
-							$part2_end_data = substr($part2,$close_tag_pos_close+1,strlen($part2));
-							
-							$actualContent = $part1.' '.$part2_start_data.' '.$ad_code.' '.$part2_end_data;
+						if ( trim( $paragraph ) ) {
+							$paragraphs[$index] .= $closing_p;
 						}
-						$i++;
+						
+						if ( $paragraph_id == $index + 1 ) {
+							$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+						}
+						
 					}
-					if(!empty($actualContent)){
-						$content = $actualContent;
-					}else{
-						$content = $content;
-					}
+					$content = implode( '', $paragraphs );
 				}
 			}
 		}
@@ -721,38 +694,24 @@ function srpp_post_filter_3($content) {
 			}else{
 				$percent_content = $data['percent'];
 				if(!empty($percent_content)){
-					$contentTemp = strip_tags( $content );
-					$total_counts = str_word_count($contentTemp);
-
-					$result_number = round($total_counts*($percent_content/100));
-					$contentTempArray = array_filter(explode(" ", $contentTemp));
-					$contentTempfirst = array_slice($contentTempArray, 0, $result_number);
-					$contentTempsecond = array_slice( $contentTempArray, $result_number );
-					$firstPreText = end( $contentTempfirst );
+				
+					$closing_p        = '</p>';
+				    $paragraphs       = explode( $closing_p, $content );       
+					$total_paragraphs = count($paragraphs);
+					$paragraph_id = round($total_paragraphs*($percent_content/100));
 					
-					$needleOccueance = substr_count( implode(" ", $contentTempfirst), $firstPreText);
-					$actualContent = '';
-					$i=1;
-					$lastPos = 0;
-					while (($lastPos = strpos($content, $firstPreText, $lastPos+1))!== false) {
-						if($i==$needleOccueance){
-							$part1 = substr( $content, 0, $lastPos);
-							$part2 = substr( $content, $lastPos, strlen($content));
-							$close_tag_pos_open = strpos($part2, '</');
-							$close_tag_pos_close = strpos($part2, '>', $close_tag_pos_open);
-
-							$part2_start_data = substr($part2,0,$close_tag_pos_close+1);
-							$part2_end_data = substr($part2,$close_tag_pos_close+1,strlen($part2));
-							
-							$actualContent = $part1.' '.$part2_start_data.' '.$ad_code.' '.$part2_end_data;
+					foreach ($paragraphs as $index => $paragraph) {
+						
+						if ( trim( $paragraph ) ) {
+							$paragraphs[$index] .= $closing_p;
 						}
-						$i++;
+
+						if ( $paragraph_id == $index + 1 ) {
+							$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+						}
+						
 					}
-					if(!empty($actualContent)){
-						$content = $actualContent;
-					}else{
-						$content = $content;
-					}
+					$content = implode( '', $paragraphs );
 				}
 			}
 			
