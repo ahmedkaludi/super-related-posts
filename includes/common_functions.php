@@ -478,9 +478,16 @@ function srpp_register_post_filter($type, $key, $class, $condition='') {
 	if(isset($options['pstn_rel_1'])){
 		$srp_filter_arr['position'] = $options['pstn_rel_1'];
 	}
-	if(isset($options['para_rel_1'])){
-		$srp_filter_arr['paragraph'] = $options['para_rel_1'];	
+	if( isset($options['re_position_type_1']) && $options['re_position_type_1'] == 'number_of_paragraph'){
+		if(isset($options['para_rel_1'])){
+			$srp_filter_arr['paragraph'] = $options['para_rel_1'];	
+		}
+	}else{
+		if(isset($options['para_percent_1'])){
+			$srp_filter_arr['percent'] = $options['para_percent_1'];	
+		}
 	}
+
 	if(isset($options['re_design_1'])){
 		$srp_filter_arr['design'] = $options['re_design_1'];		
 	}			
@@ -495,21 +502,49 @@ function srpp_post_filter_1($content) {
 		if($data['position'] == 'atc'){
 			$content .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
 		}elseif($data['position'] == 'ibc'){
-			$closing_p = '</p>';
-			$paragraphs = explode( $closing_p, $content );
-			$paragraph_id = $data['paragraph'];
-			foreach ($paragraphs as $index => $paragraph) {
-				if ( trim( $paragraph ) ) {
-					$paragraphs[$index] .= $closing_p;
+		
+			if(!empty($data['paragraph'])){
+				
+				$closing_p = '</p>';
+				$paragraphs = explode( $closing_p, $content );
+				$paragraph_id = $data['paragraph'];
+				foreach ($paragraphs as $index => $paragraph) {
+					if ( trim( $paragraph ) ) {
+						$paragraphs[$index] .= $closing_p;
+					}
+					$pos = strpos($paragraph, '<p');
+					if ( $paragraph_id == $index + 1 && $pos !== false ) {
+						$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+					}
 				}
-				$pos = strpos($paragraph, '<p');
-				if ( $paragraph_id == $index + 1 && $pos !== false ) {
-					$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+				$content = implode( '', $paragraphs );
+			}else{
+				$percent_content = $data['percent'];
+				if(!empty($percent_content)){
+				
+					$closing_p        = '</p>';
+				    $paragraphs       = explode( $closing_p, $content );       
+					$total_paragraphs = count($paragraphs);
+					$paragraph_id = round($total_paragraphs*($percent_content/100));
+
+					foreach ($paragraphs as $index => $paragraph) {
+
+						if ( trim( $paragraph ) ) {
+							$paragraphs[$index] .= $closing_p;
+						}
+						
+						if ( $paragraph_id == $index + 1 ) {
+							$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+						}
+						
+					}
+					$content = implode( '', $paragraphs );
+				
 				}
 			}
-			$content = implode( '', $paragraphs );
 		}
 	}
+
 	return $content;
 }
 
@@ -534,9 +569,17 @@ function srpp_register_post_filter_2($type, $key, $class, $condition='') {
 	if(isset($options['pstn_rel_2'])){
 		$srp_filter_arr['position'] = $options['pstn_rel_2'];
 	}
-	if(isset($options['para_rel_2'])){
-		$srp_filter_arr['paragraph'] = $options['para_rel_2'];	
+	
+	if( isset($options['re_position_type_2']) && $options['re_position_type_2'] == 'number_of_paragraph'){
+		if(isset($options['para_rel_2'])){
+			$srp_filter_arr['paragraph'] = $options['para_rel_2'];	
+		}
+	}else{
+		if(isset($options['para_percent_2'])){
+			$srp_filter_arr['percent'] = $options['para_percent_2'];	
+		}
 	}
+
 	if(isset($options['re_design_2'])){
 		$srp_filter_arr['design'] = $options['re_design_2'];		
 	}									
@@ -550,19 +593,42 @@ function srpp_post_filter_2($content) {
 		if($data['position'] == 'atc'){
 			$content .= call_user_func_array(array($data['class'], 'execute2'), array($data['parameters'], '<li>{link}</li>', $data['key']));
 		}elseif($data['position'] == 'ibc'){
-			$closing_p = '</p>';
-			$paragraphs = explode( $closing_p, $content );
-			$paragraph_id = $data['paragraph'];
-			foreach ($paragraphs as $index => $paragraph) {
-				if ( trim( $paragraph ) ) {
-					$paragraphs[$index] .= $closing_p;
+			if(!empty($data['paragraph'])){
+				$closing_p = '</p>';
+				$paragraphs = explode( $closing_p, $content );
+				$paragraph_id = $data['paragraph'];
+				foreach ($paragraphs as $index => $paragraph) {
+					if ( trim( $paragraph ) ) {
+						$paragraphs[$index] .= $closing_p;
+					}
+					$pos = strpos($paragraph, '<p');
+					if ( $paragraph_id == $index + 1 && $pos !== false ) {
+						$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute2'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+					}
 				}
-				$pos = strpos($paragraph, '<p');
-				if ( $paragraph_id == $index + 1 && $pos !== false ) {
-					$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute2'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+				$content = implode( '', $paragraphs );
+			}else{
+				$percent_content = $data['percent'];
+				if(!empty($percent_content)){
+					$closing_p        = '</p>';
+				    $paragraphs       = explode( $closing_p, $content );       
+					$total_paragraphs = count($paragraphs);
+					$paragraph_id = round($total_paragraphs*($percent_content/100));
+
+					foreach ($paragraphs as $index => $paragraph) {
+
+						if ( trim( $paragraph ) ) {
+							$paragraphs[$index] .= $closing_p;
+						}
+						
+						if ( $paragraph_id == $index + 1 ) {
+							$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+						}
+						
+					}
+					$content = implode( '', $paragraphs );
 				}
 			}
-			$content = implode( '', $paragraphs );
 		}
 	}
 	return $content;
@@ -586,9 +652,17 @@ function srpp_register_post_filter_3($type, $key, $class, $condition='') {
 	if(isset($options['pstn_rel_3'])){
 		$srp_filter_arr['position'] = $options['pstn_rel_3'];
 	}
-	if(isset($options['para_rel_3'])){
-		$srp_filter_arr['paragraph'] = $options['para_rel_3'];	
+	
+	if( isset($options['re_position_type_3']) && $options['re_position_type_3'] == 'number_of_paragraph'){
+		if(isset($options['para_rel_3'])){
+			$srp_filter_arr['paragraph'] = $options['para_rel_3'];	
+		}
+	}else{
+		if(isset($options['para_percent_3'])){
+			$srp_filter_arr['percent'] = $options['para_percent_3'];	
+		}
 	}
+
 	if(isset($options['re_design_3'])){
 		$srp_filter_arr['design'] = $options['re_design_3'];		
 	}
@@ -602,46 +676,84 @@ function srpp_post_filter_3($content) {
 		if($data['position'] == 'atc'){
 			$content .= call_user_func_array(array($data['class'], 'execute3'), array($data['parameters'], '<li>{link}</li>', $data['key']));
 		}elseif($data['position'] == 'ibc'){
-			$closing_p = '</p>';
-			$paragraphs = explode( $closing_p, $content );
-			$paragraph_id = $data['paragraph'];
-			foreach ($paragraphs as $index => $paragraph) {
-				if ( trim( $paragraph ) ) {
-					$paragraphs[$index] .= $closing_p;
+
+			if(!empty($data['paragraph'])){
+				$closing_p = '</p>';
+				$paragraphs = explode( $closing_p, $content );
+				$paragraph_id = $data['paragraph'];
+				foreach ($paragraphs as $index => $paragraph) {
+					if ( trim( $paragraph ) ) {
+						$paragraphs[$index] .= $closing_p;
+					}
+					$pos = strpos($paragraph, '<p');
+					if ( $paragraph_id == $index + 1 && $pos !== false ) {
+						$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute3'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+					}
 				}
-				$pos = strpos($paragraph, '<p');
-				if ( $paragraph_id == $index + 1 && $pos !== false ) {
-					$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute3'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+				$content = implode( '', $paragraphs );
+			}else{
+				$percent_content = $data['percent'];
+				if(!empty($percent_content)){
+				
+					$closing_p        = '</p>';
+				    $paragraphs       = explode( $closing_p, $content );       
+					$total_paragraphs = count($paragraphs);
+					$paragraph_id = round($total_paragraphs*($percent_content/100));
+					
+					foreach ($paragraphs as $index => $paragraph) {
+						
+						if ( trim( $paragraph ) ) {
+							$paragraphs[$index] .= $closing_p;
+						}
+
+						if ( $paragraph_id == $index + 1 ) {
+							$paragraphs[$index] .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+						}
+						
+					}
+					$content = implode( '', $paragraphs );
 				}
 			}
-			$content = implode( '', $paragraphs );
+			
 		}
 	}
 	return $content;
 }
 
-function srpp_shortcode_content1($arg) {
+function srpp_shortcode_content1() {
 	global $srp_filter_data;
-	foreach ($srp_filter_data as $data) {
-		$content = call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+	foreach ($srp_filter_data as $data) {		
+		$content = call_user_func_array(array($data['class'], 'execute'), array() );
 	}
 	return $content;
 }
 
-function srpp_shortcode_content2($arg) {
+function srpp_shortcode_content2() {
 	global $srp_filter_data;
 	foreach ($srp_filter_data as $data) {
-		$content = call_user_func_array(array($data['class'], 'execute2'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+		$content = call_user_func_array(array($data['class'], 'execute2'), array());
 	}
 	return $content;
 }
 
-function srpp_shortcode_content3($arg) {
+function srpp_shortcode_content3() {
 	global $srp_filter_data;
 	foreach ($srp_filter_data as $data) {
-		$content = call_user_func_array(array($data['class'], 'execute3'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+		$content = call_user_func_array(array($data['class'], 'execute3'), array());
 	}
 	return $content;
+}
+
+function srpp_run_shortcode($attr){
+	
+	if(isset($attr['related_post']) && $attr['related_post'] == 2){
+		return srpp_shortcode_content2();
+	}else if(isset($attr['related_post']) && $attr['related_post'] == 3){
+		return srpp_shortcode_content3();
+	}else{
+		return srpp_shortcode_content1();
+	}	
+
 }
 
 function srpp_post_filter_init1() {
@@ -657,8 +769,8 @@ function srpp_post_filter_init1() {
 			if (!$srp_filter_data) return;
 			if(isset($srp_filter_data[0]['position']) && $srp_filter_data[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_1', 5);
-			}else{
-				add_shortcode('super-related-posts', 'srpp_shortcode_content1');
+			}else{				
+				add_shortcode('super-related-posts', 'srpp_run_shortcode');				
 			}
 	
 		}
@@ -677,7 +789,7 @@ function srpp_post_filter_init2() {
 			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_2', 5);
 			}else{
-				add_shortcode('super-related-posts', 'srpp_shortcode_content2');
+				add_shortcode('super-related-posts', 'srpp_run_shortcode');
 			}
 		}
 	}		
@@ -694,9 +806,10 @@ function srpp_post_filter_init3() {
 			global $srp_filter_data3;
 			if (!$srp_filter_data3) return;
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
+				
 				add_filter('the_content', 'srpp_post_filter_3', 5);
 			}else{
-				add_shortcode('super-related-posts', 'srpp_shortcode_content3');
+				add_shortcode('super-related-posts', 'srpp_run_shortcode');
 			}
 		}	
 	}		

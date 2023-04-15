@@ -218,14 +218,6 @@ function srpp_display_limit($limit) {
 	<?php
 }
 
-function srpp_display_shortcode($num) {
-	?>
-	<tr valign="top">
-		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
-		<td><strong>[super-related-posts]</strong></td>
-	</tr>
-	<?php
-}
 
 function srpp_display_limit_i($limit, $num) {
 	?>
@@ -354,6 +346,22 @@ function srpp_position_related_i($pstn_rel, $num) {
 	<?php
 }
 
+
+function srpp_position_type_i($para_pos_type, $pos, $num) {
+	global $wp_version;
+	?>
+	<tr valign="top <?php echo $pos; ?>" <?php if(($pos == 'atc') || ($pos == 'sc')) { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="re_position_type_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Position Type:', 'super-related-posts') ?></label></th>
+		<td>
+			<select name="re_position_type_<?php echo esc_attr($num); ?>" id="re_position_type_<?php echo esc_attr($num); ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
+				<option <?php if($para_pos_type == 'number_of_paragraph') { echo 'selected="selected"'; } ?> value="number_of_paragraph"><?php echo esc_html__( 'Number of paragraph' , 'super-related-posts') ?></option>
+				<option <?php if($para_pos_type == '50_of_the_content') { echo 'selected="selected"'; } ?> value="50_of_the_content"><?php echo esc_html__( 'Percent of the content' , 'super-related-posts') ?></option>	
+			</select>
+		</td>
+	</tr>
+	<?php
+}
+
 function srpp_design_related_i($design, $num) {
 	global $wp_version;
 	?>
@@ -370,15 +378,57 @@ function srpp_design_related_i($design, $num) {
 	<?php
 }
 
-function srpp_paragraph_i($para, $pos, $num) {
+
+function srpp_demo_design_related_i($design, $num) {
+	global $wp_version;
+	$img_dir = SRPP_PLUGIN_URI.'images/related_designs/';
+	if($design == 'd1'){
+		$design_number = "design1.jpg";
+	}elseif($design == 'd2'){
+		$design_number = "design2.jpg";
+	}else{
+		$design_number = "design3.jpg";
+	} ?>
+	   <input type="hidden" class="suprp_image_path" value="<?php echo $img_dir; ?>" />
+	   <img src="<?php echo $img_dir.$design_number; ?>" class="suprp-design-related-img" id="design<?php echo esc_attr($num."_".$design); ?>" alt="design<?php echo esc_attr($num."_".$design); ?>"  />	
+	<?php
+}
+
+function srpp_display_shortcode_i($para, $pos, $num) {
 	?>
-	<tr valign="top" <?php if($pos != 'ibc') { echo 'style="display:none"'; } ?>>
-		<th scope="row"><label for="para_rel_<?php echo esc_attr($num); ?>"><?php echo esc_html__('After Number of paragraphs?', 'super-related-posts') ?></label></th>
-		<td><input min="1" name="para_rel_<?php echo esc_attr($num); ?>" type="number" id="para_rel_<?php echo esc_attr($num); ?>" style="width: 60px;" value="<?php echo esc_attr($para); ?>" size="2" /></td>
+	<tr valign="top" <?php if($pos != 'sc') { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
+		<td><strong id="shortcode_<?php echo esc_attr($num); ?>">[super-related-posts related_post="<?php echo esc_attr($num); ?>"]</strong></td>
 	</tr>
 	<?php
 }
 
+function srpp_display_shortcode($para, $pos, $num) {
+	?>
+	<tr valign="top" <?php if($pos != 'sc') { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Shortcode:', 'super-related-posts') ?></label></th>
+		<td><strong id="shortcode_<?php echo esc_attr($num); ?>">[super-related-posts related_post="<?php echo esc_attr($num); ?>"]</strong></td>
+	</tr>
+	<?php
+}
+
+function srpp_paragraph_i( $position_type, $para, $pos, $num) {
+	?>
+	<tr valign="top <?php echo $position_type; ?>" <?php if($pos != 'ibc' || $position_type == '50_of_the_content' ) { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="para_rel_<?php echo esc_attr($num); ?>"><?php echo esc_html__('After Number of paragraphs?', 'super-related-posts') ?></label></th>
+		<td><input min="1" name="para_rel_<?php echo esc_attr($num); ?>" type="number" id="para_rel_<?php echo esc_attr($num); ?>" style="width: 60px;" value="<?php if(!empty($para)){ echo esc_attr($para); }else{ echo '1'; } ?>" size="2" /></td>
+	</tr>
+	<?php
+}
+
+function srpp_percent_i( $position_type, $para_percent, $pos, $num) {
+	?>
+	<tr valign="top" <?php if($position_type == 'number_of_paragraph'){ echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="para_percent_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Percent:', 'super-related-posts') ?></label></th>
+		<td><input min="1" name="para_percent_<?php echo esc_attr($num); ?>" type="number" id="para_percent_<?php echo esc_attr($num); ?>" style="width: 60px;" value="<?php if(!empty($para_percent)){ echo esc_attr($para_percent); }else{ echo '50'; } ?>" size="2" /></td>
+	</tr>
+	<?php
+}
 function srpp_adv_filter_switch($filter_check, $num){
 	?>
 	<tr valign="top">

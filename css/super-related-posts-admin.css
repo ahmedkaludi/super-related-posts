@@ -106,3 +106,24 @@ div#wp-pointer-0{
     position: relative;
     display: inline-block;
 }
+
+.suprp-section-part strong#shortcode_1, strong#shortcode_2, strong#shortcode_3{
+    font-weight: 700;
+ }
+
+ .suprp-section-part .suprp-design-img{
+    border: 1px solid;
+    padding: 5px;
+    margin-bottom: 0px;
+    padding-right: -1px;
+    height: fit-content;
+}
+
+.suprp-section-part .suprp-design-label{
+    padding-left: 17px;
+}
+
+.suprp-section-part .suprp-design-related-img{
+    width: 550px;
+    height: 360px;
+}

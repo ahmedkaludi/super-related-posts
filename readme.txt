@@ -3,9 +3,9 @@ Contributors: magazine3
 Tags: Related Posts, Contextual Related Posts, Similar Posts, Related, Related Content
 Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 4.0
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 5.2
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,13 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 
 == Changelog ==
+
+= 1.2 (15 April 2023) =
+
+* Fixed: subscribe popup "No Thanks" is not clickable #13
+* Enhancement: Highlight the shortcode in the plugin options pages and on the plugin description page. #12
+* Enhancement: observations #3
+* Feature: Feature to add related content based on paragraph percentage #14
 
 = 1.1 (14 Nov 2022) =
 
