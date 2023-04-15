@@ -100,7 +100,7 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 == Changelog ==
 
-= 1.2 (14 April 2023) =
+= 1.2 (15 April 2023) =
 
 * Fixed: subscribe popup "No Thanks" is not clickable #13
 * Enhancement: Highlight the shortcode in the plugin options pages and on the plugin description page. #12
