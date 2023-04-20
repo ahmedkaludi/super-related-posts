@@ -220,6 +220,7 @@ function srpp_pi_options_subpage(){
 	);		
 	$percentage = round( (($cache_count / $posts_count) * 100), 2);	
 	$caching_status = get_option('srp_posts_caching_status');
+	$reset_posts_status = get_option('srp_posts_reset_status');
 	
 	?>
 	<div class="wrap srpp-tab-content">	
@@ -240,8 +241,18 @@ function srpp_pi_options_subpage(){
 		<?php }else{ ?>	
 			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
 		<?php } ?>	
-			
+		
 		</td>
+
+		<th scope="row"><label for=""><?php echo esc_html__('Reset Posts:', 'super-related-posts') ?></label></th>
+		<td>
+			<?php if($reset_posts_status != 'finished'){ ?>	
+				<button type="button" id="start-reseting-post-btn" class="button button-primary"><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
+			<?php }else{ ?>	
+				<button type="button" id="start-reseting-post-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
+			<?php } ?>
+		</td>
+		
 	</tr>
 	</table>
 	</div>
@@ -433,10 +444,12 @@ function srpp_save_index_entries ($start, $utf8=false, $use_stemmer='false', $ba
 		$start += $batch;
 		update_option('srp_posts_offset', intval($start));
 		update_option('srp_posts_caching_status', 'continue');
+		update_option('srp_posts_reset_status', 'continue');
 		if (!ini_get('safe_mode')) set_time_limit(30);
 	}else{
 		update_option('srp_posts_offset', 0);
 		update_option('srp_posts_caching_status', 'finished');
+		update_option('srp_posts_reset_status', 'finished');
 	}
 			
 	unset($posts);	
@@ -493,6 +506,59 @@ function srpp_start_posts_caching(){
 			$start = get_option('srp_posts_offset');
 		}
 	
+		$percentage = round( (($start / $posts_count) * 100), 2);					
+		
+	 	$result = srpp_save_index_entries ($start, true, 'false', 500, true);		
+		if($result > 0){
+			$status = array('status' => 'continue', 'percentage' => $percentage."%");
+		}else{
+			$status = array('status' => 'finished', 'percentage' => "100%");
+		}
+	 }	 	 	 	 
+
+	 echo wp_json_encode($status);
+	 wp_die();           
+}
+
+add_action( 'wp_ajax_srpp_start_posts_reset', 'srpp_start_posts_reset'); 
+
+function srpp_start_posts_reset(){
+			
+	 if ( ! isset( $_GET['srp_security_nonce'] ) ){
+		return; 
+	 }
+	 
+	 if ( !wp_verify_nonce( $_GET['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
+		return;  
+	 }
+	
+	 if(get_option('srp_posts_reset_status') == 'finished'){
+		$status = array('status' => 'finished', 'percentage'=> "100%");
+	 }else{
+
+		global $wpdb, $table_prefix;		
+		$wpp_table = $table_prefix . 'super_related_posts';
+		
+		global $posts_count;
+
+		if(!$posts_count){
+
+			$posts_count = $wpdb->get_var(
+				stripslashes ($wpdb->prepare(
+					"SELECT COUNT(*) FROM `$wpp_table`"
+				))
+			);
+
+			$table_name = $table_prefix . 'super_related_posts';
+			$wpdb->query("DELETE FROM `$table_name`");
+		}
+		
+
+		$start = 0;
+	  	if(get_option('srp_posts_offset')){
+			$start = get_option('srp_posts_offset');
+		}
+		
 		$percentage = round( (($start / $posts_count) * 100), 2);					
 		
 	 	$result = srpp_save_index_entries ($start, true, 'false', 500, true);		

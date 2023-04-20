@@ -725,6 +725,7 @@ function srpp_shortcode_content1() {
 	foreach ($srp_filter_data as $data) {		
 		$content = call_user_func_array(array($data['class'], 'execute'), array() );
 	}
+	
 	return $content;
 }
 
@@ -891,6 +892,7 @@ function srpwp_on_uninstall()
 		delete_option('srp_posts_caching_status');
 		delete_option('srp_data');
 		delete_option('super_related_posts_meta');
+		delete_option('srp_posts_reset_status');
 
 		$table_name = $table_prefix . 'super_related_posts';
 		$wpdb->query("DROP TABLE `$table_name`");

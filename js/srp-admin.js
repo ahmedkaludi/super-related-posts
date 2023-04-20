@@ -14,7 +14,7 @@ jQuery(document).ready(function($){
                     $(".srpp_progress_bar_body").text(response.percentage);
                     srpp_start_caching_ajax(current);
                 }
-                if(response.status === 'finished'){                                           
+                if(response.status === 'finished'){  
                     $(".srpp_progress_bar_body").css("width", response.percentage);
                     $(".srpp_progress_bar_body").text(response.percentage);
                     $(".srpp_progress_bar").addClass('srpp_dnone');         
@@ -35,9 +35,57 @@ jQuery(document).ready(function($){
 
     }
 
+    function srpp_start_reset_posts_ajax(current){
+        current.addClass('updating-message');
+        $.get( ajaxurl,{                    
+            action:"srpp_start_posts_reset", 
+            srp_security_nonce:srp_localize_data.srp_security_nonce
+            }, function(response) {
+                console.log(response);
+                $("#srp-percentage-div").addClass('srpp_dnone');
+                current.removeClass('updating-message');                 
+                if(response.status === 'continue'){
+                  //  alert('55');
+                    $(".srpp_progress_bar").removeClass('srpp_dnone');
+                    $(".srpp_progress_bar_body").css("width", response.percentage);
+                    $(".srpp_progress_bar_body").text(response.percentage);
+                    srpp_start_reset_posts_ajax(current);
+                }
+                if(response.status === 'finished'){   
+                   // alert('66');                                        
+                    $(".srpp_progress_bar_body").css("width", response.percentage);
+                    $(".srpp_progress_bar_body").text(response.percentage);
+                    $(".srpp_progress_bar").addClass('srpp_dnone');         
+                    alert('Reset Successfully');  
+                    location.reload();      
+                }                
+        },'json')
+        .done(function() {        
+            console.log( "second success" );
+        })
+        .fail(function() {
+            current.removeClass('updating-message');             
+            alert('Process broke. Click on Start again');        
+        })
+        .always(function() {
+            //current.removeClass('updating-message'); 
+            console.log( "finished" );
+        });
+
+    }
+
     $("#start-caching-btn").click(function(){
             var current = $(this);
+            // alert(current);
+        // return false;
             srpp_start_caching_ajax(current);
+    });
+
+    $("#start-reseting-post-btn").click(function(){
+        var current = $(this);
+        // alert(current);
+        // return false;
+       srpp_start_reset_posts_ajax(current);
     });
 
     $("#adv_filter_check_1").click(function(){
