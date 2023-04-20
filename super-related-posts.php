@@ -63,6 +63,7 @@ class SuperRelatedPosts {
 		$start_time = srpp_microtime();
 											
 		$postid = srpp_current_post_id($sprp_current_ID);
+		
 		$cache_key = $option_key.$postid.$args.'re1';
 		$result = srpp_cache_fetch($postid, $cache_key);
 		if ($result !== false) {
@@ -181,7 +182,7 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		
+	
 		if($output){			
 			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid, $cache_key, $output);
@@ -527,7 +528,7 @@ function srpp_save_index_entry($postID) {
 	if($post['post_status'] == 'publish'){
 
 		if (is_null($pid)) {
-
+			
 			$wpdb->insert( 
 				$table_name, 
 				array(
@@ -538,7 +539,7 @@ function srpp_save_index_entry($postID) {
 				), 
 				array('%d','%s', '%s', '%s') 
 			);
-			
+			update_option('srp_posts_reset_status', 'continue');
 		} else {
 			$wpdb->query(
 				$wpdb->prepare("UPDATE $table_name SET title=%s, tags=%s, spost_date=%s WHERE pID=%d",
