@@ -241,18 +241,15 @@ function srpp_pi_options_subpage(){
 		<?php }else{ ?>	
 			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
 		<?php } ?>	
+
+		<?php if($reset_posts_status != 'finished'){ ?>	
+			<button type="button" id="start-reseting-post-btn" class="button button-primary"><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
+		<?php }else{ ?>	
+			<button type="button" id="start-reseting-post-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
+		<?php } ?>
 		
 		</td>
 
-		<th scope="row"><label for=""><?php echo esc_html__('Reset Posts:', 'super-related-posts') ?></label></th>
-		<td>
-			<?php if($reset_posts_status != 'finished'){ ?>	
-				<button type="button" id="start-reseting-post-btn" class="button button-primary"><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
-			<?php }else{ ?>	
-				<button type="button" id="start-reseting-post-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
-			<?php } ?>
-		</td>
-		
 	</tr>
 	</table>
 	</div>
