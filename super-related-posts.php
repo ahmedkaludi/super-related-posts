@@ -93,18 +93,20 @@ class SuperRelatedPosts {
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
+			
 						
-			if($cat_ids){				
+			if($cat_ids){	
+				
 				$wp_term_re   = $table_prefix.'term_relationships';
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
 				$join   .= $wpdb->prepare(
-					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
-						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
-						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = %d ",
-						$cat_ids[0]
+					"inner join `$wp_term_re` tt on tt.object_id = p.ID
+					 inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+					 inner join `$wp_terms` te on  tte.term_id = te.term_id
+					 and tte.taxonomy = 'category'
+					 and te.term_id = %d ",
+					 $cat_ids[0]
 				);		
 			}
 
@@ -147,6 +149,7 @@ class SuperRelatedPosts {
 			$results = array();
 			
 			$fetch_result = $wpdb->get_results($sql);
+			
 			
 			if(!empty($fetch_result)){
 				foreach ($fetch_result as $value) {					
@@ -235,12 +238,12 @@ class SuperRelatedPosts {
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
 				$join   .= $wpdb->prepare(
-					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
-						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
-						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = %d ",
-						$cat_ids[0]
+					"inner join `$wp_term_re` tt on tt.object_id = p.ID
+					 inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+					 inner join `$wp_terms` te on  tte.term_id = te.term_id
+					 and tte.taxonomy = 'category'
+					 and te.term_id = %d ",
+					 $cat_ids[0]
 				);		
 			}
 
@@ -372,12 +375,12 @@ class SuperRelatedPosts {
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
 				$join   .= $wpdb->prepare(
-					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
-						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
-						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = %d ",
-						$cat_ids[0]
+					"inner join `$wp_term_re` tt on tt.object_id = p.ID
+					 inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+					 inner join `$wp_terms` te on  tte.term_id = te.term_id
+					 and tte.taxonomy = 'category'
+					 and te.term_id = %d ",
+					 $cat_ids[0]
 				);		
 			}
 
