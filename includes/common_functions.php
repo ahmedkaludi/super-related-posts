@@ -217,15 +217,12 @@ function srpp_set_options($option_key, $arg, $default_output_template) {
 	if (!isset($arg['included_cats'])) $arg['included_cats'] = stripslashes(@$options['included_cats']);
 	if (!isset($arg['excluded_authors'])) $arg['excluded_authors'] = stripslashes(@$options['excluded_authors']);
 	if (!isset($arg['included_authors'])) $arg['included_authors'] = stripslashes(@$options['included_authors']);
-
 	if (!isset($arg['display_status_1'])) $arg['display_status_1'] = stripslashes(@$options['display_status_1']);
 	if (!isset($arg['display_status_2'])) $arg['display_status_2'] = stripslashes(@$options['display_status_2']);
 	if (!isset($arg['display_status_3'])) $arg['display_status_3'] = stripslashes(@$options['display_status_3']);
-
 	if (!isset($arg['sort_by_1'])) $arg['sort_by_1'] = stripslashes(@$options['sort_by_1']);
 	if (!isset($arg['sort_by_2'])) $arg['sort_by_2'] = stripslashes(@$options['sort_by_2']);
 	if (!isset($arg['sort_by_3'])) $arg['sort_by_3'] = stripslashes(@$options['sort_by_3']);
-
 	if (!isset($arg['adv_filter_check'])) $arg['adv_filter_check'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_2'])) $arg['adv_filter_check_2'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_3'])) $arg['adv_filter_check_3'] = stripslashes(@$options['adv_filter_check']);
@@ -408,6 +405,20 @@ function srpp_where_match_category() {
 
 	}											
 	return $catarray;
+}
+
+/*
+	Functions for get the post primary category 
+*/
+function srpp_get_primary_category($postid) {
+	$term_list = wp_get_post_terms($postid, 'category', ['fields' => 'all']);
+	$primary_cat = array();
+	foreach($term_list as $term) {
+	   if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $term->term_id ) {
+	    $primary_cat[] =	$term->term_id;
+	   }
+	}									
+	return $primary_cat;
 }
 
 function srpp_where_match_tags() {

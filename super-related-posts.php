@@ -93,7 +93,10 @@ class SuperRelatedPosts {
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
-			
+			$primary_category = srpp_get_primary_category($postid);
+			if(!empty($primary_category)){
+				$cat_ids = $primary_category;
+			}
 						
 			if($cat_ids){	
 				
@@ -227,10 +230,13 @@ class SuperRelatedPosts {
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
-								
 			}	
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
+			}
+			$primary_category = srpp_get_primary_category($postid);
+			if(!empty($primary_category)){
+				$cat_ids = $primary_category;
 			}
 			
 			if($cat_ids){				
@@ -368,6 +374,10 @@ class SuperRelatedPosts {
 			}	
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
+			}
+			$primary_category = srpp_get_primary_category($postid);
+			if(!empty($primary_category)){
+				$cat_ids = $primary_category;
 			}
 			
 			if($cat_ids){				
