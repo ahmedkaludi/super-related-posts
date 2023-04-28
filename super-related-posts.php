@@ -93,12 +93,19 @@ class SuperRelatedPosts {
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
-			$primary_category = srpp_get_primary_category($postid);
-			if(!empty($primary_category)){
-				$cat_ids = $primary_category;
-			}
+			
 						
 			if($cat_ids){	
+
+				$cat_sql = $cat_ids[0];
+				if(count($cat_ids) > 1){
+					foreach($cat_ids as $cat_id){
+						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						$cat_sql = $cat_id;
+						break;
+						}
+					}
+				}
 				
 				$wp_term_re   = $table_prefix.'term_relationships';
 				$wp_terms     = $table_prefix.'terms';
@@ -109,7 +116,7 @@ class SuperRelatedPosts {
 					 inner join `$wp_terms` te on  tte.term_id = te.term_id
 					 and tte.taxonomy = 'category'
 					 and te.term_id = %d ",
-					 $cat_ids[0]
+					 $cat_sql
 				);		
 			}
 
@@ -234,12 +241,19 @@ class SuperRelatedPosts {
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
-			$primary_category = srpp_get_primary_category($postid);
-			if(!empty($primary_category)){
-				$cat_ids = $primary_category;
-			}
 			
-			if($cat_ids){				
+			
+			if($cat_ids){	
+				
+				$cat_sql = $cat_ids[0];
+				if(count($cat_ids) > 1){
+					foreach($cat_ids as $cat_id){
+						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						$cat_sql = $cat_id;
+						break;
+						}
+					}
+				}
 				$wp_term_re   = $table_prefix.'term_relationships';
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
@@ -249,7 +263,7 @@ class SuperRelatedPosts {
 					 inner join `$wp_terms` te on  tte.term_id = te.term_id
 					 and tte.taxonomy = 'category'
 					 and te.term_id = %d ",
-					 $cat_ids[0]
+					 $cat_sql
 				);		
 			}
 
@@ -375,12 +389,20 @@ class SuperRelatedPosts {
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
-			$primary_category = srpp_get_primary_category($postid);
-			if(!empty($primary_category)){
-				$cat_ids = $primary_category;
-			}
 			
-			if($cat_ids){				
+			
+			if($cat_ids){	
+				
+				$cat_sql = $cat_ids[0];
+				if(count($cat_ids) > 1){
+					foreach($cat_ids as $cat_id){
+						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						$cat_sql = $cat_id;
+						break;
+						}
+					}
+				}
+				
 				$wp_term_re   = $table_prefix.'term_relationships';
 				$wp_terms     = $table_prefix.'terms';
 				$wp_term_taxo = $table_prefix.'term_taxonomy';
@@ -390,7 +412,7 @@ class SuperRelatedPosts {
 					 inner join `$wp_terms` te on  tte.term_id = te.term_id
 					 and tte.taxonomy = 'category'
 					 and te.term_id = %d ",
-					 $cat_ids[0]
+					 $cat_sql
 				);		
 			}
 

@@ -407,20 +407,6 @@ function srpp_where_match_category() {
 	return $catarray;
 }
 
-/*
-	Functions for get the post primary category 
-*/
-function srpp_get_primary_category($postid) {
-	$term_list = wp_get_post_terms($postid, 'category', ['fields' => 'all']);
-	$primary_cat = array();
-	foreach($term_list as $term) {
-	   if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $term->term_id ) {
-	    $primary_cat[] =	$term->term_id;
-	   }
-	}									
-	return $primary_cat;
-}
-
 function srpp_where_match_tags() {
 
 	$args 	  = array('fields' => 'ids');
