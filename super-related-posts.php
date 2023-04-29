@@ -82,7 +82,8 @@ class SuperRelatedPosts {
 			$sort_by       = $options['sort_by_1'];			
 			$check_age = ('none' !== $options['age1']['direction']);						
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
-												
+
+									
 			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
 				
 			$cat_ids = $tag_ids = array();
@@ -93,7 +94,6 @@ class SuperRelatedPosts {
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
-			
 						
 			if($cat_ids){	
 
@@ -151,16 +151,24 @@ class SuperRelatedPosts {
 				}
 				$orderby = $wpdb->prepare(" ORDER BY sp.views DESC LIMIT 0, %d", $options['limit']);				
 				
-			}					
-							
-			$cpost_id 		   = get_the_ID();			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby";			
-			$srp_execute_sql_1 = $sql;			
+			}		
+			
+
+			$cpost_id 		   = get_the_ID();
+						
+			$options_length = get_option('super-related-posts');
+			$post_excerpt = $options_length['post_excerpt'];
+			if($post_excerpt === 'true'){
+				$excerpt_length = $options_length['excerpt_length_1'] ? $options_length['excerpt_length_1'] : '0';
+				$sql = "SELECT ID, post_title, substring(`post_excerpt`, 1, $excerpt_length) as `post_excerpt`  FROM `$wpdb->posts` p $join WHERE $where $orderby";			
+			}else{
+				$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby";			
+			}
+			$srp_execute_sql_1 = $sql;	
+			
 			$results = array();
-			
 			$fetch_result = $wpdb->get_results($sql);
-			
-			
+
 			if(!empty($fetch_result)){
 				foreach ($fetch_result as $value) {					
 					if($value->ID == $cpost_id) {
@@ -174,6 +182,7 @@ class SuperRelatedPosts {
 			$results = false;
 		}
 		$allowed_html = srpp_expanded_allowed_tags();
+
 	    if ($results) {
 			
 			$translations = srpp_prepare_template($options['output_template']);
@@ -302,8 +311,17 @@ class SuperRelatedPosts {
 				
 			}					
 							
-			$cpost_id 		   = get_the_ID();			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";		
+			$cpost_id 		   = get_the_ID();		
+			
+			$options_length = get_option('super-related-posts');
+			$post_excerpt = $options_length['post_excerpt_2'];
+			if($post_excerpt === 'true'){
+				$excerpt_length = $options_length['excerpt_length_2'] ? $options_length['excerpt_length_2'] : '0';
+				$sql = "SELECT ID, post_title, substring(`post_excerpt`, 1, $excerpt_length) as `post_excerpt` FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";				
+			}else{
+				$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";			
+			}
+
 			if($srp_execute_sql_1 === $sql){				
 				$sql =  strstr($sql, 'LIMIT', true);
 				$sql.= $wpdb->prepare("LIMIT %d, %d", ($options['limit']+1), $options['limit_2']);
@@ -451,8 +469,18 @@ class SuperRelatedPosts {
 				
 			}				
 							
-			$cpost_id 		   = get_the_ID();			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";		
+			$cpost_id 		   = get_the_ID();		
+			
+			$options_length = get_option('super-related-posts');
+			$post_excerpt = $options_length['post_excerpt_3'];
+			if($post_excerpt === 'true'){
+				$excerpt_length = $options_length['excerpt_length_3'] ? $options_length['excerpt_length_3'] : '0';
+				$sql = "SELECT ID, post_title, substring(`post_excerpt`, 1, $excerpt_length) as `post_excerpt` FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";				
+			}else{
+				$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";
+			}
+
+
 			if($sql === $srp_execute_sql_1 || $sql === $srp_execute_sql_2){							
 				$sql =  strstr($sql, 'LIMIT', true);
 				$sql.= $wpdb->prepare("LIMIT %d, %d", ($options['limit'] + $options['limit_2'] + 1), $options['limit_3'] );				

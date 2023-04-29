@@ -45,14 +45,12 @@ jQuery(document).ready(function($){
                 $("#srp-percentage-div").addClass('srpp_dnone');
                 current.removeClass('updating-message');                 
                 if(response.status === 'continue'){
-                  //  alert('55');
                     $(".srpp_progress_bar").removeClass('srpp_dnone');
                     $(".srpp_progress_bar_body").css("width", response.percentage);
                     $(".srpp_progress_bar_body").text(response.percentage);
                     srpp_start_reset_posts_ajax(current);
                 }
                 if(response.status === 'finished'){   
-                   // alert('66');                                        
                     $(".srpp_progress_bar_body").css("width", response.percentage);
                     $(".srpp_progress_bar_body").text(response.percentage);
                     $(".srpp_progress_bar").addClass('srpp_dnone');         
@@ -76,15 +74,11 @@ jQuery(document).ready(function($){
 
     $("#start-caching-btn").click(function(){
             var current = $(this);
-            // alert(current);
-        // return false;
             srpp_start_caching_ajax(current);
     });
 
     $("#start-reseting-post-btn").click(function(){
         var current = $(this);
-        // alert(current);
-        // return false;
        srpp_start_reset_posts_ajax(current);
     });
 
@@ -109,6 +103,32 @@ jQuery(document).ready(function($){
             $("#filter_options").hide();
         }
         });
+
+        $("#post_excerpt").change(function(){
+            if($('#post_excerpt').val() == 'true'){
+                $("#excerpt_length_1").parents('tr').show();
+            }else{
+                $("#excerpt_length_1").parents('tr').hide();
+            }
+        });
+
+        $("#post_excerpt_2").change(function(){
+            if($('#post_excerpt_2').val() == 'true'){
+                $("#excerpt_length_2").parents('tr').show();
+            }else{
+                $("#excerpt_length_2").parents('tr').hide();
+            }
+        });
+
+        $("#post_excerpt_3").change(function(){
+            if($('#post_excerpt_3').val() == 'true'){
+                $("#excerpt_length_3").parents('tr').show();
+            }else{
+                $("#excerpt_length_3").parents('tr').hide();
+            }
+        });
+
+
         $("#pstn_rel_1").change(function(){
             $('#re_position_type_1 option').removeAttr("selected");
             if($('#pstn_rel_1').val() == 'ibc'){

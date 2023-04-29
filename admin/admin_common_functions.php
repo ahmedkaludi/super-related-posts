@@ -314,6 +314,47 @@ function srpp_display_match_tags($match_tags) {
 	<?php
 }
 
+
+function srpp_display_post_excerpt($match_cat) {
+	?>
+	<tr valign="top">
+		<th scope="row"><label for="post_excerpt"><?php echo esc_html__('Excerpt?', 'super-related-posts') ?></label></th>
+		<td>
+			<select name="post_excerpt" id="post_excerpt">			
+			<option <?php if($match_cat == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
+			<option <?php if(empty($match_cat)) { echo 'selected="selected"'; } ?> <?php if($match_cat == 'false') { echo 'selected="selected"'; } ?> value="false"><?php echo esc_html__( 'No' , 'super-related-posts') ?></option>
+			</select>
+		</td>
+	</tr>
+	<?php
+}
+
+function srpp_display_post_excerpt_i($post_excerpt, $num) {
+	// echo "<pre>";
+	// echo $post_excerpt;
+	// die();
+	?>
+	<tr valign="top" <?php echo $post_excerpt; ?>>
+		<th scope="row"><label for="post_excerpt_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Excerpt?', 'super-related-posts') ?></label></th>
+		<td>
+			<select name="post_excerpt_<?php echo esc_attr($num); ?>" id="post_excerpt_<?php echo esc_attr($num); ?>">			
+				<option <?php if($post_excerpt == 'true') { echo 'selected="selected"'; } ?> value="true"><?php echo esc_html__( 'Yes' , 'super-related-posts') ?></option>
+				<option <?php if($post_excerpt == 'false') { echo 'selected="selected"'; } ?> <?php if(empty($post_excerpt)) { echo 'selected="selected"'; } ?> value="false"><?php echo esc_html__( 'No' , 'super-related-posts') ?></option>
+			</select>
+		</td>
+	</tr>
+	<?php
+}
+
+function srpp_display_post_excerpt_length_i( $excerpt_type, $excerpt_length, $num) {
+	?>
+	<tr valign="top" <?php if(empty($excerpt_type) || $excerpt_type == 'false') { echo 'style="display:none"'; } ?>>
+		<th scope="row"><label for="excerpt_length_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Excerpt Length:', 'super-related-posts') ?></label></th>
+		<td><input min="1" name="excerpt_length_<?php echo esc_attr($num); ?>" type="number" id="excerpt_length_<?php echo esc_attr($num); ?>" style="width: 60px;" value="<?php if(!empty($excerpt_length)){ echo esc_attr($excerpt_length); }else{ echo '5'; } ?>" size="2" /></td>
+	</tr>
+	<?php
+}
+
 function srpp_display_match_tags_i($match_tags, $num) {
 	global $wp_version;
 	?>
