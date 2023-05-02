@@ -58,7 +58,7 @@ class SuperRelatedPosts {
   } // plugin_action_links
 
 
-	static function execute($args='', $default_output_template='<li>{imagesrc_shareaholic}</li>', $option_key='super-related-posts'){
+	static function execute($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_result;
 		$start_time = srpp_microtime();
 											
