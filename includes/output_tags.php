@@ -767,7 +767,7 @@ function srpp_oth_post_featured_image($id, $size = "thumbnail") {
       $thumbnail_full = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
 
       if (($size == "thumbnail") && ($thumbnail_shareaholic[0] !== $thumbnail_full[0])) {
-        $featured_img = esc_attr($thumbnail_shareaholic[0]);
+        $featured_img = esc_attr($thumbnail_full[0]);
       } else {
         if ($size == "thumbnail") {
           $thumbnail_large = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large');
