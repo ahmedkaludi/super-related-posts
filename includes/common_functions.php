@@ -743,7 +743,6 @@ function srpp_shortcode_content3() {
 }
 
 function srpp_run_shortcode($attr){
-	
 	if(isset($attr['related_post']) && $attr['related_post'] == 2){
 		return srpp_shortcode_content2();
 	}else if(isset($attr['related_post']) && $attr['related_post'] == 3){
@@ -767,8 +766,6 @@ function srpp_post_filter_init1() {
 			if (!$srp_filter_data) return;
 			if(isset($srp_filter_data[0]['position']) && $srp_filter_data[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_1', 5);
-			}else{				
-				add_shortcode('super-related-posts', 'srpp_run_shortcode');				
 			}
 	
 		}
@@ -786,8 +783,6 @@ function srpp_post_filter_init2() {
 			if (!$srp_filter_data2) return;
 			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_2', 5);
-			}else{
-				add_shortcode('super-related-posts', 'srpp_run_shortcode');
 			}
 		}
 	}		
@@ -804,19 +799,21 @@ function srpp_post_filter_init3() {
 			global $srp_filter_data3;
 			if (!$srp_filter_data3) return;
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
-				
 				add_filter('the_content', 'srpp_post_filter_3', 5);
-			}else{
-				add_shortcode('super-related-posts', 'srpp_run_shortcode');
 			}
 		}	
 	}		
+}
+
+function srpp_post_filter_shortcode(){
+	add_shortcode('super-related-posts', 'srpp_run_shortcode');
 }
 
 // watch out that the registration functions are called earlier
 add_action ('init', 'srpp_post_filter_init1');
 add_action ('init', 'srpp_post_filter_init2');
 add_action ('init', 'srpp_post_filter_init3');
+add_action ('init', 'srpp_post_filter_shortcode');
 
 /*
 	Now some routines to handle content filtering
@@ -862,6 +859,14 @@ function srpp_content_filter_init() {
 
 // watch out that the registration functions are called earlier
 add_action ('init', 'srpp_content_filter_init');
+
+/**
+ * We are registering our widget here in wordpress
+ */
+function suprp_related_post_widget(){
+    register_widget('Suprp_Related_Post_Widget');
+}
+add_action('widgets_init', 'suprp_related_post_widget');
 
 function srpwp_label_text($label_key){
 	

@@ -330,9 +330,7 @@ function srpp_display_post_excerpt($match_cat) {
 }
 
 function srpp_display_post_excerpt_i($post_excerpt, $num) {
-	// echo "<pre>";
-	// echo $post_excerpt;
-	// die();
+	
 	?>
 	<tr valign="top" <?php echo $post_excerpt; ?>>
 		<th scope="row"><label for="post_excerpt_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Excerpt?', 'super-related-posts') ?></label></th>
