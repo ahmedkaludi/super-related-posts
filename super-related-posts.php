@@ -24,7 +24,7 @@ if (!defined('SRPP_LIBRARY')) require(SRPP_DIR_NAME.'/includes/common_functions.
 if (!defined('SRPP_OT_LIBRARY')) require(SRPP_DIR_NAME.'/includes/output_tags.php');
 if (!defined('SRPP_ASRP_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin_common_functions.php');
 if (!defined('SRPP_ADMIN_SUBPAGES_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin-subpages.php');
-require_once  SRPP_DIR_NAME.'/admin/related-post-widget.php';
+require_once SRPP_DIR_NAME.'/admin/related-post-widget.php';
 
 $sprp_current_ID = -1;
 
@@ -97,28 +97,47 @@ class SuperRelatedPosts {
 			}
 						
 			if($cat_ids){	
-
+				$is_primary = false;
 				$cat_sql = $cat_ids[0];
 				if(count($cat_ids) > 1){
 					foreach($cat_ids as $cat_id){
 						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
 						$cat_sql = $cat_id;
+						$is_primary = true;
 						break;
 						}
 					}
 				}
 				
-				$wp_term_re   = $table_prefix.'term_relationships';
-				$wp_terms     = $table_prefix.'terms';
-				$wp_term_taxo = $table_prefix.'term_taxonomy';
-				$join   .= $wpdb->prepare(
-					"inner join `$wp_term_re` tt on tt.object_id = p.ID
-					 inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
-					 inner join `$wp_terms` te on  tte.term_id = te.term_id
-					 and tte.taxonomy = 'category'
-					 and te.term_id = %d ",
-					 $cat_sql
-				);		
+				if($is_primary){
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$wp_post_meta = $table_prefix.'postmeta';
+					$join   .= $wpdb->prepare(
+						"inner join $wp_post_meta pm on pm.post_id = p.ID
+						inner join $wp_term_re tt on tt.object_id = p.ID
+						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join $wp_terms te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and pm.meta_value = %d
+						and te.term_id = %d ",
+						$cat_sql,
+						$cat_sql
+					);
+				}else{
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$join   .= $wpdb->prepare(
+						"inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join `$wp_terms` te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category'
+						and te.term_id = %d ",
+						$cat_sql
+					);		
+				}
 			}
 
 			if($tag_ids){				
@@ -254,27 +273,47 @@ class SuperRelatedPosts {
 			
 			
 			if($cat_ids){	
-				
+				$is_primary = false;
 				$cat_sql = $cat_ids[0];
 				if(count($cat_ids) > 1){
 					foreach($cat_ids as $cat_id){
 						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
 						$cat_sql = $cat_id;
+						$is_primary = true;
 						break;
 						}
 					}
 				}
-				$wp_term_re   = $table_prefix.'term_relationships';
-				$wp_terms     = $table_prefix.'terms';
-				$wp_term_taxo = $table_prefix.'term_taxonomy';
-				$join   .= $wpdb->prepare(
-					"inner join `$wp_term_re` tt on tt.object_id = p.ID
-					 inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
-					 inner join `$wp_terms` te on  tte.term_id = te.term_id
-					 and tte.taxonomy = 'category'
-					 and te.term_id = %d ",
-					 $cat_sql
-				);		
+
+				if($is_primary){
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$wp_post_meta = $table_prefix.'postmeta';
+					$join   .= $wpdb->prepare(
+						"inner join $wp_post_meta pm on pm.post_id = p.ID
+						inner join $wp_term_re tt on tt.object_id = p.ID
+						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join $wp_terms te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and pm.meta_value = %d
+						and te.term_id = %d ",
+						$cat_sql,
+						$cat_sql
+					);
+				}else{
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$join   .= $wpdb->prepare(
+						"inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join `$wp_terms` te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category'
+						and te.term_id = %d ",
+						$cat_sql
+					);		
+				}	
 			}
 
 			if($tag_ids){				
@@ -411,28 +450,47 @@ class SuperRelatedPosts {
 			
 			
 			if($cat_ids){	
-				
+				$is_primary = false;
 				$cat_sql = $cat_ids[0];
 				if(count($cat_ids) > 1){
 					foreach($cat_ids as $cat_id){
 						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
 						$cat_sql = $cat_id;
+						$is_primary = true;
 						break;
 						}
 					}
 				}
-				
-				$wp_term_re   = $table_prefix.'term_relationships';
-				$wp_terms     = $table_prefix.'terms';
-				$wp_term_taxo = $table_prefix.'term_taxonomy';
-				$join   .= $wpdb->prepare(
-					"inner join `$wp_term_re` tt on tt.object_id = p.ID
-					 inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
-					 inner join `$wp_terms` te on  tte.term_id = te.term_id
-					 and tte.taxonomy = 'category'
-					 and te.term_id = %d ",
-					 $cat_sql
-				);		
+
+				if($is_primary){
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$wp_post_meta = $table_prefix.'postmeta';
+					$join   .= $wpdb->prepare(
+						"inner join $wp_post_meta pm on pm.post_id = p.ID
+						inner join $wp_term_re tt on tt.object_id = p.ID
+						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join $wp_terms te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and pm.meta_value = %d
+						and te.term_id = %d ",
+						$cat_sql,
+						$cat_sql
+					);
+				}else{
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$join   .= $wpdb->prepare(
+						"inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join `$wp_terms` te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category'
+						and te.term_id = %d ",
+						$cat_sql
+					);		
+				}	
 			}
 
 			if($tag_ids){				
