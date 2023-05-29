@@ -25,6 +25,7 @@ if (!defined('SRPP_OT_LIBRARY')) require(SRPP_DIR_NAME.'/includes/output_tags.ph
 if (!defined('SRPP_ASRP_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin_common_functions.php');
 if (!defined('SRPP_ADMIN_SUBPAGES_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin-subpages.php');
 require_once SRPP_DIR_NAME.'/admin/related-post-widget.php';
+require_once SRPP_DIR_NAME.'/includes/gutenberg/includes/class-gutenberg.php';
 
 $sprp_current_ID = -1;
 
