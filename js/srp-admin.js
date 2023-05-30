@@ -18,10 +18,11 @@ jQuery(document).ready(function($){
                     $(".srpp_progress_bar_body").css("width", response.percentage);
                     $(".srpp_progress_bar_body").text(response.percentage);
                     $(".srpp_progress_bar").addClass('srpp_dnone');         
-                    alert('Cached Successfully');        
+                    alert('Cached Successfully'); 
+                    window.location.reload();  
                 }                
         },'json')
-        .done(function() {        
+        .done(function() {                    
             console.log( "second success" );
         })
         .fail(function() {
@@ -40,21 +41,15 @@ jQuery(document).ready(function($){
         $.get( ajaxurl,{                    
             action:"srpp_start_posts_reset", 
             srp_security_nonce:srp_localize_data.srp_security_nonce
-            }, function(response) {
-                console.log(response);
-                $("#srp-percentage-div").addClass('srpp_dnone');
+            }, function(response) {                
+                
                 current.removeClass('updating-message');                 
-                if(response.status === 'continue'){
-                    $(".srpp_progress_bar").removeClass('srpp_dnone');
-                    $(".srpp_progress_bar_body").css("width", response.percentage);
-                    $(".srpp_progress_bar_body").text(response.percentage);
-                    srpp_start_reset_posts_ajax(current);
+                if(response.status === 'cleared'){
+                    alert('Cleared Successfully');  
+                    location.reload();      
                 }
-                if(response.status === 'finished'){   
-                    $(".srpp_progress_bar_body").css("width", response.percentage);
-                    $(".srpp_progress_bar_body").text(response.percentage);
-                    $(".srpp_progress_bar").addClass('srpp_dnone');         
-                    alert('Reset Successfully');  
+                if(response.status === 'failed'){                       
+                    alert('Cache is already cleared or something went wrong');  
                     location.reload();      
                 }                
         },'json')
