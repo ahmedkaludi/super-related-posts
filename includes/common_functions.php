@@ -217,15 +217,12 @@ function srpp_set_options($option_key, $arg, $default_output_template) {
 	if (!isset($arg['included_cats'])) $arg['included_cats'] = stripslashes(@$options['included_cats']);
 	if (!isset($arg['excluded_authors'])) $arg['excluded_authors'] = stripslashes(@$options['excluded_authors']);
 	if (!isset($arg['included_authors'])) $arg['included_authors'] = stripslashes(@$options['included_authors']);
-
 	if (!isset($arg['display_status_1'])) $arg['display_status_1'] = stripslashes(@$options['display_status_1']);
 	if (!isset($arg['display_status_2'])) $arg['display_status_2'] = stripslashes(@$options['display_status_2']);
 	if (!isset($arg['display_status_3'])) $arg['display_status_3'] = stripslashes(@$options['display_status_3']);
-
 	if (!isset($arg['sort_by_1'])) $arg['sort_by_1'] = stripslashes(@$options['sort_by_1']);
 	if (!isset($arg['sort_by_2'])) $arg['sort_by_2'] = stripslashes(@$options['sort_by_2']);
 	if (!isset($arg['sort_by_3'])) $arg['sort_by_3'] = stripslashes(@$options['sort_by_3']);
-
 	if (!isset($arg['adv_filter_check'])) $arg['adv_filter_check'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_2'])) $arg['adv_filter_check_2'] = stripslashes(@$options['adv_filter_check']);
 	if (!isset($arg['adv_filter_check_3'])) $arg['adv_filter_check_3'] = stripslashes(@$options['adv_filter_check']);
@@ -725,6 +722,7 @@ function srpp_shortcode_content1() {
 	foreach ($srp_filter_data as $data) {		
 		$content = call_user_func_array(array($data['class'], 'execute'), array() );
 	}
+	
 	return $content;
 }
 
@@ -745,7 +743,6 @@ function srpp_shortcode_content3() {
 }
 
 function srpp_run_shortcode($attr){
-	
 	if(isset($attr['related_post']) && $attr['related_post'] == 2){
 		return srpp_shortcode_content2();
 	}else if(isset($attr['related_post']) && $attr['related_post'] == 3){
@@ -769,8 +766,6 @@ function srpp_post_filter_init1() {
 			if (!$srp_filter_data) return;
 			if(isset($srp_filter_data[0]['position']) && $srp_filter_data[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_1', 5);
-			}else{				
-				add_shortcode('super-related-posts', 'srpp_run_shortcode');				
 			}
 	
 		}
@@ -788,8 +783,6 @@ function srpp_post_filter_init2() {
 			if (!$srp_filter_data2) return;
 			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
 				add_filter('the_content', 'srpp_post_filter_2', 5);
-			}else{
-				add_shortcode('super-related-posts', 'srpp_run_shortcode');
 			}
 		}
 	}		
@@ -806,19 +799,21 @@ function srpp_post_filter_init3() {
 			global $srp_filter_data3;
 			if (!$srp_filter_data3) return;
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
-				
 				add_filter('the_content', 'srpp_post_filter_3', 5);
-			}else{
-				add_shortcode('super-related-posts', 'srpp_run_shortcode');
 			}
 		}	
 	}		
+}
+
+function srpp_post_filter_shortcode(){
+	add_shortcode('super-related-posts', 'srpp_run_shortcode');
 }
 
 // watch out that the registration functions are called earlier
 add_action ('init', 'srpp_post_filter_init1');
 add_action ('init', 'srpp_post_filter_init2');
 add_action ('init', 'srpp_post_filter_init3');
+add_action ('init', 'srpp_post_filter_shortcode');
 
 /*
 	Now some routines to handle content filtering
@@ -865,6 +860,14 @@ function srpp_content_filter_init() {
 // watch out that the registration functions are called earlier
 add_action ('init', 'srpp_content_filter_init');
 
+/**
+ * We are registering our widget here in wordpress
+ */
+function suprp_related_post_widget(){
+    register_widget('Suprp_Related_Post_Widget');
+}
+add_action('widgets_init', 'suprp_related_post_widget');
+
 function srpwp_label_text($label_key){
 	
 	global $translation_panel_options;
@@ -891,6 +894,7 @@ function srpwp_on_uninstall()
 		delete_option('srp_posts_caching_status');
 		delete_option('srp_data');
 		delete_option('super_related_posts_meta');
+		delete_option('srp_posts_reset_status');
 
 		$table_name = $table_prefix . 'super_related_posts';
 		$wpdb->query("DROP TABLE `$table_name`");

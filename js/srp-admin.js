@@ -14,11 +14,43 @@ jQuery(document).ready(function($){
                     $(".srpp_progress_bar_body").text(response.percentage);
                     srpp_start_caching_ajax(current);
                 }
-                if(response.status === 'finished'){                                           
+                if(response.status === 'finished'){  
                     $(".srpp_progress_bar_body").css("width", response.percentage);
                     $(".srpp_progress_bar_body").text(response.percentage);
                     $(".srpp_progress_bar").addClass('srpp_dnone');         
-                    alert('Cached Successfully');        
+                    alert('Cached Successfully'); 
+                    window.location.reload();  
+                }                
+        },'json')
+        .done(function() {                    
+            console.log( "second success" );
+        })
+        .fail(function() {
+            current.removeClass('updating-message');             
+            alert('Process broke. Click on Start again');        
+        })
+        .always(function() {
+            //current.removeClass('updating-message'); 
+            console.log( "finished" );
+        });
+
+    }
+
+    function srpp_start_reset_posts_ajax(current){
+        current.addClass('updating-message');
+        $.get( ajaxurl,{                    
+            action:"srpp_start_posts_reset", 
+            srp_security_nonce:srp_localize_data.srp_security_nonce
+            }, function(response) {                
+                
+                current.removeClass('updating-message');                 
+                if(response.status === 'cleared'){
+                    alert('Cleared Successfully');  
+                    location.reload();      
+                }
+                if(response.status === 'failed'){                       
+                    alert('Cache is already cleared or something went wrong');  
+                    location.reload();      
                 }                
         },'json')
         .done(function() {        
@@ -38,6 +70,14 @@ jQuery(document).ready(function($){
     $("#start-caching-btn").click(function(){
             var current = $(this);
             srpp_start_caching_ajax(current);
+    });
+
+    $("#start-reseting-post-btn").click(function(){
+        var result = confirm("Are you sure you want to Clear Cache?");
+        var current = $(this);
+        if (result) {
+            srpp_start_reset_posts_ajax(current);
+        }
     });
 
     $("#adv_filter_check_1").click(function(){
@@ -61,6 +101,32 @@ jQuery(document).ready(function($){
             $("#filter_options").hide();
         }
         });
+
+        $("#post_excerpt").change(function(){
+            if($('#post_excerpt').val() == 'true'){
+                $("#excerpt_length_1").parents('tr').show();
+            }else{
+                $("#excerpt_length_1").parents('tr').hide();
+            }
+        });
+
+        $("#post_excerpt_2").change(function(){
+            if($('#post_excerpt_2').val() == 'true'){
+                $("#excerpt_length_2").parents('tr').show();
+            }else{
+                $("#excerpt_length_2").parents('tr').hide();
+            }
+        });
+
+        $("#post_excerpt_3").change(function(){
+            if($('#post_excerpt_3').val() == 'true'){
+                $("#excerpt_length_3").parents('tr').show();
+            }else{
+                $("#excerpt_length_3").parents('tr').hide();
+            }
+        });
+
+
         $("#pstn_rel_1").change(function(){
             $('#re_position_type_1 option').removeAttr("selected");
             if($('#pstn_rel_1').val() == 'ibc'){

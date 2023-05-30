@@ -416,6 +416,11 @@ function srpp_otf_taglinks($option_key, $result, $ext) {
 function srpp_otf_link($option_key, $result, $ext) {
 	$ttl = srpp_otf_title($option_key, $result, $ext);
 	$pml = srpp_otf_url($option_key, $result, null);
+	if(!empty($result->post_excerpt)){
+		$excerpt_str = wp_strip_all_tags($result->post_excerpt)."...";
+	}else{
+		$excerpt_str = "";
+	}
 	$queryArg['utm_source']   = 'click';
 	$queryArg['utm_medium']   = 'relatedpost';
 	$queryArg['utm_campaign'] = 'relatedpost';
@@ -427,7 +432,7 @@ function srpp_otf_link($option_key, $result, $ext) {
 	if(empty($img)){
 		$img = SRPP_PLUGIN_URI.'/images/default-image.png';
 	}
-	return '<div class="sprp-wrpr"><div class="sprp-txt"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_attr($ttl).'">'.esc_attr($ttl).'</a></div><div class="sprp-img"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_url($ttl).'"><img src="'.esc_url($img).'" width="250" height="175"></a></div></div>';
+	return '<div class="sprp-wrpr"><div class="sprp-txt"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_attr($ttl).'">'.esc_attr($ttl).'</a><p>'.esc_attr($excerpt_str).'</p></div><div class="sprp-img"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_url($ttl).'"><img src="'.esc_url($img).'" width="250" height="175"></a></div></div>';
 }
 
 function srpp_otf_score($option_key, $result, $ext) {
@@ -762,7 +767,7 @@ function srpp_oth_post_featured_image($id, $size = "thumbnail") {
       $thumbnail_full = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
 
       if (($size == "thumbnail") && ($thumbnail_shareaholic[0] !== $thumbnail_full[0])) {
-        $featured_img = esc_attr($thumbnail_shareaholic[0]);
+        $featured_img = esc_attr($thumbnail_full[0]);
       } else {
         if ($size == "thumbnail") {
           $thumbnail_large = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large');

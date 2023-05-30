@@ -2,7 +2,7 @@
 /*
 Plugin Name: Super Related Posts
 Description: Add a highly configurable list of related posts to any posts. Related posts can be based on any combination of word usage in the content, title, or tags.
-Version: 1.2
+Version: 1.3
 Text Domain: super-related-posts
 Author: Magazine3
 Author URI: https://magazine3.company/
@@ -14,7 +14,7 @@ License: GPL2
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'SRPP_VERSION' ) ) {
-    define( 'SRPP_VERSION', '1.2' );
+    define( 'SRPP_VERSION', '1.3' );
 }
 
 define('SRPP_DIR_NAME', dirname( __FILE__ ));
@@ -24,6 +24,9 @@ if (!defined('SRPP_LIBRARY')) require(SRPP_DIR_NAME.'/includes/common_functions.
 if (!defined('SRPP_OT_LIBRARY')) require(SRPP_DIR_NAME.'/includes/output_tags.php');
 if (!defined('SRPP_ASRP_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin_common_functions.php');
 if (!defined('SRPP_ADMIN_SUBPAGES_LIBRARY')) require(SRPP_DIR_NAME.'/admin/admin-subpages.php');
+require_once SRPP_DIR_NAME.'/admin/related-post-widget.php';
+require_once SRPP_DIR_NAME.'/includes/elementor/widget.php';
+require_once SRPP_DIR_NAME.'/includes/gutenberg/includes/class-gutenberg.php';
 
 $sprp_current_ID = -1;
 
@@ -58,11 +61,12 @@ class SuperRelatedPosts {
   } // plugin_action_links
 
 
-	static function execute($args='', $default_output_template='<li>{imagesrc_shareaholic}</li>', $option_key='super-related-posts'){
+	static function execute($args='', $default_output_template='<li>{link}</li>', $option_key='super-related-posts'){
 		global $table_prefix, $wpdb, $wp_version, $sprp_current_ID, $srp_execute_sql_1, $srp_execute_result;
 		$start_time = srpp_microtime();
 											
 		$postid = srpp_current_post_id($sprp_current_ID);
+		
 		$cache_key = $option_key.$postid.$args.'re1';
 		$result = srpp_cache_fetch($postid, $cache_key);
 		if ($result !== false) {
@@ -81,7 +85,8 @@ class SuperRelatedPosts {
 			$sort_by       = $options['sort_by_1'];			
 			$check_age = ('none' !== $options['age1']['direction']);						
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
-												
+
+									
 			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
 				
 			$cat_ids = $tag_ids = array();
@@ -93,18 +98,48 @@ class SuperRelatedPosts {
 				$tag_ids     = srpp_where_match_tags();				
 			}
 						
-			if($cat_ids){				
-				$wp_term_re   = $table_prefix.'term_relationships';
-				$wp_terms     = $table_prefix.'terms';
-				$wp_term_taxo = $table_prefix.'term_taxonomy';
-				$join   .= $wpdb->prepare(
-					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
-						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
+			if($cat_ids){	
+				$is_primary = false;
+				$cat_sql = $cat_ids[0];
+				if(count($cat_ids) > 1){
+					foreach($cat_ids as $cat_id){
+						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						$cat_sql = $cat_id;
+						$is_primary = true;
+						break;
+						}
+					}
+				}
+				
+				if($is_primary){
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$wp_post_meta = $table_prefix.'postmeta';
+					$join   .= $wpdb->prepare(
+						"inner join $wp_post_meta pm on pm.post_id = p.ID
+						inner join $wp_term_re tt on tt.object_id = p.ID
+						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join $wp_terms te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and pm.meta_value = %d
+						and te.term_id = %d ",
+						$cat_sql,
+						$cat_sql
+					);
+				}else{
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$join   .= $wpdb->prepare(
+						"inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join `$wp_terms` te on  tte.term_id = te.term_id
 						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = %d ",
-						$cat_ids[0]
-				);		
+						and te.term_id = %d ",
+						$cat_sql
+					);		
+				}
 			}
 
 			if($tag_ids){				
@@ -138,15 +173,24 @@ class SuperRelatedPosts {
 				}
 				$orderby = $wpdb->prepare(" ORDER BY sp.views DESC LIMIT 0, %d", $options['limit']);				
 				
-			}					
-							
-			$cpost_id 		   = get_the_ID();			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby";			
-			$srp_execute_sql_1 = $sql;			
+			}		
+			
+
+			$cpost_id 		   = get_the_ID();
+						
+			$options_length = get_option('super-related-posts');
+			$post_excerpt = $options_length['post_excerpt'];
+			if($post_excerpt === 'true'){
+				$excerpt_length = $options_length['excerpt_length_1'] ? $options_length['excerpt_length_1'] : '0';
+				$sql = "SELECT ID, post_title, substring(`post_excerpt`, 1, $excerpt_length) as `post_excerpt`  FROM `$wpdb->posts` p $join WHERE $where $orderby";			
+			}else{
+				$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby";			
+			}
+			$srp_execute_sql_1 = $sql;	
+			
 			$results = array();
-			
 			$fetch_result = $wpdb->get_results($sql);
-			
+
 			if(!empty($fetch_result)){
 				foreach ($fetch_result as $value) {					
 					if($value->ID == $cpost_id) {
@@ -160,6 +204,7 @@ class SuperRelatedPosts {
 			$results = false;
 		}
 		$allowed_html = srpp_expanded_allowed_tags();
+
 	    if ($results) {
 			
 			$translations = srpp_prepare_template($options['output_template']);
@@ -181,7 +226,7 @@ class SuperRelatedPosts {
 				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
-		
+	
 		if($output){			
 			$output       = wp_kses($output, $allowed_html);
 			srpp_cache_store($postid, $cache_key, $output);
@@ -223,24 +268,54 @@ class SuperRelatedPosts {
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
-								
 			}	
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
 			}
 			
-			if($cat_ids){				
-				$wp_term_re   = $table_prefix.'term_relationships';
-				$wp_terms     = $table_prefix.'terms';
-				$wp_term_taxo = $table_prefix.'term_taxonomy';
-				$join   .= $wpdb->prepare(
-					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
-						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
+			
+			if($cat_ids){	
+				$is_primary = false;
+				$cat_sql = $cat_ids[0];
+				if(count($cat_ids) > 1){
+					foreach($cat_ids as $cat_id){
+						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						$cat_sql = $cat_id;
+						$is_primary = true;
+						break;
+						}
+					}
+				}
+
+				if($is_primary){
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$wp_post_meta = $table_prefix.'postmeta';
+					$join   .= $wpdb->prepare(
+						"inner join $wp_post_meta pm on pm.post_id = p.ID
+						inner join $wp_term_re tt on tt.object_id = p.ID
+						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join $wp_terms te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and pm.meta_value = %d
+						and te.term_id = %d ",
+						$cat_sql,
+						$cat_sql
+					);
+				}else{
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$join   .= $wpdb->prepare(
+						"inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join `$wp_terms` te on  tte.term_id = te.term_id
 						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = %d ",
-						$cat_ids[0]
-				);		
+						and te.term_id = %d ",
+						$cat_sql
+					);		
+				}	
 			}
 
 			if($tag_ids){				
@@ -278,8 +353,17 @@ class SuperRelatedPosts {
 				
 			}					
 							
-			$cpost_id 		   = get_the_ID();			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";		
+			$cpost_id 		   = get_the_ID();		
+			
+			$options_length = get_option('super-related-posts');
+			$post_excerpt = $options_length['post_excerpt_2'];
+			if($post_excerpt === 'true'){
+				$excerpt_length = $options_length['excerpt_length_2'] ? $options_length['excerpt_length_2'] : '0';
+				$sql = "SELECT ID, post_title, substring(`post_excerpt`, 1, $excerpt_length) as `post_excerpt` FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";				
+			}else{
+				$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";			
+			}
+
 			if($srp_execute_sql_1 === $sql){				
 				$sql =  strstr($sql, 'LIMIT', true);
 				$sql.= $wpdb->prepare("LIMIT %d, %d", ($options['limit']+1), $options['limit_2']);
@@ -366,18 +450,49 @@ class SuperRelatedPosts {
 				$tag_ids     = srpp_where_match_tags();				
 			}
 			
-			if($cat_ids){				
-				$wp_term_re   = $table_prefix.'term_relationships';
-				$wp_terms     = $table_prefix.'terms';
-				$wp_term_taxo = $table_prefix.'term_taxonomy';
-				$join   .= $wpdb->prepare(
-					   "inner join `$wp_term_re` tt on tt.object_id = p.ID
-						inner join `$wp_terms` te on tt.term_taxonomy_id = te.term_id
-						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id = te.term_id
+			
+			if($cat_ids){	
+				$is_primary = false;
+				$cat_sql = $cat_ids[0];
+				if(count($cat_ids) > 1){
+					foreach($cat_ids as $cat_id){
+						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						$cat_sql = $cat_id;
+						$is_primary = true;
+						break;
+						}
+					}
+				}
+
+				if($is_primary){
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$wp_post_meta = $table_prefix.'postmeta';
+					$join   .= $wpdb->prepare(
+						"inner join $wp_post_meta pm on pm.post_id = p.ID
+						inner join $wp_term_re tt on tt.object_id = p.ID
+						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join $wp_terms te on  tte.term_id = te.term_id
+						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and pm.meta_value = %d
+						and te.term_id = %d ",
+						$cat_sql,
+						$cat_sql
+					);
+				}else{
+					$wp_term_re   = $table_prefix.'term_relationships';
+					$wp_terms     = $table_prefix.'terms';
+					$wp_term_taxo = $table_prefix.'term_taxonomy';
+					$join   .= $wpdb->prepare(
+						"inner join `$wp_term_re` tt on tt.object_id = p.ID
+						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+						inner join `$wp_terms` te on  tte.term_id = te.term_id
 						and tte.taxonomy = 'category'
-						and tt.term_taxonomy_id = %d ",
-						$cat_ids[0]
-				);		
+						and te.term_id = %d ",
+						$cat_sql
+					);		
+				}	
 			}
 
 			if($tag_ids){				
@@ -415,8 +530,18 @@ class SuperRelatedPosts {
 				
 			}				
 							
-			$cpost_id 		   = get_the_ID();			
-			$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";		
+			$cpost_id 		   = get_the_ID();		
+			
+			$options_length = get_option('super-related-posts');
+			$post_excerpt = $options_length['post_excerpt_3'];
+			if($post_excerpt === 'true'){
+				$excerpt_length = $options_length['excerpt_length_3'] ? $options_length['excerpt_length_3'] : '0';
+				$sql = "SELECT ID, post_title, substring(`post_excerpt`, 1, $excerpt_length) as `post_excerpt` FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";				
+			}else{
+				$sql = "SELECT ID, post_title FROM `$wpdb->posts` p $join WHERE $where $orderby $limit";
+			}
+
+
 			if($sql === $srp_execute_sql_1 || $sql === $srp_execute_sql_2){							
 				$sql =  strstr($sql, 'LIMIT', true);
 				$sql.= $wpdb->prepare("LIMIT %d, %d", ($options['limit'] + $options['limit_2'] + 1), $options['limit_3'] );				
@@ -527,7 +652,7 @@ function srpp_save_index_entry($postID) {
 	if($post['post_status'] == 'publish'){
 
 		if (is_null($pid)) {
-
+			
 			$wpdb->insert( 
 				$table_name, 
 				array(
@@ -538,7 +663,7 @@ function srpp_save_index_entry($postID) {
 				), 
 				array('%d','%s', '%s', '%s') 
 			);
-			
+			update_option('srp_posts_reset_status', 'continue');
 		} else {
 			$wpdb->query(
 				$wpdb->prepare("UPDATE $table_name SET title=%s, tags=%s, spost_date=%s WHERE pID=%d",

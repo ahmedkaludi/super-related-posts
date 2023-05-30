@@ -32,7 +32,7 @@ function srpp_rp1_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srpp_options_from_post($options, array('age1','sort_by_1','display_status_1', 'limit', 'match_cat', 'match_tags', 'pstn_rel_1', 'para_percent_1', 're_position_type_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
+		$options = srpp_options_from_post($options, array('age1','sort_by_1','display_status_1', 'limit', 'match_cat','post_excerpt','excerpt_length_1', 'match_tags', 'pstn_rel_1', 'para_percent_1', 're_position_type_1', 'para_rel_1', 're_design_1', 'adv_filter_check_1', 'excluded_posts', 'included_posts', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -49,20 +49,20 @@ function srpp_rp1_options_subpage(){
 					<form method="post" action="">
 						<table class="optiontable form-table">
 							<?php	
-							
 							srpp_display_status($options['display_status_1'], $num);		
 							srpp_display_limit($options['limit']);			
 							srpp_sort_post_by_recent_popular_i($options['sort_by_1'], $num);
 							srpp_display_age($options['age1'], $options['sort_by_1'], $num);
 							srpp_display_match_cat($options['match_cat']);
 							srpp_display_match_tags($options['match_tags']);
-							srpp_position_related_i($options['pstn_rel_1'], $num);	
 
+							srpp_display_post_excerpt($options['post_excerpt']);
+							srpp_display_post_excerpt_length_i( $options['post_excerpt'], $options['excerpt_length_1'], $num);
+
+							srpp_position_related_i($options['pstn_rel_1'], $num);	
 							srpp_position_type_i($options['re_position_type_1'],$options['pstn_rel_1'], $num);	
 							srpp_paragraph_i( $options['re_position_type_1'], $options['para_rel_1'], $options['pstn_rel_1'], $num);
 							srpp_percent_i( $options['re_position_type_1'], $options['para_percent_1'], $options['pstn_rel_1'], $num);
-
-
 							srpp_display_shortcode_i($options['para_rel_1'], $options['pstn_rel_1'], $num);	
 							srpp_design_related_i($options['re_design_1'], $num);	
 									
@@ -115,7 +115,7 @@ function srpp_rp2_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srpp_options_from_post($options, array('sort_by_2','display_status_2', 'limit_2', 'age2', 'match_cat_2', 'match_tags_2', 'pstn_rel_2', 're_position_type_2', 'para_rel_2', 'para_percent_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
+		$options = srpp_options_from_post($options, array('sort_by_2','display_status_2', 'limit_2', 'age2', 'match_cat_2','post_excerpt_2','excerpt_length_2', 'match_tags_2', 'pstn_rel_2', 're_position_type_2', 'para_rel_2', 'para_percent_2', 're_design_2', 'position', 'adv_filter_check_2', 'excluded_posts_2', 'included_posts_2', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_2', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -137,6 +137,9 @@ function srpp_rp2_options_subpage(){
 						srpp_display_age($options['age2'], $options['sort_by_2'], $num);
 						srpp_display_match_cat_i($options['match_cat_2'], $num);
 						srpp_display_match_tags_i($options['match_tags_2'], $num);
+
+						srpp_display_post_excerpt_i($options['post_excerpt_2'], $num);
+						srpp_display_post_excerpt_length_i( $options['post_excerpt_2'], $options['excerpt_length_2'], $num);
 						srpp_position_related_i($options['pstn_rel_2'], $num);
 						srpp_position_type_i($options['re_position_type_2'],$options['pstn_rel_2'], $num);
 						srpp_paragraph_i( $options['re_position_type_2'], $options['para_rel_2'], $options['pstn_rel_2'], $num);
@@ -220,6 +223,7 @@ function srpp_pi_options_subpage(){
 	);		
 	$percentage = round( (($cache_count / $posts_count) * 100), 2);	
 	$caching_status = get_option('srp_posts_caching_status');
+	$reset_posts_status = get_option('srp_posts_reset_status');
 	
 	?>
 	<div class="wrap srpp-tab-content">	
@@ -240,8 +244,11 @@ function srpp_pi_options_subpage(){
 		<?php }else{ ?>	
 			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
 		<?php } ?>	
-			
+
+		<button type="button" id="start-reseting-post-btn" class="button button-primary"><?php echo esc_html__( 'Clear Cache', 'super-related-posts' )?></button>
+		
 		</td>
+
 	</tr>
 	</table>
 	</div>
@@ -257,7 +264,7 @@ function srpp_rp3_options_subpage(){
 		check_admin_referer('super-related-posts-update-options');
 		srpp_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = srpp_options_from_post($options, array('sort_by_3', 'display_status_3', 'limit_3', 'age3', 'match_cat_3', 'match_tags_3', 'pstn_rel_3', 're_position_type_3', 'para_rel_3', 'para_percent_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
+		$options = srpp_options_from_post($options, array('sort_by_3', 'display_status_3', 'limit_3', 'age3', 'match_cat_3','post_excerpt_3','excerpt_length_3', 'match_tags_3', 'pstn_rel_3', 're_position_type_3', 'para_rel_3', 'para_percent_3', 're_design_3', 'adv_filter_check_3', 'excluded_posts_3', 'included_posts_3', 'excluded_authors', 'included_authors', 'excluded_cats', 'included_cats', 'tag_str_3', 'custom'));
 		update_option('super-related-posts', $options);
 		// Show a message to say we've done something
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
@@ -279,6 +286,8 @@ function srpp_rp3_options_subpage(){
 						srpp_display_age($options['age3'], $options['sort_by_3'], $num);
 						srpp_display_match_cat_i($options['match_cat_3'], $num);
 						srpp_display_match_tags_i($options['match_tags_3'], $num);
+						srpp_display_post_excerpt_i($options['post_excerpt_3'], $num);
+						srpp_display_post_excerpt_length_i( $options['post_excerpt_3'], $options['excerpt_length_3'], $num);
 						srpp_position_related_i($options['pstn_rel_3'], $num);
 						srpp_position_type_i($options['re_position_type_3'],$options['pstn_rel_3'], $num);	
 						srpp_paragraph_i( $options['re_position_type_3'], $options['para_rel_3'], $options['pstn_rel_3'], $num);
@@ -507,6 +516,32 @@ function srpp_start_posts_caching(){
 	 wp_die();           
 }
 
+add_action( 'wp_ajax_srpp_start_posts_reset', 'srpp_start_posts_reset'); 
+
+function srpp_start_posts_reset(){
+			
+		if ( ! isset( $_GET['srp_security_nonce'] ) ){
+			return; 
+		}
+		
+		if ( !wp_verify_nonce( $_GET['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
+			return;  
+		}
+	
+	 	global $wpdb, $table_prefix;				
+		$table_name = $table_prefix . 'super_related_posts';
+		$result = $wpdb->query("TRUNCATE TABLE `$table_name`");							 	
+		delete_option('srp_posts_caching_status');
+		if($result){			
+			$status = array('status' => 'cleared');
+		}else{
+			$status = array('status' => 'failed');
+		}	 	 	 	 
+
+	 echo wp_json_encode($status);
+	 wp_die();           
+}
+
 // this function gets called when the plugin is installed to set up the index and default options
 function srpp_super_related_posts_install() {
    	global $wpdb;
@@ -561,6 +596,7 @@ function srpp_super_related_posts_install() {
 	// lets us add new options in later versions)
 	if (!isset($options['limit'])) $options['limit'] = 5;
 	if (!isset($options['skip'])) $options['skip'] = 0;
+	if (!isset($options['excerpt_length_1'])) $options['excerpt_length_1'] = 20;
 	if (!isset($options['age'])) {$options['age']['direction'] = 'none'; $options['age']['length'] = '0'; $options['age']['duration'] = 'month';}
 	if (!isset($options['divider'])) $options['divider'] = '';
 	if (!isset($options['omit_current_post'])) $options['omit_current_post'] = 'true';
@@ -579,6 +615,7 @@ function srpp_super_related_posts_install() {
 	if ($options['excluded_posts'] === '9999') $options['excluded_posts'] = '';
 	if (!isset($options['stripcodes'])) $options['stripcodes'] = array(array());
 	if (!isset($options['match_cat'])) $options['match_cat'] = 'false';
+	if (!isset($options['post_excerpt'])) $options['post_excerpt'] = 'false';
 	if (!isset($options['match_tags'])) $options['match_tags'] = 'false';
 	if (!isset($options['match_author'])) $options['match_author'] = 'false';
 	if (!isset($options['custom'])) {$options['custom']['key'] = ''; $options['custom']['op'] = '='; $options['custom']['value'] = '';}
@@ -622,11 +659,15 @@ function srpp_super_related_posts_install() {
 	if (!isset($options['included_posts_2'])) $options['included_posts_2'] = '';
 	if (!isset($options['excluded_posts'])) $options['excluded_posts'] = '';
 	if (!isset($options['excluded_posts_2'])) $options['excluded_posts_2'] = '';
+	if (!isset($options['excerpt_length_2'])) $options['excerpt_length_2'] = 20;
+	if (!isset($options['excerpt_length_3'])) $options['excerpt_length_3'] = 20;
 	if ($options['excluded_posts'] === '9999') $options['excluded_posts'] = '';
 	if ($options['excluded_posts_2'] === '9999') $options['excluded_posts_2'] = '';
 	if (!isset($options['stripcodes'])) $options['stripcodes'] = array(array());
 	if (!isset($options['match_cat'])) $options['match_cat'] = 'false';
 	if (!isset($options['match_cat_2'])) $options['match_cat_2'] = 'false';
+	if (!isset($options['post_excerpt_2'])) $options['post_excerpt_2'] = 'false';
+	if (!isset($options['post_excerpt_3'])) $options['post_excerpt_3'] = 'false';
 	if (!isset($options['match_tags'])) $options['match_tags'] = 'false';
 	if (!isset($options['match_tags_2'])) $options['match_tags_2'] = 'false';
 	if (!isset($options['match_author'])) $options['match_author'] = 'false';
