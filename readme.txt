@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 4.0
 Tested up to: 6.2
 Requires PHP: 5.2
-Stable tag: 1.2
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,19 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 
 == Changelog ==
+
+= 1.3 (30 May 2023) =
+
+* Feature: Create an option to add Excerpt and its length to be added in related posts #20
+* Feature: Create a button to reset cache posts #19
+* Feature: Add WP widget to show related content #18
+* Feature: Add Elementor block to show related content posts #17
+* Feature: Add guternberg block to show related content posts #16
+* Enhancement: Need some query optimization. #22
+* Enhancement: Need Improvement in Match the current post's category #23
+* Fixed: Related Post broken design if we use the shortcode #24
+* Fixed: Related post image is not clear #25
+* Fixed: Need to add prefix for the li { list-style: none; } #26
 
 = 1.2 (15 April 2023) =
 
