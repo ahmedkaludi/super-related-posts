@@ -78,8 +78,11 @@ jQuery(document).ready(function($){
     });
 
     $("#start-reseting-post-btn").click(function(){
+        var result = confirm("Are you sure you want to Clear Cache?");
         var current = $(this);
-       srpp_start_reset_posts_ajax(current);
+        if (result) {
+            srpp_start_reset_posts_ajax(current);
+        }
     });
 
     $("#adv_filter_check_1").click(function(){

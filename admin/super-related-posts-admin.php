@@ -246,9 +246,9 @@ function srpp_pi_options_subpage(){
 		<?php } ?>	
 
 		<?php if($reset_posts_status != 'finished'){ ?>	
-			<button type="button" id="start-reseting-post-btn" class="button button-primary"><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
+			<button type="button" id="start-reseting-post-btn"  class="button button-primary"><?php echo esc_html__( 'Clear Cache', 'super-related-posts' )?></button>
 		<?php }else{ ?>	
-			<button type="button" id="start-reseting-post-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Resetting', 'super-related-posts' )?></button>
+			<button type="button" id="start-reseting-post-btn" class="button button-primary" disabled><?php echo esc_html__( 'Clear Cache', 'super-related-posts' )?></button>
 		<?php } ?>
 		
 		</td>
@@ -452,6 +452,7 @@ function srpp_save_index_entries ($start, $utf8=false, $use_stemmer='false', $ba
 		update_option('srp_posts_offset', 0);
 		update_option('srp_posts_caching_status', 'finished');
 		update_option('srp_posts_reset_status', 'finished');
+		update_option('srp_posts_caching_status', 'continue');
 	}
 			
 	unset($posts);	
@@ -552,7 +553,7 @@ function srpp_start_posts_reset(){
 			);
 
 			$table_name = $table_prefix . 'super_related_posts';
-			$wpdb->query("DELETE FROM `$table_name`");
+			$wpdb->query("TRUNCATE TABLE `$table_name`");
 		}
 		
 
