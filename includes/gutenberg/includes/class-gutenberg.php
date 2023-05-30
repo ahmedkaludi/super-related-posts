@@ -50,8 +50,6 @@ class SUPER_Gutenberg {
             
             add_action( 'init', array( $this, 'register_super_blocks' ) );                    
             add_action( 'enqueue_block_editor_assets', array( $this, 'register_admin_assets' ) ); 
-            add_action( 'enqueue_block_assets', array( $this, 'register_frontend_assets' ) );                     
-                  
         }
 
         /**
@@ -69,28 +67,17 @@ class SUPER_Gutenberg {
              
             if($this->blocks){
             
-                foreach($this->blocks as $key => $block){                        
-                    
-                    if ( $pagenow == 'widgets.php' && version_compare( $GLOBALS['wp_version'], '5.8.0', '>=' ) ) {
+                foreach($this->blocks as $key => $block){  
 
-                        wp_register_script(
-                            $block['handler'],
-                            $block['path'],
-                            array( 'wp-i18n', 'wp-element', 'wp-blocks', 'wp-components', 'wp-edit-widgets' )                                 
-                        );
-
-                    } else {
-
+                    if ( $pagenow != 'widgets.php' ){
                         wp_register_script(
                             $block['handler'],
                             $block['path'],
                             array( 'wp-i18n', 'wp-element', 'wp-blocks', 'wp-components', 'wp-editor' )                                 
                         );
-                        
                     }
-                                      
+                
                     wp_localize_script( $block['handler'], $block['local_var'], $block['local'] );
-                 
                     wp_enqueue_script( $block['handler'] );
                 }
                 
@@ -123,40 +110,6 @@ class SUPER_Gutenberg {
                 }
                                 
             }                                        
-        }
-
-
-         /**
-         * Function to enqueue frontend assets for gutenberg blocks
-         * @Since Version 1.9.7
-         */
-        public function register_frontend_assets() {
-                                                                      
-            global $post;
-           
-            if(function_exists('parse_blocks') && is_object($post)){
-
-                 $blocks = parse_blocks($post->post_content);
-
-                  if($blocks){
-
-                       foreach ($blocks as $parse_blocks){
-
-                           if(isset($parse_blocks['blockName']) && $parse_blocks['blockName'] === 'super/related-posts'){
-                               
-                            wp_enqueue_style(
-                                 'super-g-related-posts-css',
-                                 SRPP_DIR_NAME . '/includes/gutenberg/assets/css/editor.css',
-                                 array()                        
-                            );
-                            
-                           }
-
-                       }
-
-                  }
-            }                        
-                                                                    
         }
 
         public function render_related_posts_data($attributes){

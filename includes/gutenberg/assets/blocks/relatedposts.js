@@ -39,10 +39,7 @@
               
           );
 
-        return [el(InspectorControls,{
-                className:'super-related-post-inspector'},
-               ),
-                el('div',
+        return [el('div',
                     {className:'super-related-post-block-container'},
                     related_post_details
                 )
