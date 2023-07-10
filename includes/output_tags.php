@@ -421,12 +421,6 @@ function srpp_otf_link($option_key, $result, $ext) {
 	}else{
 		$excerpt_str = "";
 	}
-	$queryArg['utm_source']   = 'click';
-	$queryArg['utm_medium']   = 'relatedpost';
-	$queryArg['utm_campaign'] = 'relatedpost';
-	$pml = add_query_arg( 'utm_source',$queryArg['utm_source'] , $pml );
-	$pml = add_query_arg( 'utm_medium',$queryArg['utm_medium'] , $pml );
-	$pml = add_query_arg( 'utm_campaign',$queryArg['utm_campaign'] , $pml );
 	$pdt = srpp_otf_date($option_key, $result, null);
 	$img = srpp_otf_imagesrc_shareaholic($option_key, $result, null);
 	if(empty($img)){
