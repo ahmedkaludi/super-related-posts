@@ -519,7 +519,11 @@ function srpp_post_filter_1($content) {
 	global $srp_filter_data;
 	foreach ($srp_filter_data as $data) {
 		if($data['position'] == 'atc'){
-			$content .= call_user_func_array(array($data['class'], 'execute'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+			$post_filter_param = '';
+			if(isset($data['parameters'])){
+				$post_filter_param = $data['parameters'];
+			}
+			$content .= call_user_func_array(array($data['class'], 'execute'), array($post_filter_param, '<li>{link}</li>', $data['key']));
 		}elseif($data['position'] == 'ibc'){
 		
 			if(!empty($data['paragraph'])){
@@ -610,7 +614,11 @@ function srpp_post_filter_2($content) {
 	global $srp_filter_data2;
 	foreach ($srp_filter_data2 as $data) {
 		if($data['position'] == 'atc'){
-			$content .= call_user_func_array(array($data['class'], 'execute2'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+			$post_filter_param = '';
+			if(isset($data['parameters'])){
+				$post_filter_param = $data['parameters'];
+			}
+			$content .= call_user_func_array(array($data['class'], 'execute2'), array($post_filter_param, '<li>{link}</li>', $data['key']));
 		}elseif($data['position'] == 'ibc'){
 			if(!empty($data['paragraph'])){
 				$closing_p = '</p>';
@@ -693,7 +701,11 @@ function srpp_post_filter_3($content) {
 	global $srp_filter_data3;
 	foreach ($srp_filter_data3 as $data) {
 		if($data['position'] == 'atc'){
-			$content .= call_user_func_array(array($data['class'], 'execute3'), array($data['parameters'], '<li>{link}</li>', $data['key']));
+			$post_filter_param = '';
+			if(isset($data['parameters'])){
+				$post_filter_param = $data['parameters'];
+			}
+			$content .= call_user_func_array(array($data['class'], 'execute3'), array($post_filter_param, '<li>{link}</li>', $data['key']));
 		}elseif($data['position'] == 'ibc'){
 
 			if(!empty($data['paragraph'])){

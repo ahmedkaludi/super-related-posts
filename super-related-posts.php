@@ -645,11 +645,15 @@ class SuperRelatedPosts {
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
-			if ($options['no_text'] !== 'false') {
+			if (isset($options['no_text']) && $options['no_text'] !== 'false') {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = srpp_prepare_template($options['none_text']);
+				$none_text = '';
+				if(isset($options['none_text'])){
+					$none_text = $options['none_text'];
+				}
+				$translations = srpp_prepare_template($none_text);
 				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
 			}
 		}
