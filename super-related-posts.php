@@ -89,9 +89,27 @@ class SuperRelatedPosts {
 									
 			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
 				
+			$category = "category";	$yoast_wpseo_primary = "_yoast_wpseo_primary_category";
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
+				$current_post_type = get_post_type();
+				switch ($current_post_type){
+					case 'product':
+							$category = 'product_cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					case 'al_product':
+							$category = 'al_product-cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					default:
+							$category = 'category';
+				}
 								
 			}	
 			if ($match_tags){			
@@ -103,7 +121,7 @@ class SuperRelatedPosts {
 				$cat_sql = $cat_ids[0];
 				if(count($cat_ids) > 1){
 					foreach($cat_ids as $cat_id){
-						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						if( get_post_meta($postid, $yoast_wpseo_primary,true) == $cat_id ) {
 						$cat_sql = $cat_id;
 						$is_primary = true;
 						break;
@@ -121,7 +139,7 @@ class SuperRelatedPosts {
 						inner join $wp_term_re tt on tt.object_id = p.ID
 						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join $wp_terms te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and tte.taxonomy = '".$category."' and pm.meta_key = '".$yoast_wpseo_primary."'
 						and pm.meta_value = %d
 						and te.term_id = %d ",
 						$cat_sql,
@@ -135,7 +153,7 @@ class SuperRelatedPosts {
 						"inner join `$wp_term_re` tt on tt.object_id = p.ID
 						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join `$wp_terms` te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category'
+						and tte.taxonomy = '".$category."'
 						and te.term_id = %d ",
 						$cat_sql
 					);		
@@ -177,6 +195,11 @@ class SuperRelatedPosts {
 			
 
 			$cpost_id 		   = get_the_ID();
+
+			$current_post_type = get_post_type();
+			if(strpos($current_post_type, 'product') !== false || strpos($current_post_type, 'al_product') !== false){
+				$where .= $wpdb->prepare( " AND p.post_type = %s",  $current_post_type );
+			}
 						
 			$options_length = get_option('super-related-posts');
 			$post_excerpt = $options_length['post_excerpt'];

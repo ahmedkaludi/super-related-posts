@@ -407,6 +407,28 @@ function srpp_where_match_category() {
 	return $catarray;
 }
 
+function srpp_where_match_product_category($product_category)
+{
+	$product_id = get_the_ID();
+	$catarray = array(); $parent_cat = array(); $p_cat = array();
+	$product_categories = wp_get_post_terms($product_id, $product_category);
+	if (!empty($product_categories)) {
+	    foreach ($product_categories as $category) {
+	        $catarray[] = $category->term_id;
+	    }
+
+	    foreach ($product_categories as $pkey => $pvalue) {
+	   		if($pvalue->parent == 0){
+	   			$parent_cat[] = $pvalue->term_id;
+	   			break;
+	   		}	
+	    }
+	    $p_cat = array_merge($parent_cat, $catarray);
+	    $p_cat = array_unique($p_cat);
+	}
+	return $p_cat; 
+}
+
 function srpp_where_match_tags() {
 
 	$args 	  = array('fields' => 'ids');
