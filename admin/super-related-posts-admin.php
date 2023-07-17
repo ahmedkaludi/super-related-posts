@@ -455,7 +455,9 @@ function srpp_save_index_entries ($start, $utf8=false, $use_stemmer='false', $ba
 add_action( 'wp_ajax_srpp_start_posts_caching', 'srpp_start_posts_caching'); 
 
 function srpp_start_posts_caching(){
-			
+	if(!current_user_can('manage_options')){
+        die('-1');
+    }		
 	 if ( ! isset( $_GET['srp_security_nonce'] ) ){
 		return; 
 	 }
@@ -519,7 +521,9 @@ function srpp_start_posts_caching(){
 add_action( 'wp_ajax_srpp_start_posts_reset', 'srpp_start_posts_reset'); 
 
 function srpp_start_posts_reset(){
-			
+		if(!current_user_can('manage_options')){
+        	die('-1');
+    	}	
 		if ( ! isset( $_GET['srp_security_nonce'] ) ){
 			return; 
 		}
@@ -783,7 +787,9 @@ if(!function_exists('srpp_pi_support_options_subpage')){
      * @return type json string
      */
 	function srpp_send_query_message(){   
-    
+        if(!current_user_can('manage_options')){
+        	die('-1');
+    	}
         if ( ! isset( $_POST['srp_security_nonce'] ) ){
            return; 
         }

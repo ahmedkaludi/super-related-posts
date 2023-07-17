@@ -20,7 +20,9 @@ class srpwp_ads_newsletter {
         }
         
         function srp_subscribe_to_news_letter(){
-
+                if(!current_user_can('manage_options')){
+                    die('-1');
+                }
                 if ( ! isset( $_POST['srp_security_nonce'] ) ){
                     return; 
                 }

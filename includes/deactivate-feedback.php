@@ -32,6 +32,7 @@ shuffle($reasons);
 	    <input id="suprp-reloaded-feedback-submit" class="button button-primary" type="submit" name="suprp_disable_submit" value="<?php _e('Submit & Deactivate', 'super_related_posts'); ?>"/>
 	    <a class="button"><?php _e('Only Deactivate', 'super_related_posts'); ?></a>
 	    <a class="suprp-feedback-not-deactivate" href="#"><?php _e('Don\'t deactivate', 'super_related_posts'); ?></a>
+	    <?php if (function_exists('wp_nonce_field')) wp_nonce_field('srp_feedback_check_nonce', 'srp_feedback_nonce'); ?>
 	</form>
     </div>
 </div>
