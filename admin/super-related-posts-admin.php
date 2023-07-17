@@ -49,22 +49,22 @@ function srpp_rp1_options_subpage(){
 					<form method="post" action="">
 						<table class="optiontable form-table">
 							<?php	
-							srpp_display_status($options['display_status_1'], $num);		
+							srpp_display_status(isset($options['display_status_1'])?$options['display_status_1']:'', $num);		
 							srpp_display_limit($options['limit']);			
-							srpp_sort_post_by_recent_popular_i($options['sort_by_1'], $num);
-							srpp_display_age($options['age1'], $options['sort_by_1'], $num);
+							srpp_sort_post_by_recent_popular_i(isset($options['sort_by_1'])?$options['sort_by_1']:'', $num);
+							srpp_display_age(isset($options['age1'])?$options['age1']:'', isset($options['sort_by_1'])?$options['sort_by_1']:'', $num);
 							srpp_display_match_cat($options['match_cat']);
 							srpp_display_match_tags($options['match_tags']);
 
-							srpp_display_post_excerpt($options['post_excerpt']);
-							srpp_display_post_excerpt_length_i( $options['post_excerpt'], $options['excerpt_length_1'], $num);
+							srpp_display_post_excerpt(isset($options['post_excerpt'])?$options['post_excerpt']:'');
+							srpp_display_post_excerpt_length_i( isset($options['post_excerpt'])?$options['post_excerpt']:'', isset($options['excerpt_length_1'])?$options['excerpt_length_1']:'', $num);
 
-							srpp_position_related_i($options['pstn_rel_1'], $num);	
-							srpp_position_type_i($options['re_position_type_1'],$options['pstn_rel_1'], $num);	
-							srpp_paragraph_i( $options['re_position_type_1'], $options['para_rel_1'], $options['pstn_rel_1'], $num);
-							srpp_percent_i( $options['re_position_type_1'], $options['para_percent_1'], $options['pstn_rel_1'], $num);
-							srpp_display_shortcode_i($options['para_rel_1'], $options['pstn_rel_1'], $num);	
-							srpp_design_related_i($options['re_design_1'], $num);	
+							srpp_position_related_i(isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);	
+							srpp_position_type_i(isset($options['re_position_type_1'])?$options['re_position_type_1']:'',isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);	
+							srpp_paragraph_i( isset($options['re_position_type_1'])?$options['re_position_type_1']:'', isset($options['para_rel_1'])?$options['para_rel_1']:'', isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);
+							srpp_percent_i( isset($options['re_position_type_1'])?$options['re_position_type_1']:'', isset($options['para_percent_1'])?$options['para_percent_1']:'', isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);
+							srpp_display_shortcode_i(isset($options['para_rel_1'])?$options['para_rel_1']:'', isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);	
+							srpp_design_related_i(isset($options['re_design_1'])?$options['re_design_1']:'', $num);	
 									
 								
 							?>
@@ -99,7 +99,7 @@ function srpp_rp1_options_subpage(){
 
 				<div class="suprp-design-img row">
 					<label for="re_design_demo_<?php echo esc_attr($num); ?>" class="suprp-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
-					<?php srpp_demo_design_related_i($options['re_design_1'], $num); ?>
+					<?php srpp_demo_design_related_i(isset($options['re_design_1'])?$options['re_design_1']:'', $num); ?>
 				</div>
 			</div>	
 						
@@ -131,21 +131,21 @@ function srpp_rp2_options_subpage(){
 				<form method="post" action="">
 				<table class="optiontable form-table">
 					<?php
-						srpp_display_status($options['display_status_2'], $num);	
-						srpp_display_limit_i($options['limit_2'], $num);				
-						srpp_sort_post_by_recent_popular_i($options['sort_by_2'], $num);
-						srpp_display_age($options['age2'], $options['sort_by_2'], $num);
-						srpp_display_match_cat_i($options['match_cat_2'], $num);
-						srpp_display_match_tags_i($options['match_tags_2'], $num);
+						srpp_display_status(isset($options['display_status_2'])?$options['display_status_2']:'', $num);	
+						srpp_display_limit_i(isset($options['limit_2'])?$options['limit_2']:'', $num);				
+						srpp_sort_post_by_recent_popular_i(isset($options['sort_by_2'])?$options['sort_by_2']:'', $num);
+						srpp_display_age(isset($options['age2'])?$options['age2']:'', isset($options['sort_by_2'])?$options['sort_by_2']:'', $num);
+						srpp_display_match_cat_i(isset($options['match_cat_2'])?$options['match_cat_2']:'', $num);
+						srpp_display_match_tags_i(isset($options['match_tags_2'])?$options['match_tags_2']:'', $num);
 
-						srpp_display_post_excerpt_i($options['post_excerpt_2'], $num);
-						srpp_display_post_excerpt_length_i( $options['post_excerpt_2'], $options['excerpt_length_2'], $num);
-						srpp_position_related_i($options['pstn_rel_2'], $num);
-						srpp_position_type_i($options['re_position_type_2'],$options['pstn_rel_2'], $num);
-						srpp_paragraph_i( $options['re_position_type_2'], $options['para_rel_2'], $options['pstn_rel_2'], $num);
-						srpp_percent_i($options['re_position_type_2'], $options['para_percent_2'], $options['pstn_rel_2'], $num);
-						srpp_display_shortcode($options['para_rel_2'], $options['pstn_rel_2'],$num);
-						srpp_design_related_i($options['re_design_2'], $num);
+						srpp_display_post_excerpt_i(isset($options['post_excerpt_2'])?$options['post_excerpt_2']:'', $num);
+						srpp_display_post_excerpt_length_i( isset($options['post_excerpt_2'])?$options['post_excerpt_2']:'', isset($options['excerpt_length_2'])?$options['excerpt_length_2']:'', $num);
+						srpp_position_related_i(isset($options['pstn_rel_2'])?$options['pstn_rel_2']:'', $num);
+						srpp_position_type_i(isset($options['re_position_type_2'])?$options['re_position_type_2']:'',isset($options['pstn_rel_2'])?$options['pstn_rel_2']:'', $num);
+						srpp_paragraph_i( isset($options['re_position_type_2'])?$options['re_position_type_2']:'', isset($options['para_rel_2'])?$options['para_rel_2']:'', isset($options['pstn_rel_2'])?$options['pstn_rel_2']:'', $num);
+						srpp_percent_i(isset($options['re_position_type_2'])?$options['re_position_type_2']:'', isset($options['para_percent_2'])?$options['para_percent_2']:'', isset($options['pstn_rel_2'])?$options['pstn_rel_2']:'', $num);
+						srpp_display_shortcode(isset($options['para_rel_2'])?$options['para_rel_2']:'', isset($options['pstn_rel_2'])?$options['pstn_rel_2']:'',$num);
+						srpp_design_related_i(isset($options['re_design_2'])?$options['re_design_2']:'', $num);
 						
 					?>
 				</table>
@@ -185,7 +185,7 @@ function srpp_rp2_options_subpage(){
 
 				<div class="suprp-design-img row">
 					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="suprp-design-label"><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
-					<?php srpp_demo_design_related_i($options['re_design_2'], $num); ?>
+					<?php srpp_demo_design_related_i(isset($options['re_design_2'])?$options['re_design_2']:'', $num); ?>
 				</div>
 			</div>	
 	</div>
@@ -280,20 +280,20 @@ function srpp_rp3_options_subpage(){
 				<form method="post" action="">
 				<table class="optiontable form-table">
 					<?php
-						srpp_display_status($options['display_status_3'], $num);	
-						srpp_display_limit_i($options['limit_3'], $num);				
-						srpp_sort_post_by_recent_popular_i($options['sort_by_3'], $num);
-						srpp_display_age($options['age3'], $options['sort_by_3'], $num);
-						srpp_display_match_cat_i($options['match_cat_3'], $num);
-						srpp_display_match_tags_i($options['match_tags_3'], $num);
-						srpp_display_post_excerpt_i($options['post_excerpt_3'], $num);
-						srpp_display_post_excerpt_length_i( $options['post_excerpt_3'], $options['excerpt_length_3'], $num);
-						srpp_position_related_i($options['pstn_rel_3'], $num);
-						srpp_position_type_i($options['re_position_type_3'],$options['pstn_rel_3'], $num);	
-						srpp_paragraph_i( $options['re_position_type_3'], $options['para_rel_3'], $options['pstn_rel_3'], $num);
-						srpp_percent_i( $options['re_position_type_3'], $options['para_percent_3'], $options['pstn_rel_3'], $num);
-						srpp_display_shortcode($options['para_rel_3'], $options['pstn_rel_3'], $num);	
-						srpp_design_related_i($options['re_design_3'], $num);		
+						srpp_display_status(isset($options['display_status_3'])?$options['display_status_3']:'', $num);	
+						srpp_display_limit_i(isset($options['limit_3'])?$options['limit_3']:'', $num);				
+						srpp_sort_post_by_recent_popular_i(isset($options['sort_by_3'])?$options['sort_by_3']:'', $num);
+						srpp_display_age(isset($options['age3'])?$options['age3']:'', isset($options['sort_by_3'])?$options['sort_by_3']:'', $num);
+						srpp_display_match_cat_i(isset($options['match_cat_3'])?$options['match_cat_3']:'', $num);
+						srpp_display_match_tags_i(isset($options['match_tags_3'])?$options['match_tags_3']:'', $num);
+						srpp_display_post_excerpt_i(isset($options['post_excerpt_3'])?$options['post_excerpt_3']:'', $num);
+						srpp_display_post_excerpt_length_i( isset($options['post_excerpt_3'])?$options['post_excerpt_3']:'', isset($options['excerpt_length_3'])?$options['excerpt_length_3']:'', $num);
+						srpp_position_related_i(isset($options['pstn_rel_3'])?$options['pstn_rel_3']:'', $num);
+						srpp_position_type_i(isset($options['re_position_type_3'])?$options['re_position_type_3']:'',isset($options['pstn_rel_3'])?$options['pstn_rel_3']:'', $num);	
+						srpp_paragraph_i( isset($options['re_position_type_3'])?$options['re_position_type_3']:'', isset($options['para_rel_3'])?$options['para_rel_3']:'', isset($options['pstn_rel_3'])?$options['pstn_rel_3']:'', $num);
+						srpp_percent_i( isset($options['re_position_type_3'])?$options['re_position_type_3']:'', isset($options['para_percent_3'])?$options['para_percent_3']:'', isset($options['pstn_rel_3'])?$options['pstn_rel_3']:'', $num);
+						srpp_display_shortcode(isset($options['para_rel_3'])?$options['para_rel_3']:'', isset($options['pstn_rel_3'])?$options['pstn_rel_3']:'', $num);	
+						srpp_design_related_i(isset($options['re_design_3'])?$options['re_design_3']:'', $num);		
 						
 					?>
 				</table>

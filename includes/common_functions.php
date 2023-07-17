@@ -189,105 +189,105 @@ function srpp_set_options($option_key, $arg, $default_output_template) {
 	if (isset($arg['custom-op'])) {$arg['custom']['op'] = $arg['custom-op']; unset($arg['custom-op']);}
 	if (isset($arg['custom-value'])) {$arg['custom']['value'] = $arg['custom-value']; unset($arg['custom-value']);}
 
-	if (!isset($arg['age1']['direction'])) $arg['age1']['direction'] = stripslashes(@$options['age1']['direction']);
-	if (!isset($arg['age1']['length'])) $arg['age1']['length'] 		 = stripslashes(@$options['age1']['length']);
-	if (!isset($arg['age1']['duration'])) $arg['age1']['duration']   = stripslashes(@$options['age1']['duration']);
+	if (isset($arg['age1']) && !isset($arg['age1']['direction'])) $arg['age1']['direction'] = stripslashes(@$options['age1']['direction']);
+	if (isset($arg['age1']) && !isset($arg['age1']['length'])) $arg['age1']['length'] 		 = stripslashes(@$options['age1']['length']);
+	if (isset($arg['age1']) && !isset($arg['age1']['duration'])) $arg['age1']['duration']   = stripslashes(@$options['age1']['duration']);
 
-	if (!isset($arg['age2']['direction'])) $arg['age2']['direction'] = stripslashes(@$options['age2']['direction']);
-	if (!isset($arg['age2']['length'])) $arg['age2']['length'] 		 = stripslashes(@$options['age2']['length']);
-	if (!isset($arg['age2']['duration'])) $arg['age2']['duration']   = stripslashes(@$options['age2']['duration']);
+	if (isset($arg['age2']) && !isset($arg['age2']['direction'])) $arg['age2']['direction'] = stripslashes(@$options['age2']['direction']);
+	if (isset($arg['age2']) && !isset($arg['age2']['length'])) $arg['age2']['length'] 		 = stripslashes(@$options['age2']['length']);
+	if (isset($arg['age2']) && !isset($arg['age2']['duration'])) $arg['age2']['duration']   = stripslashes(@$options['age2']['duration']);
 
-	if (!isset($arg['age3']['direction'])) $arg['age3']['direction'] = stripslashes(@$options['age3']['direction']);
-	if (!isset($arg['age3']['length'])) $arg['age3']['length'] 		 = stripslashes(@$options['age3']['length']);
-	if (!isset($arg['age3']['duration'])) $arg['age3']['duration']   = stripslashes(@$options['age3']['duration']);
+	if (isset($arg['age3']) && !isset($arg['age3']['direction'])) $arg['age3']['direction'] = stripslashes(@$options['age3']['direction']);
+	if (isset($arg['age3']) && !isset($arg['age3']['length'])) $arg['age3']['length'] 		 = stripslashes(@$options['age3']['length']);
+	if (isset($arg['age3']) && !isset($arg['age3']['duration'])) $arg['age3']['duration']   = stripslashes(@$options['age3']['duration']);
 	
 	if (isset($arg['sort-by1'])) {$arg['sort']['by1'] = $arg['sort-by1']; unset($arg['sort-by1']);}
 	if (isset($arg['sort-by2'])) {$arg['sort']['by2'] = $arg['sort-by2']; unset($arg['sort-by2']);}
 	// then fill in the defaults
-	if (!isset($arg['limit'])) $arg['limit'] = stripslashes(@$options['limit']);
-	if (!isset($arg['limit_2'])) $arg['limit_2'] = stripslashes(@$options['limit_2']);
-	if (!isset($arg['limit_3'])) $arg['limit_3'] = stripslashes(@$options['limit_3']);
+	if (!isset($arg['limit']) && isset($options['limit'])) $arg['limit'] = stripslashes(@$options['limit']);
+	if (!isset($arg['limit_2']) && isset($options['limit_2'])) $arg['limit_2'] = stripslashes(@$options['limit_2']);
+	if (!isset($arg['limit_3']) && isset($options['limit_3'])) $arg['limit_3'] = stripslashes(@$options['limit_3']);
 	if (!isset($arg['skip'])) $arg['skip'] = stripslashes(@$options['skip']);
 	$arg['omit_current_post'] = 'true';
-	if (!isset($arg['just_current_post'])) $arg['just_current_post'] = @$options['just_current_post'];
-	if (!isset($arg['tag_str'])) $arg['tag_str'] = stripslashes(@$options['tag_str']);
-	if (!isset($arg['tag_str_2'])) $arg['tag_str_2'] = stripslashes(@$options['tag_str']);
-	if (!isset($arg['tag_str_3'])) $arg['tag_str_3'] = stripslashes(@$options['tag_str']);
-	if (!isset($arg['excluded_cats'])) $arg['excluded_cats'] = stripslashes(@$options['excluded_cats']);
-	if (!isset($arg['included_cats'])) $arg['included_cats'] = stripslashes(@$options['included_cats']);
-	if (!isset($arg['excluded_authors'])) $arg['excluded_authors'] = stripslashes(@$options['excluded_authors']);
-	if (!isset($arg['included_authors'])) $arg['included_authors'] = stripslashes(@$options['included_authors']);
-	if (!isset($arg['display_status_1'])) $arg['display_status_1'] = stripslashes(@$options['display_status_1']);
-	if (!isset($arg['display_status_2'])) $arg['display_status_2'] = stripslashes(@$options['display_status_2']);
-	if (!isset($arg['display_status_3'])) $arg['display_status_3'] = stripslashes(@$options['display_status_3']);
-	if (!isset($arg['sort_by_1'])) $arg['sort_by_1'] = stripslashes(@$options['sort_by_1']);
-	if (!isset($arg['sort_by_2'])) $arg['sort_by_2'] = stripslashes(@$options['sort_by_2']);
-	if (!isset($arg['sort_by_3'])) $arg['sort_by_3'] = stripslashes(@$options['sort_by_3']);
-	if (!isset($arg['adv_filter_check'])) $arg['adv_filter_check'] = stripslashes(@$options['adv_filter_check']);
-	if (!isset($arg['adv_filter_check_2'])) $arg['adv_filter_check_2'] = stripslashes(@$options['adv_filter_check']);
-	if (!isset($arg['adv_filter_check_3'])) $arg['adv_filter_check_3'] = stripslashes(@$options['adv_filter_check']);
-	if (!isset($arg['excluded_posts'])) $arg['excluded_posts'] = stripslashes(@$options['excluded_posts']);
-	if (!isset($arg['excluded_posts_2'])) $arg['excluded_posts_2'] = stripslashes(@$options['excluded_posts']);
-	if (!isset($arg['excluded_posts_3'])) $arg['excluded_posts_3'] = stripslashes(@$options['excluded_posts']);
-	if (!isset($arg['included_posts'])) $arg['included_posts'] = stripslashes(@$options['included_posts']);
-	if (!isset($arg['included_posts_2'])) $arg['included_posts_2'] = stripslashes(@$options['included_posts']);
-	if (!isset($arg['included_posts_3'])) $arg['included_posts_3'] = stripslashes(@$options['included_posts']);
-	if (!isset($arg['re_design_1'])) $arg['re_design_1'] = stripslashes(@$options['re_design_1']);
-	if (!isset($arg['re_design_2'])) $arg['re_design_2'] = stripslashes(@$options['re_design_2']);
-	if (!isset($arg['re_design_3'])) $arg['re_design_3'] = stripslashes(@$options['re_design_3']);
-	if (!isset($arg['stripcodes'])) $arg['stripcodes'] = @$options['stripcodes'];
+	if (!isset($arg['just_current_post']) && isset($options['just_current_post'])) $arg['just_current_post'] = @$options['just_current_post'];
+	if (!isset($arg['tag_str']) && isset($options['tag_str'])) $arg['tag_str'] = stripslashes(@$options['tag_str']);
+	if (!isset($arg['tag_str_2']) && isset($options['tag_str'])) $arg['tag_str_2'] = stripslashes(@$options['tag_str']);
+	if (!isset($arg['tag_str_3']) && isset($options['tag_str'])) $arg['tag_str_3'] = stripslashes(@$options['tag_str']);
+	if (!isset($arg['excluded_cats']) && isset($options['excluded_cats'])) $arg['excluded_cats'] = stripslashes(@$options['excluded_cats']);
+	if (!isset($arg['included_cats']) && isset($options['included_cats'])) $arg['included_cats'] = stripslashes(@$options['included_cats']);
+	if (!isset($arg['excluded_authors']) && isset($options['excluded_authors'])) $arg['excluded_authors'] = stripslashes(@$options['excluded_authors']);
+	if (!isset($arg['included_authors']) && isset($options['included_authors'])) $arg['included_authors'] = stripslashes(@$options['included_authors']);
+	if (!isset($arg['display_status_1']) && isset($options['display_status_1'])) $arg['display_status_1'] = stripslashes(@$options['display_status_1']);
+	if (!isset($arg['display_status_2']) && isset($options['display_status_2'])) $arg['display_status_2'] = stripslashes(@$options['display_status_2']);
+	if (!isset($arg['display_status_3']) && isset($options['display_status_3'])) $arg['display_status_3'] = stripslashes(@$options['display_status_3']);
+	if (!isset($arg['sort_by_1']) && isset($options['sort_by_1'])) $arg['sort_by_1'] = stripslashes(@$options['sort_by_1']);
+	if (!isset($arg['sort_by_2']) && isset($options['sort_by_2'])) $arg['sort_by_2'] = stripslashes(@$options['sort_by_2']);
+	if (!isset($arg['sort_by_3']) && isset($options['sort_by_3'])) $arg['sort_by_3'] = stripslashes(@$options['sort_by_3']);
+	if (!isset($arg['adv_filter_check']) && isset($options['adv_filter_check'])) $arg['adv_filter_check'] = stripslashes(@$options['adv_filter_check']);
+	if (!isset($arg['adv_filter_check_2']) && isset($options['adv_filter_check'])) $arg['adv_filter_check_2'] = stripslashes(@$options['adv_filter_check']);
+	if (!isset($arg['adv_filter_check_3']) && isset($options['adv_filter_check'])) $arg['adv_filter_check_3'] = stripslashes(@$options['adv_filter_check']);
+	if (!isset($arg['excluded_posts']) && isset($options['excluded_posts'])) $arg['excluded_posts'] = stripslashes(@$options['excluded_posts']);
+	if (!isset($arg['excluded_posts_2']) && isset($options['excluded_posts'])) $arg['excluded_posts_2'] = stripslashes(@$options['excluded_posts']);
+	if (!isset($arg['excluded_posts_3']) && isset($options['excluded_posts'])) $arg['excluded_posts_3'] = stripslashes(@$options['excluded_posts']);
+	if (!isset($arg['included_posts']) && isset($options['included_posts'])) $arg['included_posts'] = stripslashes(@$options['included_posts']);
+	if (!isset($arg['included_posts_2']) && isset($options['included_posts'])) $arg['included_posts_2'] = stripslashes(@$options['included_posts']);
+	if (!isset($arg['included_posts_3']) && isset($options['included_posts'])) $arg['included_posts_3'] = stripslashes(@$options['included_posts']);
+	if (!isset($arg['re_design_1']) && isset($options['re_design_1'])) $arg['re_design_1'] = stripslashes(@$options['re_design_1']);
+	if (!isset($arg['re_design_2']) && isset($options['re_design_2'])) $arg['re_design_2'] = stripslashes(@$options['re_design_2']);
+	if (!isset($arg['re_design_3']) && isset($options['re_design_3'])) $arg['re_design_3'] = stripslashes(@$options['re_design_3']);
+	if (!isset($arg['stripcodes']) && isset($options['stripcodes'])) $arg['stripcodes'] = @$options['stripcodes'];
 	$arg['output_template'] = $default_output_template;
-	if (!isset($arg['match_cat'])) $arg['match_cat'] = @$options['match_cat'];
-	if (!isset($arg['match_cat_2'])) $arg['match_cat_2'] = @$options['match_cat'];
-	if (!isset($arg['match_cat_3'])) $arg['match_cat_3'] = @$options['match_cat'];
-	if (!isset($arg['match_tags'])) $arg['match_tags'] = @$options['match_tags'];
-	if (!isset($arg['match_tags_2'])) $arg['match_tags_2'] = @$options['match_tags_2'];
-	if (!isset($arg['match_tags_3'])) $arg['match_tags_3'] = @$options['match_tags_3'];
-	if (!isset($arg['match_author'])) $arg['match_author'] = @$options['match_author'];
-	if (!isset($arg['age'])) $arg['age'] = @$options['age'];
-	if (!isset($arg['custom'])) $arg['custom'] = @$options['custom'];
-	if (!isset($arg['sort'])) $arg['sort'] = @$options['sort'];
-	if (!isset($arg['status'])) $arg['status'] = @$options['status'];
+	if (!isset($arg['match_cat']) && isset($options['match_cat'])) $arg['match_cat'] = @$options['match_cat'];
+	if (!isset($arg['match_cat_2']) && isset($options['match_cat'])) $arg['match_cat_2'] = @$options['match_cat'];
+	if (!isset($arg['match_cat_3']) && isset($options['match_cat'])) $arg['match_cat_3'] = @$options['match_cat'];
+	if (!isset($arg['match_tags']) && isset($options['match_tags'])) $arg['match_tags'] = @$options['match_tags'];
+	if (!isset($arg['match_tags_2']) && isset($options['match_tags_2'])) $arg['match_tags_2'] = @$options['match_tags_2'];
+	if (!isset($arg['match_tags_3']) && isset($options['match_tags_3'])) $arg['match_tags_3'] = @$options['match_tags_3'];
+	if (!isset($arg['match_author']) && isset($options['match_author'])) $arg['match_author'] = @$options['match_author'];
+	if (!isset($arg['age']) && isset($options['age'])) $arg['age'] = @$options['age'];
+	if (!isset($arg['custom']) && isset($options['custom'])) $arg['custom'] = @$options['custom'];
+	if (!isset($arg['sort']) && isset($options['sort'])) $arg['sort'] = @$options['sort'];
+	if (!isset($arg['status']) && isset($options['status'])) $arg['status'] = @$options['status'];
 
 	// just for recent_posts
-	if (!isset($arg['date_modified'])) $arg['date_modified'] = @$options['date_modified'];
+	if (!isset($arg['date_modified']) && isset($options['date_modified'])) $arg['date_modified'] = @$options['date_modified'];
 
 	// just for recent_comments
-	if (!isset($arg['group_by'])) $arg['group_by'] = @$options['group_by'];
-	if (!isset($arg['group_template'])) $arg['group_template'] = stripslashes(@$options['group_template']);
-	if (!isset($arg['show_type'])) $arg['show_type'] = @$options['show_type'];
-	if (!isset($arg['no_author_comments'])) $arg['no_author_comments'] = @$options['no_author_comments'];
-	if (!isset($arg['no_user_comments'])) $arg['no_user_comments'] = @$options['no_user_comments'];
-	if (!isset($arg['unique'])) $arg['unique'] = @$options['unique'];
+	if (!isset($arg['group_by']) && isset($options['group_by'])) $arg['group_by'] = @$options['group_by'];
+	if (!isset($arg['group_template']) && isset($options['group_template'])) $arg['group_template'] = stripslashes(@$options['group_template']);
+	if (!isset($arg['show_type']) && isset($options['show_type'])) $arg['show_type'] = @$options['show_type'];
+	if (!isset($arg['no_author_comments']) && isset($options['no_author_comments'])) $arg['no_author_comments'] = @$options['no_author_comments'];
+	if (!isset($arg['no_user_comments']) && isset($options['no_user_comments'])) $arg['no_user_comments'] = @$options['no_user_comments'];
+	if (!isset($arg['unique']) && isset($options['unique'])) $arg['unique'] = @$options['unique'];
 
 	// just for super_related_posts[feed]
-	if (!isset($arg['combine'])) $arg['combine'] = @$options['crossmatch'];
-	if (!isset($arg['weight_content'])) $arg['weight_content'] = @$options['weight_content'];
-	if (!isset($arg['weight_title'])) $arg['weight_title'] = @$options['weight_title'];
-	if (!isset($arg['weight_tags'])) $arg['weight_tags'] = @$options['weight_tags'];
-	if (!isset($arg['num_terms'])) $arg['num_terms'] = stripslashes(@$options['num_terms']);
-	if (!isset($arg['term_extraction'])) $arg['term_extraction'] = @$options['term_extraction'];
-	if (!isset($arg['hand_links'])) $arg['hand_links'] = @$options['hand_links'];
+	if (!isset($arg['combine']) && isset($options['crossmatch'])) $arg['combine'] = @$options['crossmatch'];
+	if (!isset($arg['weight_content']) && isset($options['weight_content'])) $arg['weight_content'] = @$options['weight_content'];
+	if (!isset($arg['weight_title']) && isset($options['weight_title'])) $arg['weight_title'] = @$options['weight_title'];
+	if (!isset($arg['weight_tags']) && isset($options['weight_tags'])) $arg['weight_tags'] = @$options['weight_tags'];
+	if (!isset($arg['num_terms']) && isset($options['num_terms'])) $arg['num_terms'] = stripslashes(@$options['num_terms']);
+	if (!isset($arg['term_extraction']) && isset($options['term_extraction'])) $arg['term_extraction'] = @$options['term_extraction'];
+	if (!isset($arg['hand_links']) && isset($options['hand_links'])) $arg['hand_links'] = @$options['hand_links'];
 
 	// just for other_posts
-	if (!isset($arg['orderby'])) $arg['orderby'] = stripslashes(@$options['orderby']);
-	if (!isset($arg['orderby_order'])) $arg['orderby_order'] = @$options['orderby_order'];
-	if (!isset($arg['orderby_case'])) $arg['orderby_case'] = @$options['orderby_case'];
+	if (!isset($arg['orderby']) && isset($options['orderby'])) $arg['orderby'] = stripslashes(@$options['orderby']);
+	if (!isset($arg['orderby_order']) && isset($options['orderby_order'])) $arg['orderby_order'] = @$options['orderby_order'];
+	if (!isset($arg['orderby_case']) && isset($options['orderby_case'])) $arg['orderby_case'] = @$options['orderby_case'];
 
 	// the last options cannot be set via arguments
-	$arg['stripcodes'] = @$options['stripcodes'];
-	$arg['utf8'] = @$options['utf8'];
-	$arg['cjk'] = @$options['cjk'];
-	$arg['use_stemmer'] = @$options['use_stemmer'];
-	$arg['batch'] = @$options['batch'];
-	$arg['exclude_users'] = @$options['exclude_users'];
-	$arg['count_home'] = @$options['count_home'];
-	$arg['count_feed'] = @$options['count_feed'];
-	$arg['count_single'] = @$options['count_single'];
-	$arg['count_archive'] = @$options['count_archive'];
-	$arg['count_category'] = @$options['count_category'];
-	$arg['count_page'] = @$options['count_page'];
-	$arg['count_search'] = @$options['count_search'];
+	$arg['stripcodes'] = isset($options['stripcodes'])?@$options['stripcodes']:'';
+	$arg['utf8'] = isset($options['utf8'])?@$options['utf8']:'';
+	$arg['cjk'] = isset($options['cjk'])?@$options['cjk']:'';
+	$arg['use_stemmer'] = isset($options['use_stemmer'])?@$options['use_stemmer']:'';
+	$arg['batch'] = isset($options['batch'])?@$options['batch']:'';
+	$arg['exclude_users'] = isset($options['exclude_users'])?@$options['exclude_users']:'';;
+	$arg['count_home'] = isset($options['count_home'])?@$options['count_home']:'';
+	$arg['count_feed'] = isset($options['count_feed'])?@$options['count_feed']:'';
+	$arg['count_single'] = isset($options['count_single'])?@$options['count_single']:'';
+	$arg['count_archive'] = isset($options['count_archive'])?@$options['count_archive']:'';
+	$arg['count_category'] = isset($options['count_category'])?@$options['count_category']:'';
+	$arg['count_page'] = isset($options['count_page'])?@$options['count_page']:'';
+	$arg['count_search'] = isset($options['count_search'])?@$options['count_search']:'';
 
 	return $arg;
 }
@@ -812,7 +812,7 @@ function srpp_post_filter_init2() {
 		if(!$srp_options){
 			$srp_options = get_option('super-related-posts');
 		}	
-		if($srp_options['display_status_2'] == 1){
+		if(isset($srp_options['display_status_2']) && $srp_options['display_status_2'] == 1){
 			global $srp_filter_data2;
 			if (!$srp_filter_data2) return;
 			if(isset($srp_filter_data2[0]['position']) && $srp_filter_data2[0]['position'] != 'sc'){
@@ -829,7 +829,7 @@ function srpp_post_filter_init3() {
 		if(!$srp_options){
 			$srp_options = get_option('super-related-posts');
 		}	
-		if($srp_options['display_status_3'] == 1){
+		if(isset($srp_options['display_status_3']) && $srp_options['display_status_3'] == 1){
 			global $srp_filter_data3;
 			if (!$srp_filter_data3) return;
 			if(isset($srp_filter_data3[0]['position']) && $srp_filter_data3[0]['position'] != 'sc'){
