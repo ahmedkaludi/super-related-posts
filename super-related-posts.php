@@ -2,7 +2,7 @@
 /*
 Plugin Name: Super Related Posts
 Description: Add a highly configurable list of related posts to any posts. Related posts can be based on any combination of word usage in the content, title, or tags.
-Version: 1.3
+Version: 1.4
 Text Domain: super-related-posts
 Author: Magazine3
 Author URI: https://magazine3.company/
@@ -14,7 +14,7 @@ License: GPL2
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'SRPP_VERSION' ) ) {
-    define( 'SRPP_VERSION', '1.3' );
+    define( 'SRPP_VERSION', '1.4' );
 }
 
 define('SRPP_DIR_NAME', dirname( __FILE__ ));
@@ -82,16 +82,37 @@ class SuperRelatedPosts {
 		if (0 < $options['limit']) {
 			$match_tags = ($options['match_tags'] !== 'false' && $wp_version >= 2.3);			
 			$match_category = ($options['match_cat'] === 'true');
-			$sort_by       = $options['sort_by_1'];			
-			$check_age = ('none' !== $options['age1']['direction']);						
+			$sort_by       = $options['sort_by_1'];		
+			$check_age = 1;
+			if(isset($options['age1']) && isset($options['age1']['direction'])){	
+				$check_age = ('none' !== $options['age1']['direction']);	
+			}					
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
 
 									
 			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
 				
+			$category = "category";	$yoast_wpseo_primary = "_yoast_wpseo_primary_category";
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
+				$current_post_type = get_post_type();
+				switch ($current_post_type){
+					case 'product':
+							$category = 'product_cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					case 'al_product':
+							$category = 'al_product-cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					default:
+							$category = 'category';
+				}
 								
 			}	
 			if ($match_tags){			
@@ -103,7 +124,7 @@ class SuperRelatedPosts {
 				$cat_sql = $cat_ids[0];
 				if(count($cat_ids) > 1){
 					foreach($cat_ids as $cat_id){
-						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						if( get_post_meta($postid, $yoast_wpseo_primary,true) == $cat_id ) {
 						$cat_sql = $cat_id;
 						$is_primary = true;
 						break;
@@ -121,7 +142,7 @@ class SuperRelatedPosts {
 						inner join $wp_term_re tt on tt.object_id = p.ID
 						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join $wp_terms te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and tte.taxonomy = '".$category."' and pm.meta_key = '".$yoast_wpseo_primary."'
 						and pm.meta_value = %d
 						and te.term_id = %d ",
 						$cat_sql,
@@ -135,7 +156,7 @@ class SuperRelatedPosts {
 						"inner join `$wp_term_re` tt on tt.object_id = p.ID
 						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join `$wp_terms` te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category'
+						and tte.taxonomy = '".$category."'
 						and te.term_id = %d ",
 						$cat_sql
 					);		
@@ -177,6 +198,11 @@ class SuperRelatedPosts {
 			
 
 			$cpost_id 		   = get_the_ID();
+
+			$current_post_type = get_post_type();
+			if(strpos($current_post_type, 'product') !== false || strpos($current_post_type, 'al_product') !== false){
+				$where .= $wpdb->prepare( " AND p.post_type = %s",  $current_post_type );
+			}
 						
 			$options_length = get_option('super-related-posts');
 			$post_excerpt = $options_length['post_excerpt'];
@@ -212,7 +238,8 @@ class SuperRelatedPosts {
 				$items[] = srpp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
-			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
+			$opt_divider = isset($options['divider'])?$options['divider']:"\n";
+			$output = implode($opt_divider, $items);
 			//Output
 			//Output escaping is done below before rendering html
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
@@ -257,7 +284,10 @@ class SuperRelatedPosts {
 			$match_category = ($options['match_cat_2'] === 'true');
 			$sort_by       = $options['sort_by_2'];				
 			$use_tag_str = ('' != trim($options['tag_str_2']) && $wp_version >= 2.3);
-			$check_age = ('none' !== $options['age2']['direction']);
+			$check_age = 1;
+			if(isset($options['age2']) && isset($options['age2']['direction'])){
+				$check_age = ('none' !== $options['age2']['direction']);
+			}
 			$check_custom = (trim($options['custom']['key']) !== '');
 			$limit = '0'.', '.$options['limit_2'];
 			$des = isset($options['re_design_2']) ? $options['re_design_2'] : 'd1';
@@ -265,9 +295,27 @@ class SuperRelatedPosts {
 			
 			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
 
+			$category = "category";	$yoast_wpseo_primary = "_yoast_wpseo_primary_category";
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
+				$current_post_type = get_post_type();
+				switch ($current_post_type){
+					case 'product':
+							$category = 'product_cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					case 'al_product':
+							$category = 'al_product-cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					default:
+							$category = 'category';
+				}
 			}	
 			if ($match_tags){			
 				$tag_ids     = srpp_where_match_tags();				
@@ -279,7 +327,7 @@ class SuperRelatedPosts {
 				$cat_sql = $cat_ids[0];
 				if(count($cat_ids) > 1){
 					foreach($cat_ids as $cat_id){
-						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						if( get_post_meta($postid, $yoast_wpseo_primary,true) == $cat_id ) {
 						$cat_sql = $cat_id;
 						$is_primary = true;
 						break;
@@ -297,7 +345,7 @@ class SuperRelatedPosts {
 						inner join $wp_term_re tt on tt.object_id = p.ID
 						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join $wp_terms te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and tte.taxonomy = '".$category."' and pm.meta_key = '".$yoast_wpseo_primary."'
 						and pm.meta_value = %d
 						and te.term_id = %d ",
 						$cat_sql,
@@ -311,7 +359,7 @@ class SuperRelatedPosts {
 						"inner join `$wp_term_re` tt on tt.object_id = p.ID
 						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join `$wp_terms` te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category'
+						and tte.taxonomy = '".$category."'
 						and te.term_id = %d ",
 						$cat_sql
 					);		
@@ -353,7 +401,12 @@ class SuperRelatedPosts {
 				
 			}					
 							
-			$cpost_id 		   = get_the_ID();		
+			$cpost_id 		   = get_the_ID();
+			
+			$current_post_type = get_post_type();
+			if(strpos($current_post_type, 'product') !== false || strpos($current_post_type, 'al_product') !== false){
+				$where .= $wpdb->prepare( " AND p.post_type = %s",  $current_post_type );
+			}		
 			
 			$options_length = get_option('super-related-posts');
 			$post_excerpt = $options_length['post_excerpt_2'];
@@ -392,7 +445,8 @@ class SuperRelatedPosts {
 				$items[] = srpp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
-			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
+			$opt_divider = isset($options['divider'])?$options['divider']:"\n";
+			$output = implode($opt_divider, $items);
 			//Output
 			//Output escaping is done below before rendering html
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
@@ -441,9 +495,27 @@ class SuperRelatedPosts {
 			
 			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
 			
+			$category = "category";	$yoast_wpseo_primary = "_yoast_wpseo_primary_category";
 			$cat_ids = $tag_ids = array();
 			if ($match_category){
 				$cat_ids = srpp_where_match_category();
+				$current_post_type = get_post_type();
+				switch ($current_post_type){
+					case 'product':
+							$category = 'product_cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					case 'al_product':
+							$category = 'al_product-cat';
+							$yoast_wpseo_primary = '_yoast_wpseo_primary_'.$category;
+							$cat_ids = array();
+							$cat_ids = srpp_where_match_product_category($category);
+						break;
+					default:
+							$category = 'category';
+				}
 								
 			}	
 			if ($match_tags){			
@@ -456,7 +528,7 @@ class SuperRelatedPosts {
 				$cat_sql = $cat_ids[0];
 				if(count($cat_ids) > 1){
 					foreach($cat_ids as $cat_id){
-						if( get_post_meta($postid, '_yoast_wpseo_primary_category',true) == $cat_id ) {
+						if( get_post_meta($postid, $yoast_wpseo_primary,true) == $cat_id ) {
 						$cat_sql = $cat_id;
 						$is_primary = true;
 						break;
@@ -474,7 +546,7 @@ class SuperRelatedPosts {
 						inner join $wp_term_re tt on tt.object_id = p.ID
 						inner join $wp_term_taxo tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join $wp_terms te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category' and pm.meta_key = '_yoast_wpseo_primary_category'
+						and tte.taxonomy = '".$category."' and pm.meta_key = '".$yoast_wpseo_primary."'
 						and pm.meta_value = %d
 						and te.term_id = %d ",
 						$cat_sql,
@@ -488,7 +560,7 @@ class SuperRelatedPosts {
 						"inner join `$wp_term_re` tt on tt.object_id = p.ID
 						inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 						inner join `$wp_terms` te on  tte.term_id = te.term_id
-						and tte.taxonomy = 'category'
+						and tte.taxonomy = '".$category."'
 						and te.term_id = %d ",
 						$cat_sql
 					);		
@@ -532,6 +604,11 @@ class SuperRelatedPosts {
 							
 			$cpost_id 		   = get_the_ID();		
 			
+			$current_post_type = get_post_type();
+			if(strpos($current_post_type, 'product') !== false || strpos($current_post_type, 'al_product') !== false){
+				$where .= $wpdb->prepare( " AND p.post_type = %s",  $current_post_type );
+			}
+
 			$options_length = get_option('super-related-posts');
 			$post_excerpt = $options_length['post_excerpt_3'];
 			if($post_excerpt === 'true'){
@@ -576,12 +653,17 @@ class SuperRelatedPosts {
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
 		} else {
 			// if we reach here our query has produced no output ... so what next?
-			if ($options['no_text'] !== 'false') {
+			if (isset($options['no_text']) && $options['no_text'] !== 'false') {
 				$output = ''; // we display nothing at all
 			} else {
 				// we display the blank message, with tags expanded if necessary
-				$translations = srpp_prepare_template($options['none_text']);
-				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$none_text = '';
+				if(isset($options['none_text'])){
+					$none_text = $options['none_text'];
+				}
+				$translations = srpp_prepare_template($none_text);
+				$opt_suffix = isset($options['suffix'])?$options['suffix']:'';
+				$output = $opt_suffix . srpp_expand_template(array(), isset($options['none_text'])?$options['none_text']:'', $translations, $option_key) . $opt_suffix;
 			}
 		}
 		if($output){			

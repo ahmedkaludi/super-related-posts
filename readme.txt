@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 4.0
 Tested up to: 6.2
 Requires PHP: 5.2
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,13 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 
 == Changelog ==
+
+= 1.4 (18 July 2023) =
+
+* Fixed: Posts are getting displayed on product page #28
+* Fixed: UTM parameter getting added, due to this some URL is throwing 404 #29
+* Fixed: Unrelevant Post appearing it should be on Primary Category #30
+* Fixed: Warning showing on frontend #31
 
 = 1.3 (30 May 2023) =
 

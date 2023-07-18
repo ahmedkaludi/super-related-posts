@@ -54,6 +54,15 @@ function suprp_send_feedback() {
     if( isset( $_POST['data'] ) ) {
         parse_str( $_POST['data'], $form );
     }
+    if(!current_user_can('manage_options')){
+        die('-1');
+    }
+    if ( ! isset( $form['srp_feedback_nonce'] ) ){
+       die('-1'); 
+    }
+    if ( !wp_verify_nonce($form['srp_feedback_nonce'], 'srp_feedback_check_nonce' ) ){
+       die('-1');
+    }
 
     $text = '';
     if( isset( $form['suprp_disable_text'] ) ) {
@@ -106,8 +115,16 @@ add_action( 'admin_enqueue_scripts', 'suprp_enqueue_makebetter_email_js' );
 
 
 add_action('wp_ajax_suprp_subscribe_newsletter','suprp_subscribe_for_newsletter');
-add_action('wp_ajax_nopriv_suprp_subscribe_newsletter','suprp_subscribe_for_newsletter');
 function suprp_subscribe_for_newsletter(){
+    if(!current_user_can('manage_options')){
+        die('-1');
+    }
+    if ( ! isset( $_POST['srp_security_nonce'] ) ){
+        die('-1'); 
+    }
+    if ( !wp_verify_nonce( $_POST['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
+        die('-1'); 
+    }
     $api_url = 'http://magazine3.company/wp-json/api/central/email/subscribe';
     $api_params = array(
         'name' => sanitize_text_field($_POST['name']),

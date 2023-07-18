@@ -389,7 +389,7 @@ function srpp_position_related_i($pstn_rel, $num) {
 function srpp_position_type_i($para_pos_type, $pos, $num) {
 	global $wp_version;
 	?>
-	<tr valign="top <?php echo $pos; ?>" <?php if(($pos == 'atc') || ($pos == 'sc')) { echo 'style="display:none"'; } ?>>
+	<tr valign="top <?php echo $pos; ?>" <?php if(empty($pos) || ($pos == 'atc') || ($pos == 'sc')) { echo 'style="display:none"'; } ?>>
 		<th scope="row"><label for="re_position_type_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Position Type:', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="re_position_type_<?php echo esc_attr($num); ?>" id="re_position_type_<?php echo esc_attr($num); ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
@@ -462,7 +462,7 @@ function srpp_paragraph_i( $position_type, $para, $pos, $num) {
 
 function srpp_percent_i( $position_type, $para_percent, $pos, $num) {
 	?>
-	<tr valign="top" <?php if($position_type == 'number_of_paragraph'){ echo 'style="display:none"'; } ?>>
+	<tr valign="top" <?php if(empty($position_type) || $position_type == 'number_of_paragraph'){ echo 'style="display:none"'; } ?>>
 		<th scope="row"><label for="para_percent_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Percent:', 'super-related-posts') ?></label></th>
 		<td><input min="1" name="para_percent_<?php echo esc_attr($num); ?>" type="number" id="para_percent_<?php echo esc_attr($num); ?>" style="width: 60px;" value="<?php if(!empty($para_percent)){ echo esc_attr($para_percent); }else{ echo '50'; } ?>" size="2" /></td>
 	</tr>
