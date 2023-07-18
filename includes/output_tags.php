@@ -75,8 +75,9 @@ function srpp_otf_authorurl($option_key, $result, $ext) {
 }
 
 function srpp_otf_date($option_key, $result, $ext) {
-	if ($ext === 'raw') return $result->post_date;
-	else return srpp_oth_format_date($result->post_date, $ext);
+	$p_date = isset($result->post_date)?$result->post_date:'';
+	if ($ext === 'raw') return $p_date;
+	else return srpp_oth_format_date($p_date, $ext);
 }
 
 function srpp_otf_dateedited($option_key, $result, $ext) {

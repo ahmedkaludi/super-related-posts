@@ -82,8 +82,11 @@ class SuperRelatedPosts {
 		if (0 < $options['limit']) {
 			$match_tags = ($options['match_tags'] !== 'false' && $wp_version >= 2.3);			
 			$match_category = ($options['match_cat'] === 'true');
-			$sort_by       = $options['sort_by_1'];			
-			$check_age = ('none' !== $options['age1']['direction']);						
+			$sort_by       = $options['sort_by_1'];		
+			$check_age = 1;
+			if(isset($options['age1']) && isset($options['age1']['direction'])){	
+				$check_age = ('none' !== $options['age1']['direction']);	
+			}					
 			$des = isset($options['re_design_1']) ? $options['re_design_1'] : 'd1';
 
 									
@@ -235,7 +238,8 @@ class SuperRelatedPosts {
 				$items[] = srpp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
-			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
+			$opt_divider = isset($options['divider'])?$options['divider']:"\n";
+			$output = implode($opt_divider, $items);
 			//Output
 			//Output escaping is done below before rendering html
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
@@ -280,7 +284,10 @@ class SuperRelatedPosts {
 			$match_category = ($options['match_cat_2'] === 'true');
 			$sort_by       = $options['sort_by_2'];				
 			$use_tag_str = ('' != trim($options['tag_str_2']) && $wp_version >= 2.3);
-			$check_age = ('none' !== $options['age2']['direction']);
+			$check_age = 1;
+			if(isset($options['age2']) && isset($options['age2']['direction'])){
+				$check_age = ('none' !== $options['age2']['direction']);
+			}
 			$check_custom = (trim($options['custom']['key']) !== '');
 			$limit = '0'.', '.$options['limit_2'];
 			$des = isset($options['re_design_2']) ? $options['re_design_2'] : 'd1';
@@ -438,7 +445,8 @@ class SuperRelatedPosts {
 				$items[] = srpp_expand_template($result, $options['output_template'], $translations, $option_key);
 			}
 			if ($options['sort']['by1'] !== '') $items = srpp_sort_items($options['sort'], $results, $option_key, $items);
-			$output = implode(($options['divider']) ? $options['divider'] : "\n", $items);
+			$opt_divider = isset($options['divider'])?$options['divider']:"\n";
+			$output = implode($opt_divider, $items);
 			//Output
 			//Output escaping is done below before rendering html
 			$output = '<div class="sprp '.esc_attr($des).'"><h4>'.esc_html__(srpwp_label_text('translation-related-content') , 'super-related-posts').'</h4><ul>' . wp_kses($output, $allowed_html) . '</ul></div>';
@@ -654,7 +662,8 @@ class SuperRelatedPosts {
 					$none_text = $options['none_text'];
 				}
 				$translations = srpp_prepare_template($none_text);
-				$output = $options['prefix'] . srpp_expand_template(array(), $options['none_text'], $translations, $option_key) . $options['suffix'];
+				$opt_suffix = isset($options['suffix'])?$options['suffix']:'';
+				$output = $opt_suffix . srpp_expand_template(array(), isset($options['none_text'])?$options['none_text']:'', $translations, $option_key) . $opt_suffix;
 			}
 		}
 		if($output){			

@@ -330,7 +330,7 @@ function srpp_rp3_options_subpage(){
 
 			    <div class="suprp-design-img row">
 					<label for="re_design_demo_<?php echo esc_attr($num); ?>"  class="suprp-design-label" ><b><?php echo esc_html__('Design Preview:', 'super-related-posts') ?></b></label><br/>
-					<?php srpp_demo_design_related_i($options['re_design_3'], $num); ?>
+					<?php srpp_demo_design_related_i(isset($options['re_design_3'])?$options['re_design_3']:'', $num); ?>
 				</div>
 		   </div>	
 	</div>
