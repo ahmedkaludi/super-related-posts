@@ -422,12 +422,22 @@ function srpp_otf_link($option_key, $result, $ext) {
 	}else{
 		$excerpt_str = "";
 	}
+	$feature_img_alt_txt = $ttl;
+	if(isset($result->ID)){
+		$image_id = get_post_thumbnail_id($result->ID);
+		if($image_id != 0){
+			$feature_img_alt_txt = get_post_meta($image_id , '_wp_attachment_image_alt', true);
+			if(empty($feature_img_alt_txt)){
+				$feature_img_alt_txt = $ttl;	
+			}
+		}
+	}
 	$pdt = srpp_otf_date($option_key, $result, null);
 	$img = srpp_otf_imagesrc_shareaholic($option_key, $result, null);
 	if(empty($img)){
 		$img = SRPP_PLUGIN_URI.'/images/default-image.png';
 	}
-	return '<div class="sprp-wrpr"><div class="sprp-txt"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_attr($ttl).'">'.esc_attr($ttl).'</a><p>'.esc_attr($excerpt_str).'</p></div><div class="sprp-img"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_url($ttl).'"><img src="'.esc_url($img).'" width="250" height="175"></a></div></div>';
+	return '<div class="sprp-wrpr"><div class="sprp-txt"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_attr($ttl).'">'.esc_attr($ttl).'</a><p>'.esc_attr($excerpt_str).'</p></div><div class="sprp-img"><a href="'.esc_url($pml).'" rel="bookmark" title="'.esc_url($ttl).'"><img src="'.esc_url($img).'" width="250" height="175" alt="'.esc_attr($feature_img_alt_txt).'" aria-label="'.esc_attr($ttl).'"></a></div></div>';
 }
 
 function srpp_otf_score($option_key, $result, $ext) {
