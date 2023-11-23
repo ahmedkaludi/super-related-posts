@@ -1019,3 +1019,132 @@ function srp_update_post_views_via_ajax(){
 	wp_die();
 					
 }
+
+add_action( 'wp_ajax_nopriv_srp_load_related_content', 'srp_load_related_content');  
+add_action( 'wp_ajax_srp_load_related_content', 'srp_load_related_content') ;
+function srp_load_related_content()
+{
+	if ( ! isset( $_POST['srp_security_nonce'] ) ){
+		return;
+	}
+	 
+	if ( !wp_verify_nonce( $_POST['srp_security_nonce'], 'srp_ajax_check_nonce' ) ){
+		return;
+	}
+
+	if(!isset($_POST['post_id']) || (isset($_POST['post_id']) && empty($_POST['post_id']))){
+		return;
+	}
+	$response_data = array();
+	$response_data['post_content'] = '';
+	$response_data['offset'] = '';
+		global $table_prefix, $wpdb;
+		$srp_option_data = get_option('srp_data');
+		if(isset($srp_option_data['srpwp_infinite_scrolling'])){
+			// $current_url     = wp_get_referer();
+			// $url_post_id 		 = url_to_postid( $current_url );
+			$post_id = intval($_POST['post_id']);
+
+			$table_name = $table_prefix . 'super_related_posts';
+
+			$offset = 0;
+			if(isset($_POST['offset']) && $_POST['offset'] > 0){
+				$offset = intval($_POST['offset']);	
+			}else{
+				update_option('srp_post_offset', $offset);
+			}
+
+			$join   = "INNER JOIN `$table_name` sp ON p.ID=sp.pID ";
+				
+			$category = "category";
+			$cat_ids = array();
+
+			$cat_ids = srpp_where_match_category($post_id);
+			$current_post_type = get_post_type($post_id);
+			
+			switch ($current_post_type){
+				case 'product':
+						$category = 'product_cat';
+						$cat_ids = array();
+						$cat_ids = srpp_where_match_product_category($category, $post_id);
+					break;
+				case 'al_product':
+						$category = 'al_product-cat';
+						$cat_ids = array();
+						$cat_ids = srpp_where_match_product_category($category, $post_id);
+					break;
+				default:
+						$category = 'category';
+			}				
+						
+			if($cat_ids){	
+				$is_primary = false;
+				$cat_sql = $cat_ids[0];
+
+				$wp_term_re   = $table_prefix.'term_relationships';
+				$wp_terms     = $table_prefix.'terms';
+				$wp_term_taxo = $table_prefix.'term_taxonomy';
+				$join   .= $wpdb->prepare(
+					"inner join `$wp_term_re` tt on tt.object_id = p.ID
+					inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
+					inner join `$wp_terms` te on  tte.term_id = te.term_id
+					and tte.taxonomy = '".$category."'
+					and te.term_id = %d ",
+					$cat_sql
+				);		
+			}
+
+			$where = $wpdb->prepare("p.post_status = %s", 'publish');
+			$where .= $wpdb->prepare(" AND p.ID != %d", $post_id);
+			$where .= $wpdb->prepare(" AND post_type = %s", 'post');
+			$orderby = $wpdb->prepare(" ORDER BY id DESC LIMIT %d, 1", $offset);				
+
+			$cpost_id 		   = get_the_ID();
+
+			$current_post_type = get_post_type();
+			if(strpos($current_post_type, 'product') !== false || strpos($current_post_type, 'al_product') !== false){
+				$where .= $wpdb->prepare( " AND p.post_type = %s",  $current_post_type );
+			}
+						
+			$sql = "SELECT ID, post_title, post_content FROM `$wpdb->posts` p $join WHERE $where $orderby";			
+			// echo "<pre>sql===== "; print_r($sql); die;
+			$fetch_result = $wpdb->get_results($sql);
+
+			if(empty($fetch_result)){
+				$response_data['offset'] = 'finished';	
+			}else{
+				if(isset($fetch_result) && $fetch_result[0] ){
+					if($fetch_result[0]->ID !== $post_id){
+						if(isset($fetch_result[0]->post_content)){
+							$response_data['post_title'] = $fetch_result[0]->post_title;
+							$response_data['post_content'] = apply_filters('the_content', $fetch_result[0]->post_content);
+							$response_data['post_parmalink'] = get_permalink($fetch_result[0]->ID);
+							$featured_image = '';
+							if (has_post_thumbnail($fetch_result[0]->ID)) {
+							    $featured_image = get_the_post_thumbnail($fetch_result[0]->ID, 'full');
+							}
+							$response_data['featured_image'] = $featured_image;
+						}
+					}
+				}
+				if(get_option('srp_post_offset') >= 0){
+					$response_data['offset'] = get_option('srp_post_offset') + 1;
+				}
+			}
+			update_option('srp_post_offset', $response_data['offset']);
+		}
+		echo json_encode($response_data);
+		wp_die();
+}
+
+add_filter('the_content', 'srp_add_div_wrapper', 4);
+function srp_add_div_wrapper($content)
+{
+	$srp_option_data = get_option('srp_data');
+	if(isset($srp_option_data['srpwp_infinite_scrolling'])){
+		$content .= '<input type="hidden" id="srp-infinite-scroll" value="on" />';
+		$content .= '<input type="hidden" id="srp-current-post-id" value="'.esc_attr(get_the_ID()).'" />';
+	}
+	$content .= '<div id="srp-content-wrapper"></div>';
+	return $content;
+}

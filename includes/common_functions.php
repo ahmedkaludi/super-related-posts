@@ -387,10 +387,13 @@ function srpp_current_post_id ($manual_current_ID = -1) {
 	Functions to fill in the WHERE part of the workhorse SQL
 */
 
-function srpp_where_match_category() {
+function srpp_where_match_category($post_id=null) {
 	$cat_ids = '';
 	$catarray = array();
 	$cat_id_obj = get_the_category();
+	if(!empty($post_id)){
+		$cat_id_obj = get_the_category($post_id);	
+	}
 	if(!empty($cat_id_obj)){
 		foreach($cat_id_obj as $cat) {
 			if ($cat->cat_ID) $cat_ids .= $cat->cat_ID . ',';
@@ -407,9 +410,12 @@ function srpp_where_match_category() {
 	return $catarray;
 }
 
-function srpp_where_match_product_category($product_category)
+function srpp_where_match_product_category($product_category, $id=null)
 {
 	$product_id = get_the_ID();
+	if(!empty($id)){
+		$product_id = $id;	
+	}
 	$catarray = array(); $parent_cat = array(); $p_cat = array();
 	$product_categories = wp_get_post_terms($product_id, $product_category);
 	if (!empty($product_categories)) {
