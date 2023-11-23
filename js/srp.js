@@ -65,29 +65,32 @@ jQuery(document).ready(function($){
     */
     function srp_load_related_content(offset) {
         let currentPostId = $('#srp-current-post-id').val();
-        $.ajax({
-            type: "POST",
-            url:srp_localize_front_data.ajax_url,
-            data: {
-                action: 'srp_load_related_content',
-                offset: offset, 
-                post_id: currentPostId, 
-                srp_security_nonce:srp_localize_front_data.srp_security_nonce
-            },
-            async: false,
-            success: function(responseData){
-                let objResp = JSON.parse(responseData);
-                if(objResp.offset && objResp.offset != 'finished'){
-                    srpPostOffset = objResp.offset;  
-                    if(objResp.post_content.length > 0){
-                        let loadedPost = `<div class="srp-post-details" data-url="${objResp.post_parmalink}"><div class="srp-post-title"><h1>${objResp.post_title}</h1></div>${objResp.featured_image}<div class="srp-post-content">${objResp.post_content}</div><div>`;
-                        $('#srp-content-wrapper').append(loadedPost); 
-                        history.replaceState(null, null, objResp.post_parmalink); 
-                        $('html, body').scrollTop($(".srp-post-details").last().offset().top);
-                    }  
-                }      
-            } 
-        });  
+        let currentPostType = $('#srp-current-post-type').val();
+        if(currentPostType == 'post'){
+            $.ajax({
+                type: "POST",
+                url:srp_localize_front_data.ajax_url,
+                data: {
+                    action: 'srp_load_related_content',
+                    offset: offset, 
+                    post_id: currentPostId, 
+                    srp_security_nonce:srp_localize_front_data.srp_security_nonce
+                },
+                async: false,
+                success: function(responseData){
+                    let objResp = JSON.parse(responseData);
+                    if(objResp.offset && objResp.offset != 'finished'){
+                        srpPostOffset = objResp.offset;  
+                        if(objResp.post_content.length > 0){
+                            let loadedPost = `<div class="srp-post-details" data-url="${objResp.post_parmalink}"><div class="srp-post-title"><h1>${objResp.post_title}</h1></div>${objResp.featured_image}<div class="srp-post-content">${objResp.post_content}</div><div>`;
+                            $('#srp-content-wrapper').append(loadedPost); 
+                            history.replaceState(null, null, objResp.post_parmalink); 
+                            $('html, body').scrollTop($(".srp-post-details").last().offset().top);
+                        }  
+                    }      
+                } 
+            }); 
+        } 
     }
 
     /* 
