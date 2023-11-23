@@ -460,9 +460,7 @@ jQuery(document).ready(function($){
                          button= jQuery ('<a id="pointer-close" class="button-secondary">' + srp_localize_data.button1 + '</a>');
                          button_2= jQuery ('#pointer-close.button');
                          button.bind ('click.pointer', function () {
-                            if(flag == 1){
-                                 t.element.pointer ('close');
-                            }
+                            t.element.pointer ('close');
                          });
                          button_2.on('click', function() {
                            setTimeout(function(){ 

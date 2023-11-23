@@ -44,7 +44,7 @@ function srpp_rp1_options_subpage(){
 
 			<div class="suprp-section-part" style="display: inline-flex;"> 
 				
-					<form method="post" action="">
+					<form method="post">
 						<table class="srp-optiontable form-table" id="srpwp-module-table-wrapper">
 							<?php	
 							srpp_display_status(isset($options['display_status_1'])?$options['display_status_1']:'', $num);
@@ -126,7 +126,7 @@ function srpp_rp2_options_subpage(){
 		<?php } ?>
 
 			<div class="suprp-section-part" style="display: inline-flex;">
-				<form method="post" action="">
+				<form method="post">
 				<table class="srp-optiontable form-table">
 					<?php
 						srpp_display_status(isset($options['display_status_2'])?$options['display_status_2']:'', $num);	
@@ -224,19 +224,19 @@ function srpp_pi_options_subpage(){
 	$reset_posts_status = get_option('srp_posts_reset_status');
 	
 	?>
-	<!-- <div class="wrap srpp-tab-content">	 -->
-	<?php 
-		if($caching_status != 'finished'){
-			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).esc_html__( '% is completed. Please start again to finish' , 'super-related-posts').'</p></div>';	
-		}
-	?>			
-	<div class="srpp_progress_bar srpp_dnone">
-        <div class="srpp_progress_bar_body" style="width: 50%;">50%</div>
-    </div>
+	<!-- <div class="wrap srpp-tab-content">	 -->			
     <div class="srpwp-settings-div srpp_cache_div">
 		<div class="srppwp-setting-sec-label" id="srpwp-cache-heading">
 			<h3><?php echo esc_html__('Caching', 'super_related_posts') ?></h3>
 		</div>
+		<?php 
+		if($caching_status != 'finished'){
+			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).esc_html__( '% is completed. Please start again to finish' , 'super-related-posts').'</p></div>';	
+		}
+		?>
+		<div class="srpp_progress_bar srpp_dnone">
+	        <div class="srpp_progress_bar_body" style="width: 50%;">50%</div>
+	    </div>
 		<div class="srppwp-setting-sec-body srpwp-mt12">
 			<div class="srpwp-setting-label"><strong><?php echo esc_html__('Cache Posts', 'super-related-posts') ?></strong></div>
 			<div class="srpwp-setting-field">
@@ -275,7 +275,7 @@ function srpp_rp3_options_subpage(){
 		<?php } ?>
 			<div class="suprp-section-part" style="display: inline-flex;">
 
-				<form method="post" action="">
+				<form method="post">
 				<table class="srp-optiontable form-table">
 					<?php
 						srpp_display_status(isset($options['display_status_3'])?$options['display_status_3']:'', $num);	
@@ -985,7 +985,7 @@ function srpp_pi_settings()
 		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
 	}
 	?>  
-	<form method="post" action="">
+	<form method="post">
 		<div class="wrap srpp-tab-content"> 
 			<?php 
 				srpp_features_option_page();
