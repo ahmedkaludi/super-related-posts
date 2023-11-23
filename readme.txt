@@ -3,9 +3,9 @@ Contributors: magazine3
 Tags: Related Posts, Contextual Related Posts, Similar Posts, Related, Related Content
 Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 4.0
-Tested up to: 6.2
+Tested up to: 6.4
 Requires PHP: 5.2
-Stable tag: 1.4
+Stable tag: 1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,12 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 
 == Changelog ==
+
+= 1.5 (23 November 2023) =
+
+* Fixed: Alt tag is missing on super relates post thumbnail #33
+* Feature: Infinite scroll Related Content/Recent Content #36
+* Fixed: Tested with WordPress 6.4 and update readme.txt #37
 
 = 1.4 (18 July 2023) =
 
