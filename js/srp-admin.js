@@ -520,10 +520,10 @@ jQuery(document).ready(function($){
             }
 
         }else{
-            $('.optiontable tr').hide();
+            $('.srp-optiontable tr').hide();
             $('.suprp-design-img').hide();
             $("#filter_options tr").hide();
-            $('.optiontable tr:first').show();
+            $('.srp-optiontable tr:first').show();
         }
      });
      /* Display super related options ends here */
@@ -535,8 +535,8 @@ jQuery(document).ready(function($){
                 $("#filter_options tr").show();    
             }   
         }else{
-             $('.optiontable tr').hide();
-             $('.optiontable tr:first').show();
+             $('.srp-optiontable tr').hide();
+             $('.srp-optiontable tr:first').show();
              $('.suprp-design-img').hide();
              $("#filter_options tr").hide();
         }

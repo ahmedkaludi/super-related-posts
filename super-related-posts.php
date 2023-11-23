@@ -1088,9 +1088,9 @@ function srp_load_related_content()
 					"inner join `$wp_term_re` tt on tt.object_id = p.ID
 					inner join `$wp_term_taxo` tte on tte.term_taxonomy_id =tt.term_taxonomy_id
 					inner join `$wp_terms` te on  tte.term_id = te.term_id
-					and tte.taxonomy = '".$category."'
+					and tte.taxonomy = %s
 					and te.term_id = %d ",
-					$cat_sql
+					$category,$cat_sql
 				);		
 			}
 
@@ -1106,8 +1106,8 @@ function srp_load_related_content()
 				$where .= $wpdb->prepare( " AND p.post_type = %s",  $current_post_type );
 			}
 						
-			$sql = "SELECT ID, post_title, post_content FROM `$wpdb->posts` p $join WHERE $where $orderby";			
-			// echo "<pre>sql===== "; print_r($sql); die;
+			$sql = $wpdb->prepare("SELECT ID, post_title, post_content FROM `$wpdb->posts` p $join WHERE $where $orderby");			
+
 			$fetch_result = $wpdb->get_results($sql);
 
 			if(empty($fetch_result)){
@@ -1144,7 +1144,7 @@ function srp_add_div_wrapper($content)
 	if(isset($srp_option_data['srpwp_infinite_scrolling'])){
 		$content .= '<input type="hidden" id="srp-infinite-scroll" value="on" />';
 		$content .= '<input type="hidden" id="srp-current-post-id" value="'.esc_attr(get_the_ID()).'" />';
+		$content .= '<div id="srp-content-wrapper"></div>';
 	}
-	$content .= '<div id="srp-content-wrapper"></div>';
 	return $content;
 }
