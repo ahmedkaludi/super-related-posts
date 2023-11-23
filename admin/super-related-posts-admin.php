@@ -13,12 +13,10 @@ function srpp_options_page(){
 		esc_html__('Super Related Posts ', 'super-related-posts');
 	echo '</h2></div>';
 	$m = new srp_admin_subpages();
-	$m->add_subpage('Related Post1',  'related_post1', 'srpp_rp1_options_subpage');
-	$m->add_subpage('Related Post2',  'related_post2', 'srpp_rp2_options_subpage');
-	$m->add_subpage('Related Post3',  'related_post3', 'srpp_rp3_options_subpage');
-	$m->add_subpage('Posts Caching', 'posts_caching', 'srpp_pi_options_subpage');
-	$m->add_subpage('Translation Panel', 'srpp_translation', 'srpp_pi_translation_options_subpage');
-	$m->add_subpage('Advanced', 'srpp_advanced', 'srpp_pi_advanced_options_subpage');
+	$m->add_subpage('Related Post 1',  'related_post1', 'srpp_rp1_options_subpage');
+	$m->add_subpage('Related Post 2',  'related_post2', 'srpp_rp2_options_subpage');
+	$m->add_subpage('Related Post 3',  'related_post3', 'srpp_rp3_options_subpage');
+	$m->add_subpage('Settings',  'srpp_settings', 'srpp_pi_settings');
 	$m->add_subpage('Support', 'srpp_support', 'srpp_pi_support_options_subpage');
 	$m->display();
 }
@@ -46,10 +44,11 @@ function srpp_rp1_options_subpage(){
 
 			<div class="suprp-section-part" style="display: inline-flex;"> 
 				
-					<form method="post" action="">
-						<table class="optiontable form-table">
+					<form method="post">
+						<table class="srp-optiontable form-table" id="srpwp-module-table-wrapper">
 							<?php	
-							srpp_display_status(isset($options['display_status_1'])?$options['display_status_1']:'', $num);		
+							srpp_display_status(isset($options['display_status_1'])?$options['display_status_1']:'', $num);
+							srpp_design_related_i(isset($options['re_design_1'])?$options['re_design_1']:'', $num);		
 							srpp_display_limit($options['limit']);			
 							srpp_sort_post_by_recent_popular_i(isset($options['sort_by_1'])?$options['sort_by_1']:'', $num);
 							srpp_display_age(isset($options['age1'])?$options['age1']:'', isset($options['sort_by_1'])?$options['sort_by_1']:'', $num);
@@ -63,13 +62,12 @@ function srpp_rp1_options_subpage(){
 							srpp_position_type_i(isset($options['re_position_type_1'])?$options['re_position_type_1']:'',isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);	
 							srpp_paragraph_i( isset($options['re_position_type_1'])?$options['re_position_type_1']:'', isset($options['para_rel_1'])?$options['para_rel_1']:'', isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);
 							srpp_percent_i( isset($options['re_position_type_1'])?$options['re_position_type_1']:'', isset($options['para_percent_1'])?$options['para_percent_1']:'', isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);
-							srpp_display_shortcode_i(isset($options['para_rel_1'])?$options['para_rel_1']:'', isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);	
-							srpp_design_related_i(isset($options['re_design_1'])?$options['re_design_1']:'', $num);	
+							srpp_display_shortcode_i(isset($options['para_rel_1'])?$options['para_rel_1']:'', isset($options['pstn_rel_1'])?$options['pstn_rel_1']:'', $num);		
 									
 								
 							?>
 						</table>
-						<table class="optiontable form-table">
+						<table class="srp-optiontable form-table">
 							<?php 
 								if(isset($options['adv_filter_check_1'])){
 									srpp_adv_filter_switch($options['adv_filter_check_1'], $num);
@@ -80,7 +78,7 @@ function srpp_rp1_options_subpage(){
 						<?php
 							$hide_filter = (isset($options['adv_filter_check_1']) && $options['adv_filter_check_1'] == 1) ? '' : 'style="display:none"';
 						?>
-						<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
+						<table id="filter_options" class="srp-optiontable form-table" <?php echo $hide_filter; ?>>
 							<?php
 								srpp_display_excluded_posts($options['excluded_posts']);
 								srpp_display_included_posts($options['included_posts']);
@@ -128,8 +126,8 @@ function srpp_rp2_options_subpage(){
 		<?php } ?>
 
 			<div class="suprp-section-part" style="display: inline-flex;">
-				<form method="post" action="">
-				<table class="optiontable form-table">
+				<form method="post">
+				<table class="srp-optiontable form-table">
 					<?php
 						srpp_display_status(isset($options['display_status_2'])?$options['display_status_2']:'', $num);	
 						srpp_display_limit_i(isset($options['limit_2'])?$options['limit_2']:'', $num);				
@@ -149,7 +147,7 @@ function srpp_rp2_options_subpage(){
 						
 					?>
 				</table>
-				<table class="optiontable form-table">
+				<table class="srp-optiontable form-table">
 					<?php 
 						if(isset($options['adv_filter_check_2'])){
 							srpp_adv_filter_switch($options['adv_filter_check_2'], $num); 
@@ -159,7 +157,7 @@ function srpp_rp2_options_subpage(){
 				<?php
 					$hide_filter = (isset($options['adv_filter_check_2']) && $options['adv_filter_check_2'] == 1) ? '' : 'style="display:none"';
 				?>
-				<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
+				<table id="filter_options" class="srp-optiontable form-table" <?php echo $hide_filter; ?>>
 					<?php
 						if(isset($options['excluded_posts_2'])){
 							srpp_display_excluded_posts_i($options['excluded_posts_2'], $num);
@@ -226,31 +224,31 @@ function srpp_pi_options_subpage(){
 	$reset_posts_status = get_option('srp_posts_reset_status');
 	
 	?>
-	<div class="wrap srpp-tab-content">	
-	<?php 
+	<!-- <div class="wrap srpp-tab-content">	 -->			
+    <div class="srpwp-settings-div srpp_cache_div">
+		<div class="srppwp-setting-sec-label" id="srpwp-cache-heading">
+			<h3><?php echo esc_html__('Caching', 'super_related_posts') ?></h3>
+		</div>
+		<?php 
 		if($caching_status != 'finished'){
 			echo '<div id="srp-percentage-div"><p> '.esc_html($percentage).esc_html__( '% is completed. Please start again to finish' , 'super-related-posts').'</p></div>';	
 		}
-	?>			
-	<div class="srpp_progress_bar srpp_dnone">
-        <div class="srpp_progress_bar_body" style="width: 50%;">50%</div>
-    </div>
-	<table class="optiontable form-table">
-	<tr valign="top">
-		<th scope="row"><label for=""><?php echo esc_html__('Cache Posts:', 'super-related-posts') ?></label></th>
-		<td>
-		<?php if($caching_status != 'finished'){ ?>	
-			<button type="button" id="start-caching-btn" class="button button-primary"><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
-		<?php }else{ ?>	
-			<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
-		<?php } ?>	
+		?>
+		<div class="srpp_progress_bar srpp_dnone">
+	        <div class="srpp_progress_bar_body" style="width: 50%;">50%</div>
+	    </div>
+		<div class="srppwp-setting-sec-body srpwp-mt12">
+			<div class="srpwp-setting-label"><strong><?php echo esc_html__('Cache Posts', 'super-related-posts') ?></strong></div>
+			<div class="srpwp-setting-field">
+				<?php if($caching_status != 'finished'){ ?>	
+					<button type="button" id="start-caching-btn" class="button button-primary"><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
+				<?php }else{ ?>	
+					<button type="button" id="start-caching-btn" class="button button-primary" disabled><?php echo esc_html__( 'Start Caching', 'super-related-posts' )?></button>
+				<?php } ?>	
 
-		<button type="button" id="start-reseting-post-btn" class="button button-primary"><?php echo esc_html__( 'Clear Cache', 'super-related-posts' )?></button>
-		
-		</td>
-
-	</tr>
-	</table>
+				<button type="button" id="start-reseting-post-btn" class="button button-primary"><?php echo esc_html__( 'Clear Cache', 'super-related-posts' )?></button>
+			</div>
+		</div>
 	</div>
 	<?php
 }
@@ -277,8 +275,8 @@ function srpp_rp3_options_subpage(){
 		<?php } ?>
 			<div class="suprp-section-part" style="display: inline-flex;">
 
-				<form method="post" action="">
-				<table class="optiontable form-table">
+				<form method="post">
+				<table class="srp-optiontable form-table">
 					<?php
 						srpp_display_status(isset($options['display_status_3'])?$options['display_status_3']:'', $num);	
 						srpp_display_limit_i(isset($options['limit_3'])?$options['limit_3']:'', $num);				
@@ -297,7 +295,7 @@ function srpp_rp3_options_subpage(){
 						
 					?>
 				</table>
-				<table class="optiontable form-table">
+				<table class="srp-optiontable form-table">
 					<?php 
 						if(isset($options['adv_filter_check_3'])){
 							srpp_adv_filter_switch($options['adv_filter_check_3'], $num);
@@ -307,7 +305,7 @@ function srpp_rp3_options_subpage(){
 				<?php
 					$hide_filter = (isset($options['adv_filter_check_3']) && $options['adv_filter_check_3'] == 1) ? '' : 'style="display:none"';
 				?>
-				<table id="filter_options" class="optiontable form-table" <?php echo $hide_filter; ?>>
+				<table id="filter_options" class="srp-optiontable form-table" <?php echo $hide_filter; ?>>
 					<?php
 						if(isset($options['excluded_posts_3'])){
 							srpp_display_excluded_posts_i($options['excluded_posts_3'], $num);
@@ -844,103 +842,160 @@ add_action('wp_ajax_srpp_send_query_message', 'srpp_send_query_message');
 if(!function_exists('srpp_pi_translation_options_subpage')){
 	function srpp_pi_translation_options_subpage()
 	{
-		global $translation_panel_options;
-		$translation = get_option('srp_data');
-		if(empty($translation)){
-			$translation_panel = $translation_panel_options;
-			add_option('srp_data', $translation_panel_options);
-		}else{
-			$translation_panel = $translation;
-		}
+			global $translation_panel_options;
+			$translation = get_option('srp_data');
+			if(empty($translation)){
+				$translation_panel = $translation_panel_options;
+				add_option('srp_data', $translation_panel_options);
+			}else{
+				$translation_panel = $translation;
+			}
 
-		if (isset($_POST['update_options'])) {
-			if(isset($_POST['srp_data']) && !empty($_POST['srp_data'])){
-				check_admin_referer('super-related-posts-update-options');
-				srpp_cache_flush();
-				if(is_array($_POST['srp_data'])){
-					$data_to_be_updated = [];
-					foreach ($_POST['srp_data'] as $post_key => $post_value) {
-						if(!empty(trim($post_value))){
-							$data_to_be_updated[$post_key] = trim($post_value);
-						}else{
-							foreach ($translation_panel_options as $trans_key => $trans_value) {
-								if($post_key == $trans_key){
-									$data_to_be_updated[$post_key] = $trans_value;			
+			if (isset($_POST['update_options'])) {
+				if(isset($_POST['srp_data']) && !empty($_POST['srp_data'])){
+					check_admin_referer('super-related-posts-update-options');
+					srpp_cache_flush();
+					if(is_array($_POST['srp_data'])){
+						$data_to_be_updated = [];
+						foreach ($_POST['srp_data'] as $post_key => $post_value) {
+							if(!empty(trim($post_value))){
+								$data_to_be_updated[$post_key] = trim($post_value);
+							}else{
+								foreach ($translation_panel_options as $trans_key => $trans_value) {
+									if($post_key == $trans_key){
+										$data_to_be_updated[$post_key] = $trans_value;			
+									}
 								}
 							}
 						}
+						update_option('srp_data', $data_to_be_updated);
 					}
-					update_option('srp_data', $data_to_be_updated);
-					echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
 				}
 			}
-		}
-	?>
-	    <div class="wrap srpp-tab-content">
-			<form method="post" action="">
-				<div class="srppwp_support_div">
-					<h3><?php echo esc_html__('Translation Panel', 'super_related_posts') ?></h3>
-					<ul>
-					<?php 
-						if(isset($translation_panel_options) && !empty($translation_panel_options)){
-							foreach ($translation_panel_options as $trans_key => $trans_value) {
-								if(isset($translation_panel[$trans_key]) && !empty($translation_panel[$trans_key])){
-									$trans_val = 	$translation_panel[$trans_key];
-								}else{
-									$trans_val = 	$trans_value;
-								}
-								echo  '<li>'
-								. '<div class="srpwp-tools-field-title"><div style="position: relative; display: inline-block;"><strong style="padding-right: 130px;">'.esc_attr($trans_value).'</strong></div>'
-								. '<input class="regular-text" type="text" name="srp_data['.esc_attr($trans_key).']" value="'. esc_attr($trans_val).'">'
-								. '</div></li>';
-							}	
-						}
-					?>
-					</ul>
-				</div>
-				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
-				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
-			</form>
-	    </div>
-	<?php	
+		?>
+		<div class="srpwp-settings-div">
+			<div class="srppwp-setting-sec-label" id="srpwp-translation-heading">
+				<h3><?php echo esc_html__('Translation Panel', 'super_related_posts') ?></h3>
+			</div>
+			<div class="srppwp-setting-sec-body">
+				<ul>
+				<?php 
+					if(isset($translation_panel_options) && !empty($translation_panel_options)){
+						foreach ($translation_panel_options as $trans_key => $trans_value) {
+							if(isset($translation_panel[$trans_key]) && !empty($translation_panel[$trans_key])){
+								$trans_val = 	$translation_panel[$trans_key];
+							}else{
+								$trans_val = 	$trans_value;
+							}
+							echo  '<li>'
+							. '<div style="position: relative; display: inline-block;" class="srpwp-setting-label"><strong style="padding-right: 130px;">'.esc_attr($trans_value).'</strong></div>'
+							. '<div class="srpwp-setting-field"><input class="regular-text" type="text" name="srp_data['.esc_attr($trans_key).']" value="'. esc_attr($trans_val).'">'
+							. '</div></li>';
+						}	
+					}
+				?>
+				</ul>
+			</div>
+		</div>
+		<?php	
 	}
 }
 
 if(!function_exists('srpp_pi_advanced_options_subpage')){
 	function srpp_pi_advanced_options_subpage()
 	{
+			$srp_option_data = get_option('srp_data');
+			if (isset($_POST['update_options'])) {
+				check_admin_referer('super-related-posts-update-options');
+				srpp_cache_flush();
+				if(isset($_POST['srp_data']['srpwp_rmv_data_on_uninstall'])){
+					$srp_option_data['srpwp_rmv_data_on_uninstall'] = sanitize_text_field(trim($_POST['srp_data']['srpwp_rmv_data_on_uninstall']));
+				}else{
+					unset($srp_option_data['srpwp_rmv_data_on_uninstall']);
+				}
+				update_option('srp_data', $srp_option_data);
+			}
+		?>
+		<div class="srpwp-settings-div">
+			<div class="srppwp-setting-sec-label" id="srpwp-advanced-heading">
+				<h3><?php echo esc_html__('Advanced Settings', 'super_related_posts') ?></h3>
+			</div>
+			<div class="srppwp-setting-sec-body">
+				<ul>
+					<li>
+						<div class="srpwp-option-wrapper">
+	                        <div class="srpwp-tooltip srpwp-setting-label"><strong><label for="srpwp-rmv-data-on-uninstall"><?php echo esc_html__('Remove Data On Uninstall', 'super_related_posts') ?></label></strong></div>
+	                        <div class="srpwp-setting-field"><input type="checkbox" name="srp_data[srpwp_rmv_data_on_uninstall]" 
+	                        <?php echo isset($srp_option_data['srpwp_rmv_data_on_uninstall'])?'checked' : ''; ?> id="srpwp-rmv-data-on-uninstall"></div>                        
+	                        <p><?php echo esc_html__('This will remove all of its data when the plugin is deleted') ?></p>
+	                    </div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<?php
+	}
+}
+
+function srpp_features_option_page()
+{
 		$srp_option_data = get_option('srp_data');
 		if (isset($_POST['update_options'])) {
 			check_admin_referer('super-related-posts-update-options');
 			srpp_cache_flush();
-			if(isset($_POST['srp_data']['srpwp_rmv_data_on_uninstall'])){
-				$srp_option_data['srpwp_rmv_data_on_uninstall'] = sanitize_text_field(trim($_POST['srp_data']['srpwp_rmv_data_on_uninstall']));
+			if(isset($_POST['srp_data']['srpwp_infinite_scrolling'])){
+				$srp_option_data['srpwp_infinite_scrolling'] = sanitize_text_field(trim($_POST['srp_data']['srpwp_infinite_scrolling']));
 			}else{
-				unset($srp_option_data['srpwp_rmv_data_on_uninstall']);
+				unset($srp_option_data['srpwp_infinite_scrolling']);
 			}
 			update_option('srp_data', $srp_option_data);
-			echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
 		}
 	?>
-		<div class="wrap srpp-tab-content">
-			<form method="post" action="">
-				<div class="srppwp_support_div">
-					<h3><?php echo esc_html__('Advanced Settings', 'super_related_posts') ?></h3>
-					<ul>
-						<li>
-							<div>
-		                        <div class="srpwp-tooltip"><strong><?php echo esc_html__('Remove Data On Uninstall', 'super_related_posts') ?></strong></div>
-		                        <input type="checkbox" name="srp_data[srpwp_rmv_data_on_uninstall]" 
-		                        <?php echo isset($srp_option_data['srpwp_rmv_data_on_uninstall'])?'checked' : ''; ?> >                        
-		                        <p><?php echo esc_html__('This will remove all of its data when the plugin is deleted') ?></p>
-		                    </div>
-						</li>
-					</ul>
-				</div>
-				<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
-				<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
-			</form>
-		</div>	
+	<div class="srpwp-settings-div">
+		<div class="srppwp-setting-sec-label" id="srpwp-advanced-heading">
+			<h3><?php echo esc_html__('Features', 'super_related_posts') ?></h3>
+		</div>
+		<div class="srppwp-setting-sec-body">
+			<ul>
+				<li>
+					<div class="srpwp-option-wrapper">
+                        <div class="srpwp-tooltip srpwp-setting-label"><strong><label for="srpwp-infinite-scrolling"><?php echo esc_html__('Infinite Related Posts', 'super_related_posts') ?></label></strong></div>
+                        <div class="srpwp-setting-field"><input type="checkbox" name="srp_data[srpwp_infinite_scrolling]" 
+                        <?php echo isset($srp_option_data['srpwp_infinite_scrolling'])?'checked' : ''; ?> id="srpwp-infinite-scrolling"></div>                        
+                        <p><?php echo esc_html__('This will allow infinite scrolling') ?> 
+                        	<!-- <a href="#"><?php //echo esc_html__('Learn More') ?></a> -->
+                    	</p>
+                    </div>
+				</li>
+			</ul>
+		</div>
+	</div>
 	<?php
+}
+
+/**
+ * @since 1.5
+ * Settings section page
+ * */
+function srpp_pi_settings()
+{
+	if (isset($_POST['update_options'])) {
+		check_admin_referer('super-related-posts-update-options');
+		srpp_cache_flush();
+		echo '<div class="updated settings-error notice"><p>' . __('<b>Settings saved.</b>', 'super_related_posts') . '</p></div>';
 	}
+	?>  
+	<form method="post">
+		<div class="wrap srpp-tab-content"> 
+			<?php 
+				srpp_features_option_page();
+				srpp_pi_options_subpage();
+				srpp_pi_translation_options_subpage();
+				srpp_pi_advanced_options_subpage();
+			?>
+			<div class="submit"><input type="submit" class="button button-primary" name="update_options" value="<?php echo esc_html__('Save Settings', 'super_related_posts') ?>" /></div>
+			<?php if (function_exists('wp_nonce_field')) wp_nonce_field('super-related-posts-update-options'); ?>
+		</div> <!-- srpp-tab-content end--> 
+	</form>
+	<?php
 }

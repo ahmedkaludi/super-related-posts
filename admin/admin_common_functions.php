@@ -211,7 +211,7 @@ function srpp_deactivate_plugin($plugin_file) {
 
 function srpp_display_limit($limit) {
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="limit"><?php echo esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
 		<td><input min="1" name="limit" type="number" id="limit" style="width: 60px;" value="<?php echo esc_attr($limit); ?>" size="2" /></td>
 	</tr>
@@ -221,7 +221,7 @@ function srpp_display_limit($limit) {
 
 function srpp_display_limit_i($limit, $num) {
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="limit_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Number of posts to show:', 'super-related-posts') ?></label></th>
 		<td><input min="1" name="limit_<?php echo esc_attr($num); ?>" type="number" id="limit_<?php echo esc_attr($num); ?>" style="width: 60px;" value="<?php echo esc_attr($limit); ?>" size="2" /></td>
 	</tr>
@@ -258,7 +258,7 @@ function srpp_display_just_current_post($just_current_post) {
 
 function srpp_sort_post_by_recent_popular_i($sort_by, $num) {
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="sort_by_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Sort post\'s by', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="sort_by_<?php echo esc_attr($num); ?>" id="sort_by_<?php echo esc_attr($num); ?>">			
@@ -272,7 +272,7 @@ function srpp_sort_post_by_recent_popular_i($sort_by, $num) {
 
 function srpp_display_match_cat($match_cat) {
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="match_cat"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat" id="match_cat">			
@@ -286,7 +286,7 @@ function srpp_display_match_cat($match_cat) {
 
 function srpp_display_match_cat_i($match_cat, $num) {
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="match_cat_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Match the current post\'s category?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_cat_<?php echo esc_attr($num); ?>" id="match_cat_<?php echo esc_attr($num); ?>">			
@@ -301,7 +301,7 @@ function srpp_display_match_cat_i($match_cat, $num) {
 function srpp_display_match_tags($match_tags) {
 	global $wp_version;
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="match_tags"><?php echo esc_html__('Match the current post\'s tags?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_tags" id="match_tags" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
@@ -317,7 +317,7 @@ function srpp_display_match_tags($match_tags) {
 
 function srpp_display_post_excerpt($match_cat) {
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="post_excerpt"><?php echo esc_html__('Excerpt?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="post_excerpt" id="post_excerpt">			
@@ -332,7 +332,7 @@ function srpp_display_post_excerpt($match_cat) {
 function srpp_display_post_excerpt_i($post_excerpt, $num) {
 	
 	?>
-	<tr valign="top" <?php echo $post_excerpt; ?>>
+	<tr valign="top" <?php echo $post_excerpt; ?> class="srpp-parent-options">
 		<th scope="row"><label for="post_excerpt_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Excerpt?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="post_excerpt_<?php echo esc_attr($num); ?>" id="post_excerpt_<?php echo esc_attr($num); ?>">			
@@ -356,7 +356,7 @@ function srpp_display_post_excerpt_length_i( $excerpt_type, $excerpt_length, $nu
 function srpp_display_match_tags_i($match_tags, $num) {
 	global $wp_version;
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="match_tags_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Match the current post\'s tags?', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="match_tags_<?php echo esc_attr($num); ?>" id="match_tags_<?php echo esc_attr($num); ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
@@ -372,7 +372,7 @@ function srpp_display_match_tags_i($match_tags, $num) {
 function srpp_position_related_i($pstn_rel, $num) {
 	global $wp_version;
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="pstn_rel_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Position:', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="pstn_rel_<?php echo esc_attr($num); ?>" id="pstn_rel_<?php echo esc_attr($num); ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
@@ -404,7 +404,7 @@ function srpp_position_type_i($para_pos_type, $pos, $num) {
 function srpp_design_related_i($design, $num) {
 	global $wp_version;
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 		<th scope="row"><label for="re_design_<?php echo esc_attr($num); ?>"><?php echo esc_html__('Design:', 'super-related-posts') ?></label></th>
 		<td>
 			<select name="re_design_<?php echo esc_attr($num); ?>" id="re_design_<?php echo esc_attr($num); ?>" <?php if ($wp_version < 2.3) echo 'disabled="true"'; ?> >
@@ -470,11 +470,11 @@ function srpp_percent_i( $position_type, $para_percent, $pos, $num) {
 }
 function srpp_adv_filter_switch($filter_check, $num){
 	?>
-	<tr valign="top">
+	<tr valign="top" class="srpp-parent-options">
 	    <th scope="row"><label for="adv_filter_check_<?php echo esc_attr($num); ?>" class="adv_filter_check_label"><?php echo esc_html__( 'Advanced Filter Options' , 'super-related-posts') ?></label></th>
 	    <td>
 	      <label class="srpp-switch">
-	        <input type="checkbox" id="adv_filter_check_<?php echo esc_attr($num); ?>" name="adv_filter_check_<?php echo esc_attr($num); ?>" value="1" <?php if( $filter_check == 1 ){echo 'checked'; } ?> >
+	        <input type="checkbox" id="adv_filter_check_<?php echo esc_attr($num); ?>" name="adv_filter_check_<?php echo esc_attr($num); ?>" value="1" <?php if( $filter_check == 1 ){echo 'checked'; } ?> class="srpwp-adv-filter-check">
 	        <span class="slider round"></span>
 	      </label>            
 	    </td>
@@ -482,12 +482,18 @@ function srpp_adv_filter_switch($filter_check, $num){
 	<?php 
 }
 function srpp_display_status($filter_check, $num){
+	$text = 'Related Posts '.$num.' Module'; 
 	?>
-	<tr valign="top">
-	    <th scope="row"><label for="display_status_<?php echo esc_attr($num); ?>" class="display_status_label"><?php echo esc_html__( 'On/Off' , 'super-related-posts') ?></label></th>
+	<tr valign="top srpp-parent-options">
+	    <th scope="row">
+	    	<label for="display_status_<?php echo esc_attr($num); ?>" class="display_status_label"><?php echo esc_html( $text ) ?></label>
+	    	<p style="font-weight: 400"><?php echo esc_html__('This will enable the Related Posts Module for your site', 'super-related-posts') ?> 
+	    		<!-- <a href="#"><?php //echo esc_html__(' Learn More', 'super-related-posts') ?></a> -->
+	    	</p>
+	    </th>
 	    <td>
 	      <label class="srpp-switch">
-	        <input type="checkbox" id="display_status_<?php echo esc_attr($num); ?>" name="display_status_<?php echo esc_attr($num); ?>" value="1" <?php if( $filter_check == 1 ){echo 'checked'; } ?> >
+	        <input type="checkbox" class="srpp-display-status" id="display_status_<?php echo esc_attr($num); ?>" name="display_status_<?php echo esc_attr($num); ?>" value="1" <?php if( $filter_check == 1 ){echo 'checked'; } ?> >
 	        <span class="slider round"></span>
 	      </label>            
 	    </td>

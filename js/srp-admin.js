@@ -83,6 +83,7 @@ jQuery(document).ready(function($){
     $("#adv_filter_check_1").click(function(){
         if($(this).is(':checked')){
             $("#filter_options").show();
+            $("#filter_options tr").show();
         }else{
             $("#filter_options").hide();
         }
@@ -90,6 +91,7 @@ jQuery(document).ready(function($){
         $("#adv_filter_check_2").click(function(){
         if($(this).is(':checked')){
             $("#filter_options").show();
+            $("#filter_options tr").show();
         }else{
             $("#filter_options").hide();
         }
@@ -97,6 +99,7 @@ jQuery(document).ready(function($){
         $("#adv_filter_check_3").click(function(){
         if($(this).is(':checked')){
             $("#filter_options").show();
+            $("#filter_options tr").show();
         }else{
             $("#filter_options").hide();
         }
@@ -457,9 +460,7 @@ jQuery(document).ready(function($){
                          button= jQuery ('<a id="pointer-close" class="button-secondary">' + srp_localize_data.button1 + '</a>');
                          button_2= jQuery ('#pointer-close.button');
                          button.bind ('click.pointer', function () {
-                            if(flag == 1){
-                                 t.element.pointer ('close');
-                            }
+                            t.element.pointer ('close');
                          });
                          button_2.on('click', function() {
                            setTimeout(function(){ 
@@ -507,6 +508,37 @@ jQuery(document).ready(function($){
          
     /* Newletters js ends here */ 
 
+    /* Display super related options */
+     $(document).on('change', '.srpp-display-status', function(e){
+        if($(this).is(':checked')){
+            $('.srpp-parent-options').show();
+            $('.suprp-design-img').show();
+            if($('.srpwp-adv-filter-check').is(':checked')){
+                $("#filter_options tr").show();    
+            }
+
+        }else{
+            $('.srp-optiontable tr').hide();
+            $('.suprp-design-img').hide();
+            $("#filter_options tr").hide();
+            $('.srp-optiontable tr:first').show();
+        }
+     });
+     /* Display super related options ends here */
+
+     if($('.srpp-display-status').length > 0){
+        if($('.srpp-display-status').is(':checked')){
+            $('.srpp-parent-options').show();
+            if($('.srpwp-adv-filter-check').is(':checked')){
+                $("#filter_options tr").show();    
+            }   
+        }else{
+             $('.srp-optiontable tr').hide();
+             $('.srp-optiontable tr:first').show();
+             $('.suprp-design-img').hide();
+             $("#filter_options tr").hide();
+        }
+     }
 });
 
 function srppIsEmail(email) {
