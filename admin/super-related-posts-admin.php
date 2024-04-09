@@ -39,7 +39,7 @@ function srpp_rp1_options_subpage(){
 	?>
 		<div class="wrap srpp-tab-content">
 			<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
-				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
+				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=srpp_settings' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 			<?php } ?>
 
 			<div class="suprp-section-part" style="display: inline-flex;"> 
@@ -122,7 +122,7 @@ function srpp_rp2_options_subpage(){
 	?>
 		<div class="wrap srpp-tab-content">
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
-				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
+				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=srpp_settings' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 		<?php } ?>
 
 			<div class="suprp-section-part" style="display: inline-flex;">
@@ -271,7 +271,7 @@ function srpp_rp3_options_subpage(){
 	?>
 		<div class="wrap srpp-tab-content">
 		<?php if(get_option('srp_posts_caching_status') != 'finished'){ ?>
-				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
+				<div><strong><?php echo esc_html__( 'To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></strong> <a href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=srpp_settings' )) ?>"><?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a></div>	
 		<?php } ?>
 			<div class="suprp-section-part" style="display: inline-flex;">
 
@@ -747,7 +747,7 @@ function srpp_admin_notice(){
 		<div class="notice notice-warning">
 				<p><strong><?php echo esc_html__( 'Welcome to Super Related Posts' , 'super-related-posts') ?></strong> <?php echo esc_html__( '- To work this plugin faster you need to cache the posts' , 'super-related-posts') ?></p>
 				<p>
-					<a class="button button-primary" href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=posts_caching' )); ?>">
+					<a class="button button-primary" href="<?php echo esc_url(admin_url( 'options-general.php?page=super-related-posts&subpage=srpp_settings' )); ?>">
 					<?php echo esc_html__( 'Start Caching' , 'super-related-posts') ?></a>
 				</p>
 		</div>                    
