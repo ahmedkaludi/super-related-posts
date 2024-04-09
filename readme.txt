@@ -100,7 +100,7 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 == Changelog ==
 
-= 1.6 (9 April 2023) =
+= 1.6 (9 April 2024) =
 
 * Enhancement: Test with WordPress v6.5 and update readme #41
 
