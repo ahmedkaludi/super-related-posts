@@ -2,7 +2,7 @@
 /*
 Plugin Name: Super Related Posts
 Description: Add a highly configurable list of related posts to any posts. Related posts can be based on any combination of word usage in the content, title, or tags.
-Version: 1.6
+Version: 1.7
 Text Domain: super-related-posts
 Author: Magazine3
 Author URI: https://magazine3.company/
@@ -14,7 +14,7 @@ License: GPL2
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! defined( 'SRPP_VERSION' ) ) {
-    define( 'SRPP_VERSION', '1.6' );
+    define( 'SRPP_VERSION', '1.7' );
 }
 
 define('SRPP_DIR_NAME', dirname( __FILE__ ));

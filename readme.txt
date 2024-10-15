@@ -3,9 +3,9 @@ Contributors: magazine3
 Tags: Related Posts, Contextual Related Posts, Similar Posts, Related, Related Content
 Donate link: https://www.paypal.me/Kaludi/25
 Requires at least: 4.0
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 5.2
-Stable tag: 1.6
+Stable tag: 1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,10 @@ You can contact us from [here](https://magazine3.company/contact/)
 
 
 == Changelog ==
+
+= 1.7 (15 October 2024) =
+
+* Enhancement: Test with WordPress v6.6 and update readme #46
 
 = 1.6 (9 April 2024) =
 
